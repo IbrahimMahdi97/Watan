@@ -10,5 +10,19 @@
       <Folder Include="Extensions\" />
       <Folder Include="Helpers\" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Entities\Entities.csproj" />
+      <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+      <ProjectReference Include="..\Repository\Repository.csproj" />
+      <ProjectReference Include="..\Service\Service.csproj" />
+      <ProjectReference Include="..\Service.Interface\Service.Interface.csproj" />
+      <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
+      <ProjectReference Include="..\Watan.Presentation\Watan.Presentation.csproj" />
+    </ItemGroup>
 
 </Project>
