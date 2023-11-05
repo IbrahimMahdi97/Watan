@@ -1,0 +1,8 @@
+﻿bin
+obj
+.idea
+internal_logs
+.editorconfig
+appsettings.json
+appsettings.Development.json
+web.config
