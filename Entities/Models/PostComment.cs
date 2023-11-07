@@ -7,5 +7,6 @@ public class PostComment
     public int UserId { get; set; }
     public string? Comment { get; set; }
     public bool IsDeleted { get; set; }
+    public int? ParentCommentId { get; set; }
     public DateTime RecordDate { get; set; }
 }
