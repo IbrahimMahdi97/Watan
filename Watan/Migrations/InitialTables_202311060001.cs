@@ -164,7 +164,7 @@ namespace Watan.Migrations
             
             Create.Table("PostComments")   
                 .WithColumn("Id").AsInt32().NotNullable()
-                .PrimaryKey().Identity()
+                .PrimaryKey().Identity().ReferencedBy("PostComments","ParentCommentId")
                 .WithColumn("PostId").AsInt32().NotNullable()
                 .ForeignKey("Posts", "Id")
                 .OnDelete(System.Data.Rule.None)
@@ -172,10 +172,10 @@ namespace Watan.Migrations
                 .ForeignKey("Users", "Id")
                 .OnDelete(System.Data.Rule.None)
                 .WithColumn("Comment").AsString(int.MaxValue).NotNullable()
+                .WithColumn("ParentCommentId").AsInt32().Nullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0)
                 .WithColumn("RecordDate").AsDateTime2().WithDefault(SystemMethods.CurrentDateTime);
                 
-            
             Create.Table("CommentLikes")
                 .WithColumn("CommentId").AsInt32().NotNullable()
                 .ForeignKey("PostComments", "Id")
@@ -184,17 +184,6 @@ namespace Watan.Migrations
                 .ForeignKey("Users", "Id")
                 .OnDelete(System.Data.Rule.None);
             
-            Create.Table("CommentResponses")   
-                .WithColumn("CommentId").AsInt32().NotNullable()
-                .ForeignKey("PostComments", "Id")
-                .OnDelete(System.Data.Rule.None)
-                .WithColumn("UserId").AsInt32().NotNullable()
-                .ForeignKey("Users", "Id")
-                .OnDelete(System.Data.Rule.None)
-                .WithColumn("Response").AsString(int.MaxValue).NotNullable()
-                .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0)
-                .WithColumn("RecordDate").AsDateTime2().WithDefault(SystemMethods.CurrentDateTime);
-
             Create.Table("ComplaintTypes")
                 .WithColumn("Id").AsInt32().NotNullable()
                 .PrimaryKey().Identity()
