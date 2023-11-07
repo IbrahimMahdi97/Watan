@@ -101,7 +101,8 @@ namespace Watan.Migrations
             Create.Table("PostTypes")
                 .WithColumn("Id").AsInt32().NotNullable()
                 .PrimaryKey().Identity()
-                .WithColumn("Description").AsString(50).NotNullable();
+                .WithColumn("Description").AsString(50).NotNullable()
+                .WithColumn("Prefix").AsString(3).NotNullable();
 
             Create.Table("Posts")
                 .WithColumn("Id").AsInt32().NotNullable()
@@ -187,7 +188,8 @@ namespace Watan.Migrations
             Create.Table("ComplaintTypes")
                 .WithColumn("Id").AsInt32().NotNullable()
                 .PrimaryKey().Identity()
-                .WithColumn("Description").AsString(50).NotNullable();
+                .WithColumn("Description").AsString(50).NotNullable()
+                .WithColumn("Prefix").AsString(3).NotNullable();
 
             Create.Table("Complaints")
                 .WithColumn("Id").AsInt32().NotNullable()

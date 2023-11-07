@@ -9,19 +9,25 @@ namespace Watan.Migrations
         public override void Down()
         {
             Delete.FromTable("PostTypes").Row(new {
-                Description = "خبر"
+                Description = "خبر",
+                Prefix= "NWS"
             }).Row(new {
-                Description = "حدث"
+                Description = "حدث",
+                Prefix= "EVT"
             }); 
             
             Delete.FromTable("ComplaintsTypes").Row(new {
-                Description = "شكوى"
+                Description = "شكوى",
+                Prefix= "CMP"
             }).Row(new {
-                Description = "اقتراح"
+                Description = "اقتراح",
+                Prefix= "SUG"
             }).Row(new {
-                Description = "مظلومية"
+                Description = "مظلومية",
+                Prefix= "UNF"
             }).Row(new {
-                Description = "تعديل بيانات"
+                Description = "تعديل بيانات",
+                Prefix= "CNG"
             });    
             
             Delete.FromTable("Roles").Row(new {
