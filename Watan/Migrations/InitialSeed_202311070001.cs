@@ -16,7 +16,7 @@ namespace Watan.Migrations
                 Prefix= "EVT"
             }); 
             
-            Delete.FromTable("ComplaintsTypes").Row(new {
+            Delete.FromTable("ComplaintTypes").Row(new {
                 Description = "شكوى",
                 Prefix= "CMP"
             }).Row(new {
@@ -113,19 +113,25 @@ namespace Watan.Migrations
         public override void Up()
         {
             Insert.IntoTable("PostTypes").Row(new {
-                Description = "خبر"
+                Description = "خبر",
+                Prefix= "NWS"
             }).Row(new {
-                Description = "حدث"
+                Description = "حدث",
+                Prefix= "EVT"
             }); 
             
-            Insert.IntoTable("ComplaintsTypes").Row(new {
-                Description = "شكوى"
+            Insert.IntoTable("ComplaintTypes").Row(new {
+                Description = "شكوى",
+                Prefix= "CMP"
             }).Row(new {
-                Description = "اقتراح"
+                Description = "اقتراح",
+                Prefix= "SUG"
             }).Row(new {
-                Description = "مظلومية"
+                Description = "مظلومية",
+                Prefix= "UNF"
             }).Row(new {
-                Description = "تعديل بيانات"
+                Description = "تعديل بيانات",
+                Prefix= "CNG"
             });    
             
             Insert.IntoTable("Roles").Row(new {
