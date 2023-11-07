@@ -24,5 +24,21 @@
       <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
       <ProjectReference Include="..\Watan.Presentation\Watan.Presentation.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="internal_logs\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Remove="internal_logs\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="internal_logs\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Content Remove="internal_logs\**" />
+    </ItemGroup>
 
 </Project>
