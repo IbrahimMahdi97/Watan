@@ -4,15 +4,14 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>WatanPresentation</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+      <ProjectReference Include="..\Service.Interface\Service.Interface.csproj" />
     </ItemGroup>
 
 </Project>
