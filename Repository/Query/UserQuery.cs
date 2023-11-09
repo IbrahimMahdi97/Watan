@@ -3,12 +3,12 @@ namespace Repository.Query;
 public static class UserQuery
 {
     public const string CreateUserQuery =
-        @"IF EXISTS(SELECT Email FROM Users WHERE Email = @Email)
+        @"IF EXISTS(SELECT PhoneNumber FROM Users WHERE PhoneNumber = @PhoneNumber)
             SELECT 0;
             ELSE
-            INSERT INTO Users (FirstName, LastName, Position, Gender, Email,  PhoneNumber, ImageUrl, Password)
+            INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, ProvinceOfBirth, DateOfBirth, Password)
               OUTPUT inserted.Id
-              VALUES(@FirstName, @LastName, @Position, @Gender, @Email, @PhoneNumber, @ImageName, @Password);";
+              VALUES(@FirstName, @MotherName, @Gender, @Email, @PhoneNumber, @ProvinceOfBirth, @DateOfBirth, @Password);";
     
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";

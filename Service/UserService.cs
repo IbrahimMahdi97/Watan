@@ -29,8 +29,8 @@ internal sealed class UserService : IUserService
         var result = await _repository.User.CreateUser(userForCreationDto);
 
         if (result <= 0)
-            if (userForCreationDto.Email != null)
-                throw new UserEmailAlreadyExistsBadRequestException(userForCreationDto.Email);
+            if (userForCreationDto.PhoneNumber != null)
+                throw new UserEmailAlreadyExistsBadRequestException(userForCreationDto.PhoneNumber);
 
         await _repository.User.AddUserRoles(userForCreationDto.Roles, result);
 
