@@ -15,6 +15,27 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
+    public async Task<int> CreateUser(UserForCreationDto userForCreationDto)
+    {
+        const string query = UserQuery.CreateUserQuery;
+        var param = new DynamicParameters(userForCreationDto);
+
+        using var connection = _context.CreateConnection();
+        connection.Open();
+
+        using var trans = connection.BeginTransaction();
+        var id = await connection.QuerySingleAsync<int>(query, param, transaction: trans);
+
+        const string passwordQuery = UserQuery.AddEncryptedPasswordByIdQuery;
+        await connection.ExecuteAsync(passwordQuery, new
+        {
+            Password = (userForCreationDto.Password + id).ToSha512(),
+            Id = id
+        }, transaction: trans);
+        
+        trans.Commit();
+        return id;
+    }
 
     public async Task<UserDto?> FindByCredentials(string email, string password)
     {
@@ -39,28 +60,6 @@ public class UserRepository : IUserRepository
         using var connection = _context.CreateConnection();
         var user = await connection.QuerySingleOrDefaultAsync<UserDto>(query, new { Id = id });
         return user;
-    }
-
-    public async Task<int> CreateUser(UserForCreationDto userForCreationDto)
-    {
-        const string query = UserQuery.CreateUserQuery;
-        var param = new DynamicParameters(userForCreationDto);
-
-        using var connection = _context.CreateConnection();
-        connection.Open();
-
-        using var trans = connection.BeginTransaction();
-        var id = await connection.QuerySingleAsync<int>(query, param, transaction: trans);
-
-        const string passwordQuery = UserQuery.AddEncryptedPasswordByIdQuery;
-        await connection.ExecuteAsync(passwordQuery, new
-        {
-            Password = (userForCreationDto.Password + id).ToSha512(),
-            Id = id
-        }, transaction: trans);
-        
-        trans.Commit();
-        return id;
     }
 
     public Task AddUserRoles(List<UserRoleForCreation> userRoles, int id)
