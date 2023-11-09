@@ -10,7 +10,7 @@
       <Folder Include="Query\" />
     </ItemGroup>
 
-<ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     </ItemGroup>
 
