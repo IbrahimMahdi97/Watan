@@ -3,7 +3,6 @@ namespace Shared.DataTransferObjects;
 public class UserDto
 {
     public int Id { get; set; }
-    public bool IsVerified { get; set; }
     public string? FullName { get; set; }
     public string? MotherName { get; set; }
     public string? ProvinceOfBirth { get; set; }
