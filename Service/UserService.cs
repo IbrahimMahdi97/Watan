@@ -41,7 +41,7 @@ internal sealed class UserService : IUserService
     {
         var user = await CheckIfUserExists(userForAuth);
 
-        var tokens = new TokenDto();
+        var tokens = await CreateToken(user, true);
         user.AccessToken = tokens.AccessToken;
         user.RefreshToken = tokens.RefreshToken;
 
@@ -90,7 +90,7 @@ internal sealed class UserService : IUserService
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.MobilePhone, user.PhoneNumber!),
             
             new(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
