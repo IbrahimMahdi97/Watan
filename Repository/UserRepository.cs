@@ -62,9 +62,17 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task AddUserRoles(List<UserRoleForCreation> userRoles, int id)
+    public async Task AddUserRoles(List<UserRoleForCreation> userRoles, int id)
     {
-        throw new NotImplementedException();
+        const string queryUserRoles = RoleQuery.InsertUserRolesQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+
+        foreach (var paramUserRoles in userRoles.Select(role => new DynamicParameters(role)))
+        {
+            paramUserRoles.Add("UserId", id);
+            await connection.ExecuteAsync(queryUserRoles, paramUserRoles);
+        }
     }
     
     public async Task UpdateRefreshToken(int id, string refreshToken, DateTime? refreshTokenExpiryTime)
