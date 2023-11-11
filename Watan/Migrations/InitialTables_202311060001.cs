@@ -53,6 +53,8 @@ namespace Watan.Migrations
                 .WithColumn("ResidenceCardNumber").AsString(50).NotNullable()
                 .WithColumn("VoterCardNumber").AsString(50).NotNullable()
                 .WithColumn("Password").AsString(int.MaxValue).NotNullable()
+                .WithColumn("RefreshToken").AsString().Nullable()
+                .WithColumn("RefreshTokenExpiryTime").AsDateTime2().Nullable()
                 .WithColumn("AddedByUserId").AsInt32().Nullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0)
                 .WithColumn("RecordDate").AsDateTime2().WithDefault(SystemMethods.CurrentDateTime);
