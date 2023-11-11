@@ -40,9 +40,8 @@ internal sealed class UserService : IUserService
     public async Task<UserDto> ValidateUser(UserForAuthenticationDto userForAuth)
     {
         var user = await CheckIfUserExists(userForAuth);
-        if (!user.IsVerified) throw new UserIsNotVerifiedBadRequestException(userForAuth.PhoneNumber);
 
-        var tokens = user.IsVerified ? await CreateToken(user, true) : new TokenDto();
+        var tokens = new TokenDto();
         user.AccessToken = tokens.AccessToken;
         user.RefreshToken = tokens.RefreshToken;
 
