@@ -14,7 +14,7 @@ public static class UserQuery
         @"UPDATE Users SET Password = @password WHERE Id = @id;";
     
     public const string UserRolesByUserIdQuery =
-        @"SELECT Id, Description, UR.CityId, UR.MinistryId FROM Roles R
+        @"SELECT Id, Description, UR.UserId FROM Roles R
                        JOIN UserRoles UR on R.Id = UR.RoleId
                        WHERE UR.UserId = @Id";
     
