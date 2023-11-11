@@ -94,8 +94,9 @@ namespace Watan.Migrations
                 HouseNumber = "1",
                 NationalIdNumber = "123456789123456789",
                 ResidenceCardNumber = "12345",
-                VoterCardNumber = "1234567"
-            });
+                VoterCardNumber = "1234567",
+                Password = "58b5444cf1b6253a4317fe12daff411a78bda0a95279b1d5768ebf5ca60829e78da944e8a9160a0b6d428cb213e813525a72650dac67b88879394ff624da482f"
+                });
             
             Delete.FromTable("UserRoles").Row(new {
                 UserId = 1,
@@ -198,7 +199,8 @@ namespace Watan.Migrations
                 HouseNumber = "1",
                 NationalIdNumber = "123456789123456789",
                 ResidenceCardNumber = "12345",
-                VoterCardNumber = "1234567"
+                VoterCardNumber = "1234567",
+                Password = "58b5444cf1b6253a4317fe12daff411a78bda0a95279b1d5768ebf5ca60829e78da944e8a9160a0b6d428cb213e813525a72650dac67b88879394ff624da482f"
             });
 
             Insert.IntoTable("UserRoles").Row(new {
