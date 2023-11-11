@@ -37,12 +37,12 @@ public class UserRepository : IUserRepository
         return id;
     }
 
-    public async Task<UserDto?> FindByCredentials(string email, string password)
+    public async Task<UserDto?> FindByCredentials(string phonenumber, string password)
     {
         const string query = UserQuery.UserByCredentialsQuery;
         using var connection = _context.CreateConnection();
         var user = await connection.QuerySingleOrDefaultAsync<UserDto>(query,
-            new { Email = email, Password = password });
+            new { PhoneNumber = phonenumber, Password = password });
         return user;
     }
 

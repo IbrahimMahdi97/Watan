@@ -28,5 +28,5 @@ public static class UserQuery
         @"SELECT * FROM Users WHERE Id = @id";
     
     public const string UserByCredentialsQuery =
-        @"SELECT * FROM Users WHERE Email = @email AND Password = @Password";
+        @"SELECT * FROM Users WHERE PhoneNumber = @phonenumber AND Password = @Password";
 }
