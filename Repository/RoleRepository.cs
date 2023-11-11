@@ -1,6 +1,8 @@
+using Dapper;
 using Entities.Models;
 using Interfaces;
 using Microsoft.Extensions.Configuration;
+using Repository.Query;
 
 namespace Repository;
 
@@ -15,9 +17,12 @@ internal sealed class RoleRepository : IRoleRepository
         _context = context;
     }
 
-    public Task<IEnumerable<Role>> GetUserRoles(int id)
+    public async Task<IEnumerable<Role>> GetUserRoles(int id)
     {
-        throw new NotImplementedException();
+        const string query = RoleQuery.UserRolesByIdQuery;
+        using var connection = _context.CreateConnection();
+        var roles = await connection.QueryAsync<Role>(query, new { Id = id });
+        return roles;
     }
 
     public Task<UserRole> GetRole(string description)
