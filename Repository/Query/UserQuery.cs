@@ -22,7 +22,7 @@ public static class UserQuery
         @"UPDATE Users SET RefreshToken = @refreshToken, RefreshTokenExpiryTime = @refreshTokenExpiryTime WHERE Id = @id;";
     
     public const string UserIdByPhoneQuery =
-        @"SELECT Id FROM Users WHERE Email = @phonenumber";
+        @"SELECT Id FROM Users WHERE PhoneNumber = @phonenumber";
     
     public const string UserByIdQuery =
         @"SELECT * FROM Users WHERE Id = @id";

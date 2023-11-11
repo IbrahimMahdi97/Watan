@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
-using Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Service.Interface;
 using Shared.DataTransferObjects;
 using Shared.Helpers;
 
-namespace Watan.Presentation.Controllers;
+namespace WatanPresentation.Controllers;
 
 [Route("api/users")]
 [ApiController]

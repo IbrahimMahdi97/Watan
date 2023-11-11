@@ -30,7 +30,7 @@ internal sealed class UserService : IUserService
 
         if (result <= 0)
             if (userForCreationDto.PhoneNumber != null)
-                throw new UserEmailAlreadyExistsBadRequestException(userForCreationDto.PhoneNumber);
+                throw new UserPhoneNumberAlreadyExistsBadRequestException(userForCreationDto.PhoneNumber);
 
         await _repository.User.AddUserRoles(userForCreationDto.Roles, result);
 

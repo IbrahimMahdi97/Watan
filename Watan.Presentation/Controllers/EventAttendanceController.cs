@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 
-namespace Watan.Presentation.Controllers;
+namespace WatanPresentation.Controllers;
 
 [Route("api/event_attendance")]
 [ApiController]

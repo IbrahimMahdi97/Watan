@@ -2,8 +2,8 @@ namespace Entities.Exceptions;
 
 public class InvalidCredentialsUnauthorizedException : UnauthorizedException
 {
-    public InvalidCredentialsUnauthorizedException(string email)
-        : base($"Invalid credentials for email : {email}.")
+    public InvalidCredentialsUnauthorizedException(string phoneNumber)
+        : base($"Invalid credentials for phone number : {phoneNumber}.")
     {
     }
 }

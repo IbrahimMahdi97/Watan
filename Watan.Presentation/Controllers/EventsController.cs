@@ -1,7 +1,7 @@
-using Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Service.Interface;
 
-namespace Watan.Presentation.Controllers;
+namespace WatanPresentation.Controllers;
 
 [Route("api/events")]
 [ApiController]
