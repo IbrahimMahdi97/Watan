@@ -46,7 +46,7 @@ namespace Watan.Migrations
                 .WithColumn("LinkedInAccount").AsString(int.MaxValue).Nullable()
                 .WithColumn("ProvinceId").AsInt32().NotNullable()
                 .WithColumn("TownId").AsInt32().NotNullable()
-                .WithColumn("Distinct").AsString(50).NotNullable()
+                .WithColumn("District").AsString(50).NotNullable()
                 .WithColumn("StreetNumber").AsString(50).NotNullable()
                 .WithColumn("HouseNumber").AsString(50).NotNullable()
                 .WithColumn("NationalIdNumber").AsString(50).NotNullable()

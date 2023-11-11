@@ -17,7 +17,7 @@ public class User
     public string? LinkedInAccount { get; set; }
     public int ProvinceId { get; set; }
     public int TownId { get; set; }
-    public string? Distinct { get; set; }
+    public string? District { get; set; }
     public string? StreetNumber { get; set; }
     public string? HouseNumber { get; set; }
     public string? NationalIdNumber { get; set; }
