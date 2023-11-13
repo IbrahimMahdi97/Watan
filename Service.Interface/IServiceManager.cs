@@ -3,4 +3,5 @@
 public interface IServiceManager
 {
     IUserService UserService { get; }
+    IPostService PostService { get; }
 }
