@@ -1,3 +1,4 @@
+using System.Data;
 using Dapper;
 using Entities.Models;
 using Interfaces;
@@ -30,19 +31,19 @@ public class PostRepository : IPostRepository
         return post;
     }
 
-    public async Task<int> CreatePost(PostForManipulationDto postDto, int userId)
+    public async Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId)
     {
         const string query = PostQuery.InsertPostQuery;
         var param = new DynamicParameters(postDto);
         param.Add("AddedByUserId", userId);
         param.Add("RecordDate", DateTime.Now);
-        using var connection = _context.CreateConnection();
+        var connection = _context.CreateConnection();
         connection.Open();
 
-        using var trans = connection.BeginTransaction();
+        var trans = connection.BeginTransaction();
         var id = await connection.QuerySingleAsync<int>(query, param, transaction: trans);
-        trans.Commit();
-        return id;
+
+        return (id, connection, trans);
     }
 
     public async Task UpdatePost(int id, PostForManipulationDto postDto)

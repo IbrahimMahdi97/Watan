@@ -1,3 +1,4 @@
+using System.Data;
 using Dapper;
 using Interfaces;
 using Repository.Query;
@@ -8,12 +9,12 @@ namespace Repository;
 public class EventRepository : IEventRepository
 {
     private readonly DapperContext _context;
-    
+
     public EventRepository(DapperContext context)
     {
         _context = context;
     }
-    
+
     public async Task<IEnumerable<EventWithPostDto>> GetAllEvents()
     {
         const string query = EventQuery.AllEventsQuery;
@@ -30,42 +31,18 @@ public class EventRepository : IEventRepository
         return eventDetails;
     }
 
-    public async Task<int> Create(EventWithPostDto eventDto, int userId)
+    public async Task<int> Create(EventWithPostDto eventDto, int postId, IDbConnection connection, IDbTransaction transaction)
     {
-        const string insertPostQuery = PostQuery.InsertPostQuery;
-        var postParams = new DynamicParameters(eventDto.PostDetails);
-        postParams.Add("AddedByUserId", userId);
-        postParams.Add("RecordDate", DateTime.Now);
-
         const string insertEventQuery = EventQuery.InsertEvent;
         var eventParams = new DynamicParameters(eventDto);
         eventParams.Add("Date", DateTime.Now);
+        eventParams.Add("PostId", postId);
 
-        using var connection = _context.CreateConnection();
-        connection.Open();
+        await connection.ExecuteAsync(insertEventQuery, eventParams, transaction: transaction);
 
-        using var trans = connection.BeginTransaction();
-    
-        try
-        {
-            var postId = await connection.ExecuteScalarAsync<int>(insertPostQuery, postParams, transaction: trans);
-            if (postId <= 0)
-            {
-                trans.Rollback();
-                return 0;
-            }
-
-            eventParams.Add("PostId", postId);
-            await connection.ExecuteScalarAsync(insertEventQuery, eventParams, transaction: trans);
-
-            trans.Commit();
-            return postId;
-        }
-        catch (Exception ex)
-        {
-            trans.Rollback();
-            throw;
-        }
+        transaction.Commit();
+        connection.Close();
+        return postId;
     }
 
     public async Task Update(int id, EventForManiupulationDto eventDto)
