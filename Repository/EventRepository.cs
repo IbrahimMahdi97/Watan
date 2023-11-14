@@ -19,7 +19,24 @@ public class EventRepository : IEventRepository
     {
         const string query = EventQuery.AllEventsQuery;
         using var connection = _context.CreateConnection();
-        var events = await connection.QueryAsync<EventWithPostDto>(query);
+        var events = await connection.QueryAsync<EventForManiupulationDto, PostForManipulationDto, EventWithPostDto>(
+            query,
+            (eventDetails, postDetails) =>
+            {
+                var eventWithPost = new EventWithPostDto
+                {
+                    Type = eventDetails.Type,
+                    ProvinceId = eventDetails.ProvinceId,
+                    TownId = eventDetails.TownId,
+                    StartTime = eventDetails.StartTime,
+                    EndTime = eventDetails.EndTime,
+                    LocationUrl = eventDetails.LocationUrl,
+                    PostDetails = postDetails
+                };
+                return eventWithPost;
+            },
+            splitOn: "Id"
+        );
         return events.ToList();
     }
 
