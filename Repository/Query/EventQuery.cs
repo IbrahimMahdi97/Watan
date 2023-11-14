@@ -2,7 +2,10 @@ namespace Repository.Query;
 
 public static class EventQuery
 {
-    public const string AllEventsQuery = @"SELECT * FROM EventDetails;";
+    public const string AllEventsQuery = @"SELECT * FROM EventDetails 
+                                        INNER JOIN Posts ON (EventDetails.PostId = Posts.Id) 
+                                        WHERE Posts.IsDeleted=0";
+    
     public const string EventByIdQuery = @"SELECT * FROM EventDetails WHERE PostId = @Id";
 
     public const string InsertEvent = @"INSERT INTO EventDetails (PostId, Type, ProvinceId, TownId, Date, StartTime, EndTime, LocationUrl)

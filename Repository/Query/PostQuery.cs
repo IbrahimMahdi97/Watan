@@ -2,7 +2,7 @@ namespace Repository.Query;
 
 public static class PostQuery
 {
-    public const string AllPostsQuery = @"SELECT * FROM Posts;";
+    public const string AllPostsQuery = @"SELECT * FROM Posts WHERE IsDeleted=0 AND TypeId = @TypeId";
     
     public const string PostById = @"SELECT * FROM Posts WHERE Id = @id";
     
