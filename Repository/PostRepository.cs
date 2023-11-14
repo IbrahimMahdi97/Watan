@@ -33,7 +33,7 @@ public class PostRepository : IPostRepository
 
     public async Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId, string postType)
     {
-        const string prefixQuery = PostQuery.PostTypeIdQuery;
+        const string prefixQuery = PostTypeQuery.PostTypeIdByPrefixQuery;
         var prefixParam = new DynamicParameters();
         prefixParam.Add("Prefix", postType);
         const string query = PostQuery.InsertPostQuery;
