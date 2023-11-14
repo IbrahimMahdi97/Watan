@@ -17,4 +17,6 @@ public static class PostQuery
                                             WHERE Id = @Id;";
 
     public const string DeletePostQuery = @"Update Posts Set IsDeleted=1";
+
+    public const string PostTypeIdQuery = @"SELECT Id FROM PostTypes WHERE Prefix=@Prefix";
 }

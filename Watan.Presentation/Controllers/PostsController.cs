@@ -35,7 +35,7 @@ public class PostsController : ControllerBase
     public async Task<ActionResult<Post>> CreatePost(PostForManipulationDto postDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
-        var plan = await _service.PostService.CreatePost(postDto, userId);
+        var plan = await _service.PostService.CreatePost(postDto, userId, "NWS");
         return Ok(plan);
     }
     

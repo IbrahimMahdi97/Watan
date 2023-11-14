@@ -31,8 +31,11 @@ public class PostRepository : IPostRepository
         return post;
     }
 
-    public async Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId)
+    public async Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId, string postType)
     {
+        const string prefixQuery = PostQuery.PostTypeIdQuery;
+        var prefixParam = new DynamicParameters();
+        prefixParam.Add("Prefix", postType);
         const string query = PostQuery.InsertPostQuery;
         var param = new DynamicParameters(postDto);
         param.Add("AddedByUserId", userId);
@@ -41,6 +44,8 @@ public class PostRepository : IPostRepository
         connection.Open();
 
         var trans = connection.BeginTransaction();
+        var typeId = await connection.QuerySingleAsync<int>(prefixQuery, prefixParam, transaction: trans);
+        param.Add("TypeId", typeId);
         var id = await connection.QuerySingleAsync<int>(query, param, transaction: trans);
 
         return (id, connection, trans);

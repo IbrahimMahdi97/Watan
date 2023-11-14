@@ -8,7 +8,7 @@ public interface IPostRepository
 {
     Task<IEnumerable<Post>> GetAllPosts();
     Task<PostDto> GetPostById(int id);
-    Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId);
+    Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId, string postType);
     Task UpdatePost(int id, PostForManipulationDto postDto);
     Task DeletePost(int id);
 }

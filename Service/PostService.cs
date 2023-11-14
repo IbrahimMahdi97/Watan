@@ -30,9 +30,9 @@ internal sealed class PostService : IPostService
         return post;
     }
 
-    public async Task<int> CreatePost(PostForManipulationDto postDto, int userId)
+    public async Task<int> CreatePost(PostForManipulationDto postDto, int userId, string postType)
     {
-        var (result, connection, transaction) = await _repository.Post.CreatePost(postDto, userId);
+        var (result, connection, transaction) = await _repository.Post.CreatePost(postDto, userId, postType);
         
         //boolean flag can be added to move these lines into repo
         transaction.Commit();
