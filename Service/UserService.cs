@@ -14,13 +14,15 @@ namespace Service;
 
 internal sealed class UserService : IUserService
 {
-    
     private readonly IRepositoryManager _repository;
+    private readonly IFileStorageService _fileStorageService;
     private readonly IConfiguration _configuration;
 
-    public UserService(IRepositoryManager repository, IConfiguration configuration)
+    public UserService(IRepositoryManager repository, IFileStorageService fileStorageService,
+        IConfiguration configuration)
     {
         _repository = repository;
+        _fileStorageService = fileStorageService;
         _configuration = configuration;
     }
 
@@ -34,9 +36,13 @@ internal sealed class UserService : IUserService
 
         await _repository.User.AddUserRoles(userForCreationDto.Roles, result);
 
+        if (userForCreationDto.UserImage is not null)
+            await _fileStorageService.CopyFileToServer(result,
+                _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
+
         return result;
     }
-    
+
     public async Task<UserDto> ValidateUser(UserForAuthenticationDto userForAuth)
     {
         var user = await CheckIfUserExists(userForAuth);
@@ -54,11 +60,17 @@ internal sealed class UserService : IUserService
     {
         var user = await GetUserAndCheckIfItExists(id);
         user.Roles = await _repository.User.GetUserRoles(user.Id);
-            
+
+        var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
+            _configuration["UserImagesSetStorageUrl"]!,
+            _configuration["UserImagesGetStorageUrl"]!).ToList();
+
+        user.ImageUrl = images.Any() ? images.First() : "";
+
         user.RefreshToken = string.Empty;
         return user;
     }
-    
+
     private async Task<UserDto> GetUserAndCheckIfItExists(int id)
     {
         var user = await _repository.User.FindById(id);
@@ -66,7 +78,7 @@ internal sealed class UserService : IUserService
 
         return user;
     }
-    
+
     private async Task<UserDto> CheckIfUserExists(UserForAuthenticationDto dto)
     {
         var id = await _repository.User.FindIdByPhone(dto.PhoneNumber);
@@ -76,7 +88,7 @@ internal sealed class UserService : IUserService
         if (user is null) throw new InvalidCredentialsUnauthorizedException(dto.PhoneNumber);
         return user;
     }
-    
+
     private SigningCredentials GetSigningCredentials()
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -85,13 +97,13 @@ internal sealed class UserService : IUserService
 
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
-    
+
     private async Task<List<Claim>> GetClaims(UserDto user)
     {
         var claims = new List<Claim>
         {
             new(ClaimTypes.MobilePhone, user.PhoneNumber!),
-            
+
             new(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
 
@@ -100,7 +112,7 @@ internal sealed class UserService : IUserService
 
         return claims;
     }
-    
+
     private JwtSecurityToken GenerateTokenOptions
         (SigningCredentials signingCredentials, IEnumerable<Claim> claims)
     {
@@ -115,6 +127,7 @@ internal sealed class UserService : IUserService
 
         return tokenOptions;
     }
+
     private static string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
@@ -122,6 +135,7 @@ internal sealed class UserService : IUserService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
+
     private async Task<TokenDto> CreateToken(UserDto user, bool populateExp)
     {
         var signingCredentials = GetSigningCredentials();
@@ -139,6 +153,4 @@ internal sealed class UserService : IUserService
             RefreshToken = refreshToken
         };
     }
-
-    
 }

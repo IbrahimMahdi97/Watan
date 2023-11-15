@@ -32,7 +32,7 @@ public class EventsController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPost("create")]
-    public async Task<ActionResult<EventDetails>> Create(EventWithPostDto eventDto)
+    public async Task<ActionResult<EventDetails>> Create([FromForm] EventWithPostDto eventDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var eventDetails = await _service.EventService.Create(eventDto, userId);
@@ -41,7 +41,7 @@ public class EventsController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Update(int id, EventForManiupulationDto eventDto)
+    public async Task<ActionResult> Update(int id, [FromForm] EventForManiupulationDto eventDto)
     {
         await _service.EventService.Update(id, eventDto);
         return NoContent();

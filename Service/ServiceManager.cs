@@ -7,7 +7,6 @@ namespace Service;
 public class ServiceManager : IServiceManager
 {
     private readonly Lazy<IUserService> _userService;
-    private readonly Lazy<IRoleRepository> _roleRepository;
     private readonly Lazy<IPostService> _postService;
     private readonly Lazy<IEventService> _eventService;
     private readonly Lazy<IComplaintService> _complaintService;
@@ -15,18 +14,20 @@ public class ServiceManager : IServiceManager
 
     public ServiceManager(IRepositoryManager repositoryManager, IConfiguration configuration)
     {
+        Lazy<IFileStorageService> fileStorageService = new(() =>
+            new FileStorageService());
+        
         _userService = new Lazy<IUserService>(() => 
-            new UserService(repositoryManager, configuration));
+            new UserService(repositoryManager, fileStorageService.Value, configuration));
         _postService = new Lazy<IPostService>(() =>
-            new PostService(repositoryManager, configuration));
+            new PostService(repositoryManager, fileStorageService.Value, configuration));
         _eventService = new Lazy<IEventService>(() =>
-            new EventService(repositoryManager, configuration));
+            new EventService(repositoryManager, fileStorageService.Value, configuration));
         _complaintService = new Lazy<IComplaintService>(() =>
             new ComplaintService(repositoryManager, configuration));
     }
 
     public IUserService UserService => _userService.Value;
-    public IRoleRepository Role => _roleRepository.Value;
     public IPostService PostService => _postService.Value;
     public IEventService EventService => _eventService.Value;
     public IComplaintService ComplaintService => _complaintService.Value;

@@ -15,7 +15,7 @@ public class UsersController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPost]
-    public async Task<IActionResult> CreateUser([FromBody] UserForCreationDto userForCreationDto)
+    public async Task<IActionResult> CreateUser([FromForm] UserForCreationDto userForCreationDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var id = await _service.UserService.CreateUser(userForCreationDto, userId);

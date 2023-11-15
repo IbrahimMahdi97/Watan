@@ -1,6 +1,5 @@
 using System.Data;
 using Dapper;
-using Entities.Models;
 using Interfaces;
 using Repository.Query;
 using Shared.DataTransferObjects;
@@ -15,11 +14,11 @@ public class PostRepository : IPostRepository
     {
         _context = context;
     }
-    public async Task<IEnumerable<Post>> GetAllPosts()
+    public async Task<IEnumerable<PostDto>> GetAllPosts()
     {
         const string query = PostQuery.AllPostsQuery;
         using var connection = _context.CreateConnection();
-        var posts = await connection.QueryAsync<Post>(query);
+        var posts = await connection.QueryAsync<PostDto>(query);
         return posts.ToList();
     }
 

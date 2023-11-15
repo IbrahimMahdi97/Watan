@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace Shared.DataTransferObjects;
 
 public class EventForManiupulationDto

@@ -8,11 +8,13 @@ namespace Service;
 internal sealed class EventService : IEventService
 {
     private readonly IRepositoryManager _repository;
+    private readonly IFileStorageService _fileStorageService;
     private readonly IConfiguration _configuration;
 
-    public EventService(IRepositoryManager repository, IConfiguration configuration)
+    public EventService(IRepositoryManager repository, IFileStorageService fileStorageService, IConfiguration configuration)
     {
         _repository = repository;
+        _fileStorageService = fileStorageService;
         _configuration = configuration;
     }
 
@@ -33,12 +35,17 @@ internal sealed class EventService : IEventService
     {
         var (postId, connection, transaction) = await _repository.Post.CreatePost(eventDto.PostDetails, userId, "EVT");
         await _repository.Event.Create(eventDto, postId, connection, transaction);
+        
+        if (eventDto.PostDetails.PostImage is not null)
+            await _fileStorageService.CopyFileToServer(postId,
+                _configuration["PostImagesSetStorageUrl"]!, eventDto.PostDetails.PostImage);
 
         return postId;
     }
 
     public async Task Update(int id, EventForManiupulationDto eventDto)
     {
+        //Todo: what about update title and description ?? and then image ?
         await _repository.Event.Update(id, eventDto);
     }
 }
