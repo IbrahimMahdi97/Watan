@@ -14,4 +14,5 @@ public class UserDto
     public DateTime RefreshTokenExpiryTime { get; set; }
     public string AccessToken { get; set; } = string.Empty;
     public string RefreshToken { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
 }

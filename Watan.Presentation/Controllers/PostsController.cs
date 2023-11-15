@@ -32,7 +32,7 @@ public class PostsController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPost("create")]
-    public async Task<ActionResult<Post>> CreatePost(PostForManipulationDto postDto)
+    public async Task<ActionResult<Post>> CreatePost([FromForm] PostForManipulationDto postDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var plan = await _service.PostService.CreatePost(postDto, userId, "NWS");
@@ -41,7 +41,7 @@ public class PostsController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdatePost(int id, PostForManipulationDto postDto)
+    public async Task<ActionResult> UpdatePost(int id, [FromForm] PostForManipulationDto postDto)
     {
         await _service.PostService.UpdatePost(id, postDto);
         return NoContent();
