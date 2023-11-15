@@ -17,8 +17,17 @@ public class PostRepository : IPostRepository
     public async Task<IEnumerable<PostDto>> GetAllPosts()
     {
         const string query = PostQuery.AllPostsQuery;
+        var param = new DynamicParameters();
+        const string prefixQuery = PostTypeQuery.PostTypeIdByPrefixQuery;
+        var prefixParam = new DynamicParameters();
+        prefixParam.Add("Prefix", "NWS");
         using var connection = _context.CreateConnection();
-        var posts = await connection.QueryAsync<PostDto>(query);
+        connection.Open();
+
+        var trans = connection.BeginTransaction();
+        var typeId = await connection.QuerySingleAsync<int>(prefixQuery, prefixParam, trans);
+        param.Add("TypeId", typeId);
+        var posts = await connection.QueryAsync<PostDto>(query, param, trans);
         return posts.ToList();
     }
 
