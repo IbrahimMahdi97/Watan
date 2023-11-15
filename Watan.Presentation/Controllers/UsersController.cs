@@ -25,6 +25,7 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Authenticate([FromBody] UserForAuthenticationDto user)
     {
+        //TODO: accept login from email & password too
         var userDto = await _service.UserService.ValidateUser(user);
         return Ok(userDto);
     }
