@@ -21,12 +21,12 @@ public static class UserQuery
     public const string UpdateRefreshTokenByIdQuery =
         @"UPDATE Users SET RefreshToken = @refreshToken, RefreshTokenExpiryTime = @refreshTokenExpiryTime WHERE Id = @id;";
     
-    public const string UserIdByPhoneQuery =
-        @"SELECT Id FROM Users WHERE PhoneNumber = @phonenumber";
+    public const string UserIdByEmailOrPhoneNumberQuery =
+        @"SELECT Id FROM Users WHERE Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ";
     
     public const string UserByIdQuery =
         @"SELECT * FROM Users WHERE Id = @id";
     
-    public const string UserByCredentialsQuery =
-        @"SELECT * FROM Users WHERE PhoneNumber = @phonenumber AND Password = @Password";
+    public const string UserByCredentialsEmailOrPhoneNumberQuery = 
+        @"SELECT * FROM Users WHERE ( Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ) AND Password = @Password";
 }

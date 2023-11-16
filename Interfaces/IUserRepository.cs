@@ -4,8 +4,8 @@ namespace Interfaces;
 
 public interface IUserRepository
 {
-    Task<UserDto?> FindByCredentials(string phonenumber, string password);
-    Task<int> FindIdByPhone(string phonenumber);
+    Task<UserDto?> FindByCredentialsEmailOrPhoneNumber(string emailOrPhoneNumber, string password);
+    Task<int> FindIdByEmailOrPhoneNumber(string emailOrPhoneNumber);
     Task<UserDto?> FindById(int id);
     Task<int> CreateUser(UserForCreationDto userForCreationDto);
     Task AddUserRoles(List<UserRoleForCreation> userRoles, int id);

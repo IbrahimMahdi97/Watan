@@ -81,14 +81,21 @@ internal sealed class UserService : IUserService
 
     private async Task<UserDto> CheckIfUserExists(UserForAuthenticationDto dto)
     {
-        var id = await _repository.User.FindIdByPhone(dto.PhoneNumber);
-        if (id == 0) throw new InvalidCredentialsUnauthorizedException(dto.PhoneNumber);
+        var id = await _repository.User.FindIdByEmailOrPhoneNumber(dto.EmailOrPhoneNumber);
+        if (id == 0) throw new InvalidCredentialsEmailOrPhoneNumberUnauthorizedException(dto.EmailOrPhoneNumber);
 
-        var user = await _repository.User.FindByCredentials(dto.PhoneNumber, (dto.Password + id).ToSha512());
-        if (user is null) throw new InvalidCredentialsUnauthorizedException(dto.PhoneNumber);
+        var user = await _repository.User.FindByCredentialsEmailOrPhoneNumber(dto.EmailOrPhoneNumber, (dto.Password + id).ToSha512());
+        if (user is null) throw new InvalidCredentialsEmailOrPhoneNumberUnauthorizedException(dto.EmailOrPhoneNumber);
+
+        var tokens = await CreateToken(user, true);
+        user.AccessToken = tokens.AccessToken;
+        user.RefreshToken = tokens.RefreshToken;
+
+        user.Roles = await _repository.User.GetUserRoles(user.Id);
+
         return user;
     }
-
+    
     private SigningCredentials GetSigningCredentials()
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
