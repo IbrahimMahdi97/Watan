@@ -21,13 +21,32 @@ internal sealed class EventService : IEventService
     public async Task<IEnumerable<EventWithPostDto>> GetAllEvents()
     {
         var events = await _repository.Event.GetAllEvents();
-        return events;
+        var eventWithPostDtos = events.ToList();
+        foreach (var eventDetails in eventWithPostDtos)
+        {
+            if (eventDetails.PostDetails != null)
+            {
+                var images = _fileStorageService.GetFilesUrlsFromServer(
+                    eventDetails.PostDetails.Id,
+                    _configuration["PostImagesSetStorageUrl"]!,
+                    _configuration["PostImagesGetStorageUrl"]!
+                ).ToList();
+
+                eventDetails.PostDetails.ImageUrl = images.Any() ? images.First() : string.Empty;
+            }
+        }
+        return eventWithPostDtos;
     }
 
     public async Task<EventWithPostDto> GetEventById(int id)
     {
         var eventDetails = await _repository.Event.GetEventById(id);
         eventDetails.PostDetails = await _repository.Post.GetPostById(id);
+        var images = _fileStorageService.GetFilesUrlsFromServer(eventDetails.PostDetails.Id,
+            _configuration["PostImagesSetStorageUrl"]!,
+            _configuration["PostImagesGetStorageUrl"]!).ToList();
+
+        eventDetails.PostDetails.ImageUrl = images.Any() ? images.First() : "";
         return eventDetails;
     }
 
