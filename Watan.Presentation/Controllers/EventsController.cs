@@ -41,9 +41,17 @@ public class EventsController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Update(int id, [FromForm] EventForManiupulationDto eventDto)
+    public async Task<ActionResult> Update(int id, [FromForm] EventWithPostForCreationDto eventDto)
     {
         await _service.EventService.Update(id, eventDto);
+        return NoContent();
+    }
+    
+    [Authorize(Roles = "admin")]
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        await _service.PostService.DeletePost(id);
         return NoContent();
     }
 }

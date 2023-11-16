@@ -62,9 +62,9 @@ internal sealed class EventService : IEventService
         return postId;
     }
 
-    public async Task Update(int id, EventForManiupulationDto eventDto)
+    public async Task Update(int id, EventWithPostForCreationDto eventDto)
     {
-        //Todo: what about update title and description ?? and then image ?
+        await _repository.Post.UpdatePost(id, eventDto.PostDetails);
         await _repository.Event.Update(id, eventDto);
     }
 }

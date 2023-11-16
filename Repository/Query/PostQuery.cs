@@ -12,8 +12,7 @@ public static class PostQuery
     
     public const string UpdatePostQuery = @"UPDATE Posts SET 
                                             Title = @Title,
-                                            Description = @Description,
-                                            TypeId = @TypeId 
+                                            Description = @Description 
                                             WHERE Id = @Id;";
 
     public const string DeletePostQuery = @"Update Posts Set IsDeleted=1";

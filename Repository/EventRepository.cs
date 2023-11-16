@@ -62,7 +62,7 @@ public class EventRepository : IEventRepository
         return postId;
     }
 
-    public async Task Update(int id, EventForManiupulationDto eventDto)
+    public async Task Update(int id, EventWithPostForCreationDto eventDto)
     {
         const string query = EventQuery.UpdateEventQuery;
         var param = new DynamicParameters(eventDto);
