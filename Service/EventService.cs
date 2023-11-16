@@ -31,7 +31,7 @@ internal sealed class EventService : IEventService
         return eventDetails;
     }
 
-    public async Task<int> Create(EventWithPostDto eventDto, int userId)
+    public async Task<int> Create(EventWithPostForCreationDto eventDto, int userId)
     {
         var (postId, connection, transaction) = await _repository.Post.CreatePost(eventDto.PostDetails, userId, "EVT");
         await _repository.Event.Create(eventDto, postId, connection, transaction);

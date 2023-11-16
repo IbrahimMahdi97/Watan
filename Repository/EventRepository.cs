@@ -19,7 +19,7 @@ public class EventRepository : IEventRepository
     {
         const string query = EventQuery.AllEventsQuery;
         using var connection = _context.CreateConnection();
-        var events = await connection.QueryAsync<EventForManiupulationDto, PostForManipulationDto, EventWithPostDto>(
+        var events = await connection.QueryAsync<EventForManiupulationDto, PostDto, EventWithPostDto>(
             query,
             (eventDetails, postDetails) =>
             {
@@ -48,7 +48,7 @@ public class EventRepository : IEventRepository
         return eventDetails;
     }
 
-    public async Task<int> Create(EventWithPostDto eventDto, int postId, IDbConnection connection, IDbTransaction transaction)
+    public async Task<int> Create(EventWithPostForCreationDto eventDto, int postId, IDbConnection connection, IDbTransaction transaction)
     {
         const string insertEventQuery = EventQuery.InsertEvent;
         var eventParams = new DynamicParameters(eventDto);

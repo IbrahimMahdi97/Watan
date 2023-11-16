@@ -32,7 +32,7 @@ public class EventsController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPost("create")]
-    public async Task<ActionResult<EventDetails>> Create([FromForm] EventWithPostDto eventDto)
+    public async Task<ActionResult<EventDetails>> Create([FromForm] EventWithPostForCreationDto eventDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var eventDetails = await _service.EventService.Create(eventDto, userId);
