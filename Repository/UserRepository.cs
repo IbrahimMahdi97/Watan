@@ -37,37 +37,20 @@ public class UserRepository : IUserRepository
         return id;
     }
 
-    public async Task<UserDto?> FindByCredentials(string phonenumber, string password)
+    public async Task<UserDto?> FindByCredentialsEmailOrPhoneNumber(string emailOrPhoneNumber, string password)
     {
-        const string query = UserQuery.UserByCredentialsQuery;
+        const string query = UserQuery.UserByCredentialsEmailOrPhoneNumberQuery;
         using var connection = _context.CreateConnection();
         var user = await connection.QuerySingleOrDefaultAsync<UserDto>(query,
-            new { PhoneNumber = phonenumber, Password = password });
+            new { EmailOrPhoneNumber = emailOrPhoneNumber, Password = password });
         return user;
     }
 
-    public async Task<UserDto?> FindByCredentialsEmail(string email, string password)
+    public async Task<int> FindIdByEmailOrPhoneNumber(string emailOrPhoneNumber)
     {
-        const string query = UserQuery.UserByCredentialsEmailQuery;
+        const string query = UserQuery.UserIdByEmailOrPhoneNumberQuery;
         using var connection = _context.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<UserDto>(query,
-            new { Email = email, Password = password });
-        return user;
-    }
-
-    public async Task<int> FindIdByPhone(string phonenumber)
-    {
-        const string query = UserQuery.UserIdByPhoneQuery;
-        using var connection = _context.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<int>(query, new { PhoneNumber = phonenumber });
-        return user;
-    }
-
-    public async Task<int> FindIdByEmail(string email)
-    {
-        const string query = UserQuery.UserIdByEmailQuery;
-        using var connection = _context.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<int>(query, new { Email = email });
+        var user = await connection.QuerySingleOrDefaultAsync<int>(query, new { EmailOrPhoneNumber = emailOrPhoneNumber });
         return user;
     }
 
