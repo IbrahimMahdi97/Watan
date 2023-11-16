@@ -81,11 +81,45 @@ internal sealed class UserService : IUserService
 
     private async Task<UserDto> CheckIfUserExists(UserForAuthenticationDto dto)
     {
+        UserDto user;
+        if (!string.IsNullOrEmpty(dto.PhoneNumber))
+        {
+            user = await CheckIfUserExistsByPhone(dto);
+        }
+        else if (!string.IsNullOrEmpty(dto.Email))
+        {
+            user = await CheckIfUserExistsByEmail(dto);
+        }
+        else
+        {
+            throw new NoCredentialsUnauthorizedException();
+        }
+        var tokens = await CreateToken(user, true);
+        user.AccessToken = tokens.AccessToken;
+        user.RefreshToken = tokens.RefreshToken;
+
+        user.Roles = await _repository.User.GetUserRoles(user.Id);
+
+        return user;
+    }
+
+    private async Task<UserDto> CheckIfUserExistsByPhone(UserForAuthenticationDto dto)
+    {
         var id = await _repository.User.FindIdByPhone(dto.PhoneNumber);
         if (id == 0) throw new InvalidCredentialsUnauthorizedException(dto.PhoneNumber);
 
         var user = await _repository.User.FindByCredentials(dto.PhoneNumber, (dto.Password + id).ToSha512());
         if (user is null) throw new InvalidCredentialsUnauthorizedException(dto.PhoneNumber);
+        return user;
+    }
+
+    private async Task<UserDto> CheckIfUserExistsByEmail(UserForAuthenticationDto dto)
+    {
+        var id = await _repository.User.FindIdByEmail(dto.Email);
+        if (id == 0) throw new InvalidCredentialsEmailUnauthorizedException(dto.Email);
+
+        var user = await _repository.User.FindByCredentialsEmail(dto.Email, (dto.Password + id).ToSha512());
+        if (user is null) throw new InvalidCredentialsEmailUnauthorizedException(dto.Email);
         return user;
     }
 

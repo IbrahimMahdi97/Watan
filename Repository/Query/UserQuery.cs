@@ -23,10 +23,16 @@ public static class UserQuery
     
     public const string UserIdByPhoneQuery =
         @"SELECT Id FROM Users WHERE PhoneNumber = @phonenumber";
+
+    public const string UserIdByEmailQuery =
+        @"SELECT Id FROM Users WHERE Email = @email";
     
     public const string UserByIdQuery =
         @"SELECT * FROM Users WHERE Id = @id";
     
     public const string UserByCredentialsQuery =
         @"SELECT * FROM Users WHERE PhoneNumber = @phonenumber AND Password = @Password";
+    
+    public const string UserByCredentialsEmailQuery = 
+        @"SELECT * FROM Users WHERE Email = @email AND Password = @Password";
 }

@@ -46,6 +46,15 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task<UserDto?> FindByCredentialsEmail(string email, string password)
+    {
+        const string query = UserQuery.UserByCredentialsEmailQuery;
+        using var connection = _context.CreateConnection();
+        var user = await connection.QuerySingleOrDefaultAsync<UserDto>(query,
+            new { Email = email, Password = password });
+        return user;
+    }
+
     public async Task<int> FindIdByPhone(string phonenumber)
     {
         const string query = UserQuery.UserIdByPhoneQuery;
@@ -53,7 +62,15 @@ public class UserRepository : IUserRepository
         var user = await connection.QuerySingleOrDefaultAsync<int>(query, new { PhoneNumber = phonenumber });
         return user;
     }
-    
+
+    public async Task<int> FindIdByEmail(string email)
+    {
+        const string query = UserQuery.UserIdByEmailQuery;
+        using var connection = _context.CreateConnection();
+        var user = await connection.QuerySingleOrDefaultAsync<int>(query, new { Email = email });
+        return user;
+    }
+
     public async Task<UserDto?> FindById(int id)
     {
         const string query = UserQuery.UserByIdQuery;
