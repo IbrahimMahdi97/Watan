@@ -1,3 +1,4 @@
+using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
@@ -34,6 +35,15 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserDto>> GetUserById(int id)
     {
         var userDto = await _service.UserService.GetById(id);
+        return Ok(userDto);
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<ActionResult<UserDto>> GetUserDetails()
+    {
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var userDto = await _service.UserService.GetById(userId);
         return Ok(userDto);
     }
 }
