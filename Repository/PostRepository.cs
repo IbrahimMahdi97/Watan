@@ -47,7 +47,7 @@ public class PostRepository : IPostRepository
         const string query = PostQuery.InsertPostQuery;
         var param = new DynamicParameters(postDto);
         param.Add("AddedByUserId", userId);
-        param.Add("RecordDate", DateTime.Now);
+        param.Add("CreateDate", DateTime.Now);
         var connection = _context.CreateConnection();
         connection.Open();
 

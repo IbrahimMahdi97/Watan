@@ -8,7 +8,7 @@ public static class PostQuery
     
     public const string InsertPostQuery = @"INSERT INTO Posts (Title, Description, TypeId, AddedByUserId, RecordDate) 
                                             OUTPUT inserted.Id 
-                                            VALUES (@Title, @Description, @TypeId, @AddedByUserId, @RecordDate);";
+                                            VALUES (@Title, @Description, @TypeId, @AddedByUserId, @CreateDate);";
     
     public const string UpdatePostQuery = @"UPDATE Posts SET 
                                             Title = @Title,
