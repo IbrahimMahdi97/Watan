@@ -43,4 +43,10 @@ public class ComplaintService : IComplaintService
     {
         await _repository.Complaint.DeleteComplaint(id);
     }
+
+    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId)
+    {
+        var complaints = await _repository.Complaint.GetUserComplaints(userId);
+        return complaints;
+    }
 }

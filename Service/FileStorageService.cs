@@ -34,7 +34,8 @@ public class FileStorageService : IFileStorageService
 
     public IEnumerable<string> GetFilesUrlsFromServer(int entityId, string folderName, string? urlPrefix)
     {
-        if (!Directory.Exists(folderName)) return null;
+        if (!Directory.Exists(folderName))
+            return Enumerable.Empty<string>();
 
         var directory = new DirectoryInfo(folderName);
         var files = directory.GetFiles(entityId + " - *");

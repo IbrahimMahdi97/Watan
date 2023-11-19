@@ -63,4 +63,13 @@ public class ComplaintRepository : IComplaintRepository
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, new { Id = id });
     }
+
+    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId)
+    {
+        const string query = ComplaintQuery.GetComplaintsByUserId;
+        using var connection = _context.CreateConnection();
+        var complaints = await connection.QueryAsync<ComplaintDto>(query, 
+            new {UserId = userId});
+        return complaints.ToList();
+    }
 }

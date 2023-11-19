@@ -53,4 +53,13 @@ public class ComplaintsController : ControllerBase
         await _service.ComplaintService.DeleteComplaint(id);
         return NoContent();
     }
+
+    [Authorize]
+    [HttpGet("my_complaints")]
+    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetUserComplaints()
+    {
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var complaints = await _service.ComplaintService.GetUserComplaints(userId);
+        return Ok(complaints);
+    }
 }
