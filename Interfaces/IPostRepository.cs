@@ -1,5 +1,4 @@
 using System.Data;
-using Entities.Models;
 using Shared.DataTransferObjects;
 
 namespace Interfaces;

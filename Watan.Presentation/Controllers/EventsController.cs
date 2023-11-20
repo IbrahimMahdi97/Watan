@@ -1,9 +1,11 @@
+using System.Text.Json;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Shared.DataTransferObjects;
 using Shared.Helpers;
+using Shared.RequestFeatures;
 
 namespace WatanPresentation.Controllers;
 
@@ -16,9 +18,10 @@ public class EventsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EventWithPostDto>>> GetAllEvents()
+    public async Task<ActionResult<IEnumerable<EventWithPostDto>>> GetAllEvents([FromQuery] EventsParameters eventsParameters)
     {
-        var events = await _service.EventService.GetAllEvents();
+        var events = await _service.EventService.GetAllEvents(eventsParameters);
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.MetaData));
         return Ok(events);
     }
     
