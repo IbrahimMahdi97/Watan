@@ -143,7 +143,7 @@ internal sealed class UserService : IUserService
         return Convert.ToBase64String(randomNumber);
     }
 
-    private async Task<TokenDto> CreateToken(UserDto user, bool populateExp)
+    public async Task<TokenDto> CreateToken(UserDto user, bool populateExp)
     {
         var signingCredentials = GetSigningCredentials();
         var claims = await GetClaims(user);

@@ -46,4 +46,14 @@ public class UsersController : ControllerBase
         var userDto = await _service.UserService.GetById(userId);
         return Ok(userDto);
     }
+    
+    [Authorize]
+    [HttpPost("refresh_token")]
+    public async Task<TokenDto> RefreshToken()
+    {
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var userDto = await _service.UserService.GetById(userId);
+        var tokenDto = await _service.UserService.CreateToken(userDto, true);
+        return tokenDto;
+    }
 }
