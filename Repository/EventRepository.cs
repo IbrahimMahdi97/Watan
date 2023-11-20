@@ -44,7 +44,8 @@ public class EventRepository : IEventRepository
                 };
                 return eventWithPost;
             },
-            splitOn: "Id"
+            splitOn: "Id",
+            param: param
         );
         
         return new PagedList<EventWithPostDto>(events, count, eventsParameters.PageNumber, eventsParameters.PageSize);
