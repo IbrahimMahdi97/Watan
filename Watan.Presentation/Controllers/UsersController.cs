@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
     
     [Authorize]
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<UserDto>> GetUserById(int id)
+    public async Task<ActionResult<UserDetailsDto>> GetUserById(int id)
     {
         var userDto = await _service.UserService.GetById(id);
         return Ok(userDto);
@@ -40,20 +40,20 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpGet("me")]
-    public async Task<ActionResult<UserDto>> GetUserDetails()
+    public async Task<ActionResult<UserDetailsDto>> GetUserDetails()
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var userDto = await _service.UserService.GetById(userId);
         return Ok(userDto);
     }
     
-    [Authorize]
-    [HttpPost("refresh_token")]
-    public async Task<TokenDto> RefreshToken()
-    {
-        var userId = User.RetrieveUserIdFromPrincipal();
-        var userDto = await _service.UserService.GetById(userId);
-        var tokenDto = await _service.UserService.CreateToken(userDto, true);
-        return tokenDto;
-    }
+    // [Authorize]
+    // [HttpPost("refresh_token")]
+    // public async Task<TokenDto> RefreshToken()
+    // {
+    //     var userId = User.RetrieveUserIdFromPrincipal();
+    //     var userDto = await _service.UserService.GetById(userId);
+    //     var tokenDto = await _service.UserService.CreateToken(userDto, true);
+    //     return tokenDto;
+    // }
 }

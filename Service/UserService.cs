@@ -35,6 +35,7 @@ internal sealed class UserService : IUserService
                 throw new UserPhoneNumberAlreadyExistsBadRequestException(userForCreationDto.PhoneNumber);
 
         await _repository.User.AddUserRoles(userForCreationDto.Roles, result);
+        await _repository.User.AddUserRegion(userForCreationDto.UserRegion, result);
 
         if (userForCreationDto.UserImage is not null)
             await _fileStorageService.CopyFileToServer(result,
@@ -56,22 +57,21 @@ internal sealed class UserService : IUserService
         return user;
     }
 
-    public async Task<UserDto> GetById(int id)
+    public async Task<UserDetailsDto> GetById(int id)
     {
         var user = await GetUserAndCheckIfItExists(id);
         user.Roles = await _repository.User.GetUserRoles(user.Id);
+        user.Regions = await _repository.User.GetUserRegions(user.Id);
 
         var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
             _configuration["UserImagesSetStorageUrl"]!,
             _configuration["UserImagesGetStorageUrl"]!).ToList();
 
         user.ImageUrl = images.Any() ? images.First() : "";
-
-        user.RefreshToken = string.Empty;
         return user;
     }
 
-    private async Task<UserDto> GetUserAndCheckIfItExists(int id)
+    private async Task<UserDetailsDto> GetUserAndCheckIfItExists(int id)
     {
         var user = await _repository.User.FindById(id);
         if (user is null) throw new UserNotFoundException(id);
