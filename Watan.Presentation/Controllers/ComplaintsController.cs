@@ -31,7 +31,7 @@ public class ComplaintsController : ControllerBase
     
     [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create(ComplaintForManipulationDto complaintDto)
+    public async Task<ActionResult<int>> Create([FromForm] ComplaintForManipulationDto complaintDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var id = await _service.ComplaintService.CreateComplaint(complaintDto, userId);

@@ -24,7 +24,7 @@ public class ServiceManager : IServiceManager
         _eventService = new Lazy<IEventService>(() =>
             new EventService(repositoryManager, fileStorageService.Value, configuration));
         _complaintService = new Lazy<IComplaintService>(() =>
-            new ComplaintService(repositoryManager, configuration));
+            new ComplaintService(repositoryManager, fileStorageService.Value, configuration));
     }
 
     public IUserService UserService => _userService.Value;
