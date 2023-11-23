@@ -1,4 +1,3 @@
-using Entities.Models;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

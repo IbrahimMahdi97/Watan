@@ -2,6 +2,7 @@ using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -18,13 +19,11 @@ internal sealed class EventService : IEventService
         _configuration = configuration;
     }
 
-    public async Task<IEnumerable<EventWithPostDto>> GetAllEvents()
+    public async Task<PagedList<EventWithPostDto>> GetAllEvents(EventsParameters eventsParameters)
     {
-        var events = await _repository.Event.GetAllEvents();
-        var eventWithPostDtos = events.ToList();
-        foreach (var eventDetails in eventWithPostDtos)
+        var events = await _repository.Event.GetAllEvents(eventsParameters);
+        foreach (var eventDetails in events)
         {
-            if (eventDetails.PostDetails != null)
             {
                 var images = _fileStorageService.GetFilesUrlsFromServer(
                     eventDetails.PostDetails.Id,
@@ -35,7 +34,8 @@ internal sealed class EventService : IEventService
                 eventDetails.PostDetails.ImageUrl = images.Any() ? images.First() : string.Empty;
             }
         }
-        return eventWithPostDtos;
+        
+        return events;
     }
 
     public async Task<EventWithPostDto> GetEventById(int id)

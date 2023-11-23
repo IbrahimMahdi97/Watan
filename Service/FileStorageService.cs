@@ -9,7 +9,8 @@ public class FileStorageService : IFileStorageService
     {
         if (entityId <= 0 || file is not { Length: > 0 }) return;
 
-        var filePath = Path.Combine(folderName, fileName ?? entityId + " - " + Guid.NewGuid());
+        var name = fileName ?? entityId + " - " + Guid.NewGuid();
+        var filePath = Path.Combine(folderName, name + Path.GetExtension(file.FileName));
 
         if (!Directory.Exists(folderName))
             Directory.CreateDirectory(folderName);
@@ -34,8 +35,7 @@ public class FileStorageService : IFileStorageService
 
     public IEnumerable<string> GetFilesUrlsFromServer(int entityId, string folderName, string? urlPrefix)
     {
-        if (!Directory.Exists(folderName))
-            return Enumerable.Empty<string>();
+        if (!Directory.Exists(folderName)) return Array.Empty<string>();
 
         var directory = new DirectoryInfo(folderName);
         var files = directory.GetFiles(entityId + " - *");

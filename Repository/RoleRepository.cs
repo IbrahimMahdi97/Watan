@@ -1,15 +1,12 @@
 using Dapper;
 using Entities.Models;
 using Interfaces;
-using Microsoft.Extensions.Configuration;
 using Repository.Query;
 
 namespace Repository;
 
 internal sealed class RoleRepository : IRoleRepository
 {
-    private readonly IRepositoryManager _repository;
-    private readonly IConfiguration _configuration;
     private readonly DapperContext _context;
 
     public RoleRepository(DapperContext context)

@@ -1,5 +1,4 @@
 using Shared.DataTransferObjects;
-using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Service.Interface;
