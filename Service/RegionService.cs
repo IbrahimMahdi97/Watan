@@ -1,0 +1,55 @@
+using Interfaces;
+using Service.Interface;
+using Shared.DataTransferObjects;
+
+namespace Service;
+
+internal sealed class RegionService : IRegionService
+{
+    private readonly IRepositoryManager _repository;
+    
+    public RegionService(IRepositoryManager repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<IEnumerable<RegionDto>> GetAll()
+    {
+        var regions = await _repository.Region.GetAll();
+        return regions;
+    }
+    
+    public async Task<RegionDto> GetById(int id)
+    {
+        var region = await _repository.Region.GetById(id);
+        return region;
+    }
+
+    public async Task<RegionDto> GetByName(string name)
+    {
+        var region = await _repository.Region.GetByName(name);
+        return region;
+    }
+
+    public async Task<IEnumerable<RegionDto>> GetByTownId(int townId)
+    {
+        var regions = await _repository.Region.GetByTownId(townId);
+        return regions;
+    }
+
+    public async Task<int> Create(RegionForManipulationDto regionDto)
+    {
+        var result = await _repository.Region.Create(regionDto);
+        return result;
+    }
+
+    public async Task Update(int id, RegionForManipulationDto regionDto)
+    {
+        await _repository.Region.Update(id, regionDto);
+    }
+
+    public async Task Delete(int id)
+    {
+        await _repository.Region.Delete(id);
+    }
+}

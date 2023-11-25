@@ -31,7 +31,7 @@ public class ComplaintsController : ControllerBase
     
     [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create(ComplaintForManipulationDto complaintDto)
+    public async Task<ActionResult<int>> Create([FromForm] ComplaintForManipulationDto complaintDto)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var id = await _service.ComplaintService.CreateComplaint(complaintDto, userId);
@@ -52,5 +52,14 @@ public class ComplaintsController : ControllerBase
     {
         await _service.ComplaintService.DeleteComplaint(id);
         return NoContent();
+    }
+
+    [Authorize]
+    [HttpGet("my_complaints")]
+    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetUserComplaints()
+    {
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var complaints = await _service.ComplaintService.GetUserComplaints(userId);
+        return Ok(complaints);
     }
 }

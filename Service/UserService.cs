@@ -35,6 +35,7 @@ internal sealed class UserService : IUserService
                 throw new UserPhoneNumberAlreadyExistsBadRequestException(userForCreationDto.PhoneNumber);
 
         await _repository.User.AddUserRoles(userForCreationDto.Roles, result);
+        await _repository.User.AddUserRegion(userForCreationDto.UserRegion, result);
 
         if (userForCreationDto.UserImage is not null)
             await _fileStorageService.CopyFileToServer(result,
@@ -56,22 +57,21 @@ internal sealed class UserService : IUserService
         return user;
     }
 
-    public async Task<UserDto> GetById(int id)
+    public async Task<UserDetailsDto> GetById(int id)
     {
         var user = await GetUserAndCheckIfItExists(id);
         user.Roles = await _repository.User.GetUserRoles(user.Id);
+        user.Regions = await _repository.User.GetUserRegions(user.Id);
 
         var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
             _configuration["UserImagesSetStorageUrl"]!,
             _configuration["UserImagesGetStorageUrl"]!).ToList();
 
         user.ImageUrl = images.Any() ? images.First() : "";
-
-        user.RefreshToken = string.Empty;
         return user;
     }
 
-    private async Task<UserDto> GetUserAndCheckIfItExists(int id)
+    private async Task<UserDetailsDto> GetUserAndCheckIfItExists(int id)
     {
         var user = await _repository.User.FindById(id);
         if (user is null) throw new UserNotFoundException(id);
@@ -119,6 +119,31 @@ internal sealed class UserService : IUserService
 
         return claims;
     }
+    
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var jwtSettings = _configuration.GetSection("JwtSettings");
+        var key = Encoding.UTF8.GetBytes(jwtSettings["secretKey"]!);
+
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true, ValidateIssuer = true, ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateLifetime = false, ValidIssuer = jwtSettings["validIssuer"],
+            ValidAudience = jwtSettings["validAudience"]
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(
+                SecurityAlgorithms.HmacSha256,
+                StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new SecurityTokenException("Invalid token");
+        }
+
+        return principal;
+    }
 
     private JwtSecurityToken GenerateTokenOptions
         (SigningCredentials signingCredentials, IEnumerable<Claim> claims)
@@ -159,5 +184,36 @@ internal sealed class UserService : IUserService
             AccessToken = accessToken,
             RefreshToken = refreshToken
         };
+    }
+    
+    public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
+    {
+        var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+        var userId = Convert.ToInt32(principal.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var user = await _repository.User.FindById(userId);
+        if (user == null)
+            throw new ExpiredRefreshTokenUnauthorizedException();
+        var returnUser = new UserDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            DateOfBirth = user.DateOfBirth,
+            District = user.District,
+            Email = user.Email,
+            Gender = user.Gender,
+            HouseNumber = user.HouseNumber,
+            StreetNumber = user.StreetNumber,
+            ImageUrl = user.ImageUrl,
+            MotherName = user.MotherName,
+            Roles = user.Roles,
+            ProvinceOfBirth = user.ProvinceOfBirth,
+            NationalIdNumber = user.NationalIdNumber,
+            ResidenceCardNumber = user.ResidenceCardNumber,
+            VoterCardNumber = user.VoterCardNumber
+        };
+        if (returnUser.RefreshToken != tokenDto.RefreshToken ||
+            user.RefreshTokenExpiryTime <= DateTime.Now) throw new ExpiredRefreshTokenUnauthorizedException();
+
+        return await CreateToken(returnUser, false);
     }
 }

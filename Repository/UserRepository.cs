@@ -19,7 +19,8 @@ public class UserRepository : IUserRepository
     {
         const string query = UserQuery.CreateUserQuery;
         var param = new DynamicParameters(userForCreationDto);
-
+        param.Add("ProvinceId", userForCreationDto.UserRegion.ProvinceId);
+        param.Add("TownId", userForCreationDto.UserRegion.TownId);
         using var connection = _context.CreateConnection();
         connection.Open();
 
@@ -54,11 +55,11 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<UserDto?> FindById(int id)
+    public async Task<UserDetailsDto?> FindById(int id)
     {
         const string query = UserQuery.UserByIdQuery;
         using var connection = _context.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<UserDto>(query, new { Id = id });
+        var user = await connection.QuerySingleOrDefaultAsync<UserDetailsDto>(query, new { Id = id });
         return user;
     }
 
@@ -74,7 +75,17 @@ public class UserRepository : IUserRepository
             await connection.ExecuteAsync(queryUserRoles, paramUserRoles);
         }
     }
-    
+
+    public async Task AddUserRegion(UserRegionForCreationDto userRegion, int userId)
+    {
+        const string queryUserRoles = UserRegionQuery.InsertUserRegionQuery;
+        var param = new DynamicParameters(userRegion);
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        param.Add("UserId", userId);
+        await connection.ExecuteAsync(queryUserRoles, param);
+    }
+
     public async Task UpdateRefreshToken(int id, string refreshToken, DateTime? refreshTokenExpiryTime)
     {
         const string query = UserQuery.UpdateRefreshTokenByIdQuery;
@@ -93,7 +104,15 @@ public class UserRepository : IUserRepository
     {
         const string query = UserQuery.UserRolesByUserIdQuery;
         using var connection = _context.CreateConnection();
-        var cities = await connection.QueryAsync<UserRoleDto>(query, new { Id = userId });
-        return cities.ToList();
+        var roles = await connection.QueryAsync<UserRoleDto>(query, new { Id = userId });
+        return roles.ToList();
+    }
+
+    public async Task<IEnumerable<UserRegionDto>> GetUserRegions(int userId)
+    {
+        const string query = UserRegionQuery.UserRegionsByUserIdQuery;
+        using var connection = _context.CreateConnection();
+        var regions = await connection.QueryAsync<UserRegionDto>(query, new { Id = userId });
+        return regions.ToList();
     }
 }
