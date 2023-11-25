@@ -7,4 +7,7 @@ public interface IRepositoryManager
     IPostRepository Post { get; }
     IEventRepository Event { get; }
     IComplaintRepository Complaint { get; }
+    IProvinceRepository Province { get; }
+    ITownRepository Town { get; }
+    IRegionRepository Region { get; }
 }

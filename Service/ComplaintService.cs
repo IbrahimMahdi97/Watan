@@ -5,7 +5,7 @@ using Shared.DataTransferObjects;
 
 namespace Service;
 
-public class ComplaintService : IComplaintService
+internal sealed class ComplaintService : IComplaintService
 {
     private readonly IRepositoryManager _repository;
     private readonly IFileStorageService _fileStorageService;
