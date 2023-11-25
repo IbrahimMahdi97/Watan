@@ -70,7 +70,7 @@ public static class ServiceExtensions
 	{
 		services.AddSwaggerGen(s =>
 		{
-			s.SwaggerDoc("v1", new OpenApiInfo { Title = "Injaz API", Version = "v1" });
+			s.SwaggerDoc("v1", new OpenApiInfo { Title = "Watan API", Version = "v1" });
 			s.AddSecurityDefinition("Bearer",
 				new OpenApiSecurityScheme
 				{
