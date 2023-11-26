@@ -14,11 +14,11 @@ public class ComplaintRepository : IComplaintRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints()
+    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints(string? search)
     {
         const string query = ComplaintQuery.AllComplaintsQuery;
         using var connection = _context.CreateConnection();
-        var complaints = await connection.QueryAsync<ComplaintDto>(query);
+        var complaints = await connection.QueryAsync<ComplaintDto>(query, new {Search = search?? ""});
         return complaints.ToList();
     }
     

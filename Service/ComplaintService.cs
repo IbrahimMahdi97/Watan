@@ -18,9 +18,9 @@ internal sealed class ComplaintService : IComplaintService
         _configuration = configuration;
     }
     
-    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints()
+    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints(string? search)
     {
-        var complaints = await _repository.Complaint.GetAllComplaints();
+        var complaints = await _repository.Complaint.GetAllComplaints(search);
         var complaintsDto = complaints.ToList();
         foreach (var complaint in complaintsDto)
         {

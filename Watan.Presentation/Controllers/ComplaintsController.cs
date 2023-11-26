@@ -15,9 +15,9 @@ public class ComplaintsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetAll([FromQuery] string? search)
     {
-        var complaints = await _service.ComplaintService.GetAllComplaints();
+        var complaints = await _service.ComplaintService.GetAllComplaints(search);
         return Ok(complaints);
     }
     

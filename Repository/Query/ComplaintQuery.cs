@@ -2,7 +2,7 @@ namespace Repository.Query;
 
 public static class ComplaintQuery
 {
-    public const string AllComplaintsQuery = @"SELECT * FROM Complaints WHERE IsDeleted=0";
+    public const string AllComplaintsQuery = @"SELECT * FROM Complaints WHERE Details LIKE '%' + @Search + '%' AND IsDeleted=0";
     public const string ComplaintByIdQuery = @"SELECT * FROM Complaints WHERE Id=@Id";
 
     public const string InsertComplaintQuery = @"INSERT INTO Complaints (UserId, TypeId, Details, RecordDate) 
