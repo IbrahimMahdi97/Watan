@@ -84,7 +84,8 @@ internal sealed class UserService : IUserService
         var id = await _repository.User.FindIdByEmailOrPhoneNumber(dto.EmailOrPhoneNumber);
         if (id == 0) throw new InvalidCredentialsEmailOrPhoneNumberUnauthorizedException(dto.EmailOrPhoneNumber);
 
-        var user = await _repository.User.FindByCredentialsEmailOrPhoneNumber(dto.EmailOrPhoneNumber, (dto.Password + id).ToSha512());
+        var user = await _repository.User.FindByCredentialsEmailOrPhoneNumber(dto.EmailOrPhoneNumber,
+            (dto.Password + id).ToSha512());
         if (user is null) throw new InvalidCredentialsEmailOrPhoneNumberUnauthorizedException(dto.EmailOrPhoneNumber);
 
         var tokens = await CreateToken(user, true);
@@ -95,7 +96,7 @@ internal sealed class UserService : IUserService
 
         return user;
     }
-    
+
     private SigningCredentials GetSigningCredentials()
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -119,7 +120,7 @@ internal sealed class UserService : IUserService
 
         return claims;
     }
-    
+
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -185,7 +186,7 @@ internal sealed class UserService : IUserService
             RefreshToken = refreshToken
         };
     }
-    
+
     public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
     {
         var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
@@ -209,7 +210,10 @@ internal sealed class UserService : IUserService
             ProvinceOfBirth = user.ProvinceOfBirth,
             NationalIdNumber = user.NationalIdNumber,
             ResidenceCardNumber = user.ResidenceCardNumber,
-            VoterCardNumber = user.VoterCardNumber
+            VoterCardNumber = user.VoterCardNumber,
+            PhoneNumber = user.PhoneNumber,
+            RefreshToken = user.RefreshToken,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime.Value,
         };
         if (returnUser.RefreshToken != tokenDto.RefreshToken ||
             user.RefreshTokenExpiryTime <= DateTime.Now) throw new ExpiredRefreshTokenUnauthorizedException();
