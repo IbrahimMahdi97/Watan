@@ -1,6 +1,6 @@
 namespace Shared.DataTransferObjects;
 
-public class EventWithPostDto : EventForManiupulationDto
+public class EventWithPostDto : EventForManipulationDto
 {
     public PostDto PostDetails { get; set; } = null!;
 }

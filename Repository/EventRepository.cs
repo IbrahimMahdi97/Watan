@@ -28,7 +28,7 @@ public class EventRepository : IEventRepository
         using var connection = _context.CreateConnection();
         
         var count = await connection.QueryFirstOrDefaultAsync<int>(countQuery, param);
-        var events = await connection.QueryAsync<EventForManiupulationDto, PostDto, EventWithPostDto>(
+        var events = await connection.QueryAsync<EventForManipulationDto, PostDto, EventWithPostDto>(
             query,
             (eventDetails, postDetails) =>
             {
@@ -38,6 +38,7 @@ public class EventRepository : IEventRepository
                     ProvinceId = eventDetails.ProvinceId,
                     TownId = eventDetails.TownId,
                     StartTime = eventDetails.StartTime,
+                    Date = eventDetails.Date,
                     EndTime = eventDetails.EndTime,
                     LocationUrl = eventDetails.LocationUrl,
                     PostDetails = postDetails
@@ -63,7 +64,6 @@ public class EventRepository : IEventRepository
     {
         const string insertEventQuery = EventQuery.InsertEvent;
         var eventParams = new DynamicParameters(eventDto);
-        eventParams.Add("Date", DateTime.Now);
         eventParams.Add("PostId", postId);
 
         await connection.ExecuteAsync(insertEventQuery, eventParams, transaction: transaction);
