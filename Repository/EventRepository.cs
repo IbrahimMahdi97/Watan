@@ -20,35 +20,16 @@ public class EventRepository : IEventRepository
     {
         const string query = EventQuery.SelectEventsByParametersQuery;
         const string countQuery = EventQuery.SelectCountOfEventsByParametersQuery;
-        
+
         var skip = (eventsParameters.PageNumber - 1) * eventsParameters.PageSize;
         var param = new DynamicParameters(eventsParameters);
         param.Add("skip", skip);
-        
+
         using var connection = _context.CreateConnection();
-        
+
         var count = await connection.QueryFirstOrDefaultAsync<int>(countQuery, param);
-        var events = await connection.QueryAsync<EventForManipulationDto, PostDto, EventWithPostDto>(
-            query,
-            (eventDetails, postDetails) =>
-            {
-                var eventWithPost = new EventWithPostDto
-                {
-                    Type = eventDetails.Type,
-                    ProvinceId = eventDetails.ProvinceId,
-                    TownId = eventDetails.TownId,
-                    StartTime = eventDetails.StartTime,
-                    Date = eventDetails.Date,
-                    EndTime = eventDetails.EndTime,
-                    LocationUrl = eventDetails.LocationUrl,
-                    PostDetails = postDetails
-                };
-                return eventWithPost;
-            },
-            splitOn: "Id",
-            param: param
-        );
-        
+        var events = await connection.QueryAsync<EventWithPostDto>(query, param: param);
+
         return new PagedList<EventWithPostDto>(events, count, eventsParameters.PageNumber, eventsParameters.PageSize);
     }
 
@@ -60,7 +41,8 @@ public class EventRepository : IEventRepository
         return eventDetails;
     }
 
-    public async Task<int> Create(EventWithPostForCreationDto eventDto, int postId, IDbConnection connection, IDbTransaction transaction)
+    public async Task<int> Create(EventWithPostForCreationDto eventDto, int postId, IDbConnection connection,
+        IDbTransaction transaction)
     {
         const string insertEventQuery = EventQuery.InsertEvent;
         var eventParams = new DynamicParameters(eventDto);

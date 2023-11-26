@@ -2,9 +2,11 @@ namespace Repository.Query;
 
 public static class EventQuery
 {
-    public const string SelectEventsByParametersQuery = @"SELECT EventDetails.*, Posts.*
+    public const string SelectEventsByParametersQuery = @"SELECT EventDetails.*, Posts.*, T.Description AS Town, P.Description AS Province
                                             FROM EventDetails 
                                             INNER JOIN Posts ON EventDetails.PostId = Posts.Id 
+                                            INNER JOIN Provinces P on EventDetails.ProvinceId = P.Id 
+                                            INNER JOIN Towns T on EventDetails.TownId = T.Id
                                             WHERE IIF(@ProvinceId = 0, 0, EventDetails.ProvinceId) = @ProvinceId AND
                                               IIF(@TownId = 0, 0, EventDetails.TownId) = @TownId AND
                                               IIF(@AddedByUserId = 0, 0, Posts.AddedByUserId) = @AddedByUserId AND
