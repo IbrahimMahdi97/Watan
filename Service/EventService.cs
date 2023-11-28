@@ -24,15 +24,20 @@ internal sealed class EventService : IEventService
         var events = await _repository.Event.GetAllEvents(eventsParameters);
         foreach (var eventDetails in events)
         {
+            eventDetails.PostDetails = new PostDto
             {
-                var images = _fileStorageService.GetFilesUrlsFromServer(
+                Id = eventDetails.Id,
+                Description = eventDetails.Description,
+                Title = eventDetails.Title,
+                RecordDate = eventDetails.RecordDate
+            };
+            var images = _fileStorageService.GetFilesUrlsFromServer(
                     eventDetails.PostDetails.Id,
                     _configuration["PostImagesSetStorageUrl"]!,
                     _configuration["PostImagesGetStorageUrl"]!
                 ).ToList();
 
                 eventDetails.PostDetails.ImageUrl = images.Any() ? images.First() : string.Empty;
-            }
         }
         
         return events;
