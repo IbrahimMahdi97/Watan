@@ -2,6 +2,7 @@ using Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 using Repository;
+using Shared.Helpers;
 using Watan.Extensions;
 using Watan.Migrations;
 
@@ -23,10 +24,10 @@ builder.Services.AddAuthentication();
 builder.Services.ConfigureJwt(builder.Configuration);
 
 builder.Services.AddControllers()
-    .AddApplicationPart(typeof(WatanPresentation.AssemblyReference).Assembly)/*.AddJsonOptions(options =>
+    .AddApplicationPart(typeof(WatanPresentation.AssemblyReference).Assembly).AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new DateConverter());
-    })*/;
+    });
 
 var app = builder.Build();
 
