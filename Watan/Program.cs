@@ -53,12 +53,6 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseCors("CorsPolicy");
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-//todo: if needed
-//app.UseSwaggerAuthorized();
-
 app.UseSwagger();
 
 app.UseSwaggerUI(s =>
@@ -66,6 +60,15 @@ app.UseSwaggerUI(s =>
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "Watan API v1");
     s.RoutePrefix = string.Empty;
 });
+
+app.UseAuthentication();
+app.UseMiddleware<ExpiredOrMissedTokenMiddleware>();
+app.UseAuthorization();
+
+//todo: if needed
+//app.UseSwaggerAuthorized();
+
+
 
 /*app.UseSwaggerUI(s =>
 {
