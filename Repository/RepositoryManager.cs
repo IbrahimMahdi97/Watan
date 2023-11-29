@@ -12,6 +12,9 @@ public class RepositoryManager : IRepositoryManager
     private readonly Lazy<IProvinceRepository> _provinceRepository;
     private readonly Lazy<ITownRepository> _townRepository;
     private readonly Lazy<IRegionRepository> _regionRepository;
+    private readonly Lazy<IEventAttendanceRepository> _eventAttendanceRepository;
+    private readonly Lazy<IPostCommentRepository> _postCommentRepository;
+    private readonly Lazy<IPostLikeRepository> _postLikeRepository;
     public RepositoryManager(DapperContext dapperContext)
     {
         _userRepository = new Lazy<IUserRepository>(() => new UserRepository(dapperContext));
@@ -22,6 +25,11 @@ public class RepositoryManager : IRepositoryManager
         _provinceRepository = new Lazy<IProvinceRepository>(() => new ProvinceRepository(dapperContext));
         _townRepository = new Lazy<ITownRepository>(() => new TownRepository(dapperContext));
         _regionRepository = new Lazy<IRegionRepository>(() => new RegionRepository(dapperContext));
+        _eventAttendanceRepository = new Lazy<IEventAttendanceRepository>(
+            () => new EventAttendanceRepository(dapperContext));
+        _postCommentRepository = new Lazy<IPostCommentRepository>(
+            () => new PostCommentRepository(dapperContext));
+        _postLikeRepository = new Lazy<IPostLikeRepository>(() => new PostLikeRepository(dapperContext));
     }
     public IUserRepository User => _userRepository.Value;
     public IRoleRepository Role => _roleRepository.Value;
@@ -31,4 +39,7 @@ public class RepositoryManager : IRepositoryManager
     public IProvinceRepository Province  => _provinceRepository.Value;
     public ITownRepository Town => _townRepository.Value;
     public IRegionRepository Region => _regionRepository.Value;
+    public IEventAttendanceRepository EventAttendance => _eventAttendanceRepository.Value;
+    public IPostCommentRepository PostComment => _postCommentRepository.Value;
+    public IPostLikeRepository PostLike => _postLikeRepository.Value;
 }

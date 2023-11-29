@@ -9,4 +9,7 @@ public interface IServiceManager
     IProvinceService ProvinceService { get; }
     ITownService TownService { get; }
     IRegionService RegionService { get; }
+    IEventAttendanceService EventAttendanceService { get; }
+    IPostCommentService PostCommentService { get; }
+    IPostLikeService PostLikeService { get; }
 }

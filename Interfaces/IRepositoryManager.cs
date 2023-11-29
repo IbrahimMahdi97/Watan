@@ -10,4 +10,7 @@ public interface IRepositoryManager
     IProvinceRepository Province { get; }
     ITownRepository Town { get; }
     IRegionRepository Region { get; }
+    IEventAttendanceRepository EventAttendance { get; }
+    IPostCommentRepository PostComment { get; }
+    IPostLikeRepository PostLike { get; }
 }

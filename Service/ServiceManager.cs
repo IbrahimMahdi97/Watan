@@ -13,6 +13,9 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<IProvinceService> _provinceService;
     private readonly Lazy<ITownService> _townService;
     private readonly Lazy<IRegionService> _regionService;
+    private readonly Lazy<IEventAttendanceService> _eventAttendanceService;
+    private readonly Lazy<IPostCommentService> _postCommentService;
+    private readonly Lazy<IPostLikeService> _postLikeService;
 
     public ServiceManager(IRepositoryManager repositoryManager, IConfiguration configuration)
     {
@@ -27,12 +30,13 @@ public class ServiceManager : IServiceManager
             new EventService(repositoryManager, fileStorageService.Value, configuration));
         _complaintService = new Lazy<IComplaintService>(() =>
             new ComplaintService(repositoryManager, fileStorageService.Value, configuration));
-        _provinceService = new Lazy<IProvinceService>(() => 
-            new ProvinceService(repositoryManager));
-        _townService = new Lazy<ITownService>(() =>
-            new TownService(repositoryManager));
-        _regionService = new Lazy<IRegionService>(() =>
-            new RegionService(repositoryManager));
+        _provinceService = new Lazy<IProvinceService>(() => new ProvinceService(repositoryManager));
+        _townService = new Lazy<ITownService>(() => new TownService(repositoryManager));
+        _regionService = new Lazy<IRegionService>(() => new RegionService(repositoryManager));
+        _eventAttendanceService = new Lazy<IEventAttendanceService>(() => 
+            new EventAttendanceService(repositoryManager));
+        _postCommentService = new Lazy<IPostCommentService>(() => new PostCommentService(repositoryManager));
+        _postLikeService = new Lazy<IPostLikeService>(() => new PostLikeService(repositoryManager));
     }
 
     public IUserService UserService => _userService.Value;
@@ -42,4 +46,7 @@ public class ServiceManager : IServiceManager
     public IProvinceService ProvinceService => _provinceService.Value;
     public ITownService TownService => _townService.Value;
     public IRegionService RegionService => _regionService.Value;
+    public IEventAttendanceService EventAttendanceService => _eventAttendanceService.Value;
+    public IPostCommentService PostCommentService => _postCommentService.Value;
+    public IPostLikeService PostLikeService => _postLikeService.Value;
 }
