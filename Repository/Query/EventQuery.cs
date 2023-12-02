@@ -2,7 +2,10 @@ namespace Repository.Query;
 
 public static class EventQuery
 {
-    public const string SelectEventsByParametersQuery = @"SELECT EventDetails.*, Posts.*, T.Description AS Town, P.Description AS Province
+    public const string SelectEventsByParametersQuery = @"SELECT EventDetails.*, Posts.*, T.Description AS Town, P.Description AS Province, 
+                                            (SELECT COUNT(EAT.UserId) FROM EventAttendance EAT WHERE EAT.PostId = Posts.Id) AS AttendanceCount, 
+                                            (SELECT COUNT(POL.UserId) FROM PostLikes POL WHERE POL.PostId = Posts.Id) AS LikesCount, 
+                                            (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount 
                                             FROM EventDetails 
                                             INNER JOIN Posts ON EventDetails.PostId = Posts.Id 
                                             INNER JOIN Provinces P on EventDetails.ProvinceId = P.Id 
