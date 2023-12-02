@@ -11,4 +11,5 @@ public static class PostCommentsQuery
     public const string GetByIdQuery = @"SELECT * FROM PostComments WHERE Id=@Id";
     public const string UpdateQuery = @"Update PostComments SET Comment = @Comment WHERE Id = @Id";
     public const string DeleteQuery = @"Update PostComments SET IsDeleted=1 WHERE Id = @Id";
+    public const string CountByPostId = @"SELECT COUNT(Id) FROM PostComments WHERE PostId=@PostId";
 }

@@ -2,7 +2,11 @@ namespace Repository.Query;
 
 public static class PostQuery
 {
-    public const string AllPostsQuery = @"SELECT * FROM Posts WHERE IsDeleted=0 AND TypeId = @TypeId";
+    public const string AllPostsQuery = @"SELECT Posts.*, 
+                                (SELECT COUNT(POL.UserId) FROM PostLikes POL WHERE POL.PostId = Posts.Id) AS LikesCount, 
+                                (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount 
+                                            FROM Posts 
+                                            WHERE Posts.IsDeleted=0 AND TypeId = @TypeId";
     
     public const string PostById = @"SELECT * FROM Posts WHERE Id = @id";
     
