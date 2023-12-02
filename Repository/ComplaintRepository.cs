@@ -2,6 +2,7 @@ using Dapper;
 using Interfaces;
 using Repository.Query;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -14,12 +15,21 @@ public class ComplaintRepository : IComplaintRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints(string? search)
+    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints(ComplaintsParameters parameters)
     {
-        const string query = ComplaintQuery.AllComplaintsQuery;
+        const string query = ComplaintQuery.ComplaintsByParametersQuery;
+        const string countQuery = ComplaintQuery.ComplaintsCountByParametersQuery;
+
+        var skip = (parameters.PageNumber - 1) * parameters.PageSize;
+        var param = new DynamicParameters(parameters);
+        param.Add("skip", skip);
+
         using var connection = _context.CreateConnection();
-        var complaints = await connection.QueryAsync<ComplaintDto>(query, new {Search = search?? ""});
-        return complaints.ToList();
+
+        var count = await connection.QueryFirstOrDefaultAsync<int>(countQuery, param);
+        var complaints = await connection.QueryAsync<ComplaintDto>(query, param: param);
+
+        return new PagedList<ComplaintDto>(complaints, count, parameters.PageNumber, parameters.PageSize);
     }
     
     public async Task<ComplaintDto> GetComplaintById(int id)
