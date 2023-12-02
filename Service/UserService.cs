@@ -215,12 +215,17 @@ internal sealed class UserService : IUserService
             ResidenceCardNumber = user.ResidenceCardNumber,
             VoterCardNumber = user.VoterCardNumber,
             PhoneNumber = user.PhoneNumber,
-            RefreshToken = user.RefreshToken,
-            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime.Value,
+            RefreshToken = user.RefreshToken ?? "",
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime ?? DateTime.Now,
         };
         if (returnUser.RefreshToken != tokenDto.RefreshToken ||
             user.RefreshTokenExpiryTime <= DateTime.Now) throw new ExpiredRefreshTokenUnauthorizedException();
 
         return await CreateToken(returnUser, false);
+    }
+
+    public async Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto)
+    {
+        await _repository.User.UpdateRating(userRatingForUpdateDto);
     }
 }

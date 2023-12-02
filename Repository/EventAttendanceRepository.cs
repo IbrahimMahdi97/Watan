@@ -1,7 +1,6 @@
 using Dapper;
 using Interfaces;
 using Repository.Query;
-using Shared.DataTransferObjects;
 
 namespace Repository;
 

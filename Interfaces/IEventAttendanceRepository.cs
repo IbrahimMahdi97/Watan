@@ -1,5 +1,3 @@
-using Shared.DataTransferObjects;
-
 namespace Interfaces;
 
 public interface IEventAttendanceRepository

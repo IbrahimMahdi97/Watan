@@ -8,4 +8,5 @@ public interface IUserService
     Task<UserDto> ValidateUser(UserForAuthenticationDto userForAuth);
     Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId);
     Task<TokenDto> RefreshToken(TokenDto tokenDto);
+    Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
 }

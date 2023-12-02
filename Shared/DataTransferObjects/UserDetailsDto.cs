@@ -22,4 +22,5 @@ public class UserDetailsDto
     public TokenDto? UserToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
     public string? RefreshToken { get; set; }
+    public int Rating { get; set; }
 }
