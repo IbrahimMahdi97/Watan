@@ -15,4 +15,5 @@ public interface IUserRepository
     Task<IEnumerable<UserRegionDto>> GetUserRegions(int userId);
     Task UpdateDeviceId(int userId, string deviceId);
     Task<string?> GetUserDeviceId(int userId);
+    Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
 }

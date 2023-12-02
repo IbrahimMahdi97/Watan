@@ -33,7 +33,7 @@ public class UserRepository : IUserRepository
             Password = (userForCreationDto.Password + id).ToSha512(),
             Id = id
         }, transaction: trans);
-        
+
         trans.Commit();
         return id;
     }
@@ -51,7 +51,8 @@ public class UserRepository : IUserRepository
     {
         const string query = UserQuery.UserIdByEmailOrPhoneNumberQuery;
         using var connection = _context.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<int>(query, new { EmailOrPhoneNumber = emailOrPhoneNumber });
+        var user = await connection.QuerySingleOrDefaultAsync<int>(query,
+            new { EmailOrPhoneNumber = emailOrPhoneNumber });
         return user;
     }
 
@@ -100,6 +101,7 @@ public class UserRepository : IUserRepository
 
         trans.Commit();
     }
+
     public async Task<IEnumerable<UserRoleDto>> GetUserRoles(int userId)
     {
         const string query = UserQuery.UserRolesByUserIdQuery;
@@ -122,12 +124,19 @@ public class UserRepository : IUserRepository
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, new { Id = userId, DeviceId = deviceId });
     }
-    
+
     public async Task<string?> GetUserDeviceId(int id)
     {
         const string query = UserQuery.UserDeviceIdQuery;
         using var connection = _context.CreateConnection();
         connection.Open();
-        return await connection.QueryFirstOrDefaultAsync<string>(query, new {Id = id});
+        return await connection.QueryFirstOrDefaultAsync<string>(query, new { Id = id });
+    }
+
+    public async Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto)
+    {
+        const string query = UserQuery.UpdateRatingByIdQuery;
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, userRatingForUpdateDto);
     }
 }

@@ -223,4 +223,9 @@ internal sealed class UserService : IUserService
 
         return await CreateToken(returnUser, false);
     }
+
+    public async Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto)
+    {
+        await _repository.User.UpdateRating(userRatingForUpdateDto);
+    }
 }

@@ -12,7 +12,7 @@ public class UsersController : ControllerBase
 {
     private readonly IServiceManager _service;
     public UsersController(IServiceManager service) => _service = service;
-    
+
     [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromForm] UserForCreationDto userForCreationDto)
@@ -21,20 +21,28 @@ public class UsersController : ControllerBase
         var id = await _service.UserService.CreateUser(userForCreationDto, userId);
         return id > 0 ? Ok(new { Id = id }) : BadRequest();
     }
-    
+
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Authenticate([FromBody] UserForAuthenticationDto user)
     {
         var userDto = await _service.UserService.ValidateUser(user);
         return Ok(userDto);
     }
-    
+
     [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<UserDetailsDto>> GetUserById(int id)
     {
         var userDto = await _service.UserService.GetById(id);
         return Ok(userDto);
+    }
+
+    [Authorize(Roles = "admin")]
+    [HttpPut("rating")]
+    public async Task<ActionResult> UpdateUserRating(UserRatingForUpdateDto userRatingForUpdateDto)
+    {
+        await _service.UserService.UpdateRating(userRatingForUpdateDto);
+        return NoContent();
     }
 
     [Authorize]
@@ -45,8 +53,8 @@ public class UsersController : ControllerBase
         var userDto = await _service.UserService.GetById(userId);
         return Ok(userDto);
     }
-    
-    
+
+
     [HttpPost("refresh_token")]
     public async Task<ActionResult<TokenDto>> Refresh([FromBody] TokenDto tokenDto)
     {
