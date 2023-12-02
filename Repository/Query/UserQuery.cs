@@ -27,6 +27,9 @@ public static class UserQuery
     public const string UserByIdQuery =
         @"SELECT * FROM Users WHERE Id = @id";
     
+    public const string UpdateDeviceIdByIdQuery =
+        @"UPDATE Users SET DeviceId = @deviceId WHERE Id = @id";
+    
     public const string UserByCredentialsEmailOrPhoneNumberQuery = 
         @"SELECT * FROM Users WHERE ( Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ) AND Password = @Password";
 }

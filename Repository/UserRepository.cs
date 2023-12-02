@@ -115,4 +115,11 @@ public class UserRepository : IUserRepository
         var regions = await connection.QueryAsync<UserRegionDto>(query, new { Id = userId });
         return regions.ToList();
     }
+
+    public async Task UpdateDeviceId(int userId, string deviceId)
+    {
+        const string query = UserQuery.UpdateDeviceIdByIdQuery;
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, new { Id = userId, DeviceId = deviceId });
+    }
 }

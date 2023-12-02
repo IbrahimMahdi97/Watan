@@ -13,4 +13,5 @@ public interface IUserRepository
     Task UpdateRefreshToken(int id, string refreshToken, DateTime? refreshTokenExpiryTime);
     Task<IEnumerable<UserRoleDto>> GetUserRoles(int userId);
     Task<IEnumerable<UserRegionDto>> GetUserRegions(int userId);
+    Task UpdateDeviceId(int userId, string deviceId);
 }

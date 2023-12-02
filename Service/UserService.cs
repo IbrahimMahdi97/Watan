@@ -53,6 +53,9 @@ internal sealed class UserService : IUserService
         user.RefreshToken = tokens.RefreshToken;
 
         user.Roles = await _repository.User.GetUserRoles(user.Id);
+        
+        if(!string.IsNullOrEmpty(userForAuth.DeviceId))
+            await _repository.User.UpdateDeviceId(user.Id, userForAuth.DeviceId);
 
         return user;
     }
