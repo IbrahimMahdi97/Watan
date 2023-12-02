@@ -76,6 +76,18 @@ internal sealed class ComplaintService : IComplaintService
     public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId, ComplaintsParameters parameters)
     {
         var complaints = await _repository.Complaint.GetUserComplaints(userId, parameters);
-        return complaints;
+        var complaintsDto = complaints.ToList();
+        foreach (var complaint in complaintsDto)
+        {
+            var images = _fileStorageService.GetFilesUrlsFromServer(
+                complaint.Id,
+                _configuration["ComplaintImagesSetStorageUrl"]!,
+                _configuration["ComplaintImagesGetStorageUrl"]!
+            ).ToList();
+
+            complaint.ImageUrl = images.Any() ? images.First() : string.Empty;
+        }
+
+        return complaintsDto;
     }
 }
