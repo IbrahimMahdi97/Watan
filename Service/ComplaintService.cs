@@ -2,6 +2,7 @@ using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -18,9 +19,9 @@ internal sealed class ComplaintService : IComplaintService
         _configuration = configuration;
     }
     
-    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints(string? search)
+    public async Task<IEnumerable<ComplaintDto>> GetAllComplaints(ComplaintsParameters parameters)
     {
-        var complaints = await _repository.Complaint.GetAllComplaints(search);
+        var complaints = await _repository.Complaint.GetAllComplaints(parameters);
         var complaintsDto = complaints.ToList();
         foreach (var complaint in complaintsDto)
         {

@@ -71,7 +71,7 @@ app.UseSwaggerUI(s =>
 });*/
 
 app.UseAuthentication();
-app.UseMiddleware<ExpiredOrMissedTokenMiddleware>();
+// app.UseMiddleware<ExpiredOrMissedTokenMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

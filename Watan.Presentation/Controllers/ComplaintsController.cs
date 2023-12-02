@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Shared.DataTransferObjects;
 using Shared.Helpers;
+using Shared.RequestFeatures;
 
 namespace WatanPresentation.Controllers;
 
@@ -15,9 +16,9 @@ public class ComplaintsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetAll([FromQuery] string? search)
+    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetAll([FromQuery] ComplaintsParameters parameters)
     {
-        var complaints = await _service.ComplaintService.GetAllComplaints(search);
+        var complaints = await _service.ComplaintService.GetAllComplaints(parameters);
         return Ok(complaints);
     }
     
