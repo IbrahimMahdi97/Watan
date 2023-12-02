@@ -23,6 +23,8 @@ public class User
     public string? NationalIdNumber { get; set; }
     public string? ResidenceCardNumber { get; set; }
     public string? VoterCardNumber { get; set; }
+    public int Rating { get; set; }
+    public string? DeviceId { get; set; }
     public int AddedByUserId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime RecordDate { get; set; }
