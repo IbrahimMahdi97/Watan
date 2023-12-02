@@ -9,6 +9,7 @@ public static class ComplaintQuery
                                                         FROM Complaints Co 
                                                         INNER JOIN ComplaintTypes Type ON  Co.TypeId = Type.Id 
                                                         WHERE IIF(@TypeId = 0, 0, Co.TypeId) = @TypeId AND 
+                                                              IIF(@UserId = 0, 0, Co.UserId) = @UserId AND 
                                                         (@Details IS NULL OR Co.Details LIKE '%' + @Details + '%') AND 
                                                         Co.IsDeleted = 0 
                                                         ORDER BY Co.RecordDate DESC
@@ -16,6 +17,7 @@ public static class ComplaintQuery
     public const string ComplaintsCountByParametersQuery = @"SELECT COUNT(Id)
                                                                 FROM Complaints  
                                                                 WHERE IIF(@TypeId = 0, 0, TypeId) = @TypeId AND 
+                                                                      IIF(@UserId = 0, 0, UserId) = @UserId AND 
                                                                 (@Details IS NULL OR Details LIKE '%' + @Details + '%')  AND 
                                                                 IsDeleted = 0";
     public const string ComplaintByIdQuery = @"SELECT * FROM Complaints WHERE Id=@Id";
