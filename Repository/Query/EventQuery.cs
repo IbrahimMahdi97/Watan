@@ -30,7 +30,14 @@ public static class EventQuery
                                               (EventDetails.Date BETWEEN @FromEventDate AND @ToEventDate)
                                               AND Posts.IsDeleted = 0";
     
-    public const string EventByIdQuery = @"SELECT * FROM EventDetails WHERE PostId = @Id";
+    public const string EventByIdQuery = @"SELECT EventDetails.*, Posts.*, T.Description AS Town, P.Description AS Province, 
+                                            (SELECT COUNT(EAT.UserId) FROM EventAttendance EAT WHERE EAT.PostId = Posts.Id) AS AttendanceCount, 
+                                            (SELECT COUNT(POL.UserId) FROM PostLikes POL WHERE POL.PostId = Posts.Id) AS LikesCount, 
+                                            (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount 
+                                            FROM EventDetails 
+                                            INNER JOIN Posts ON EventDetails.PostId = Posts.Id 
+                                            INNER JOIN Provinces P on EventDetails.ProvinceId = P.Id 
+                                            INNER JOIN Towns T on EventDetails.TownId = T.Id WHERE PostId = @Id";
 
     public const string InsertEvent = @"INSERT INTO EventDetails (PostId, Type, ProvinceId, TownId, Date, StartTime, EndTime, LocationUrl)
                                             VALUES (@PostId, @Type, @ProvinceId, @TownId, @Date, @StartTime, @EndTime, @LocationUrl)";
