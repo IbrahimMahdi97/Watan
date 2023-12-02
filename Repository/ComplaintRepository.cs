@@ -23,6 +23,7 @@ public class ComplaintRepository : IComplaintRepository
         var skip = (parameters.PageNumber - 1) * parameters.PageSize;
         var param = new DynamicParameters(parameters);
         param.Add("skip", skip);
+        param.Add("UserId", 0);
 
         using var connection = _context.CreateConnection();
 
@@ -74,12 +75,21 @@ public class ComplaintRepository : IComplaintRepository
         await connection.ExecuteAsync(query, new { Id = id });
     }
 
-    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId)
+    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId, ComplaintsParameters parameters)
     {
-        const string query = ComplaintQuery.GetComplaintsByUserId;
+        const string query = ComplaintQuery.ComplaintsByParametersQuery;
+        const string countQuery = ComplaintQuery.ComplaintsCountByParametersQuery;
+
+        var skip = (parameters.PageNumber - 1) * parameters.PageSize;
+        var param = new DynamicParameters(parameters);
+        param.Add("skip", skip);
+        param.Add("UserId", userId);
+
         using var connection = _context.CreateConnection();
-        var complaints = await connection.QueryAsync<ComplaintDto>(query, 
-            new {UserId = userId});
-        return complaints.ToList();
+
+        var count = await connection.QueryFirstOrDefaultAsync<int>(countQuery, param);
+        var complaints = await connection.QueryAsync<ComplaintDto>(query, param: param);
+
+        return new PagedList<ComplaintDto>(complaints, count, parameters.PageNumber, parameters.PageSize);
     }
 }

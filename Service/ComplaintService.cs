@@ -73,9 +73,9 @@ internal sealed class ComplaintService : IComplaintService
         await _repository.Complaint.DeleteComplaint(id);
     }
 
-    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId)
+    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId, ComplaintsParameters parameters)
     {
-        var complaints = await _repository.Complaint.GetUserComplaints(userId);
+        var complaints = await _repository.Complaint.GetUserComplaints(userId, parameters);
         return complaints;
     }
 }

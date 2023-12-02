@@ -10,5 +10,5 @@ public interface IComplaintService
     Task<int> CreateComplaint(ComplaintForManipulationDto complaint, int userId);
     Task UpdateComplaint(int id, ComplaintForManipulationDto complaint);
     Task DeleteComplaint(int id);
-    Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId);
+    Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId, ComplaintsParameters parameters);
 }
