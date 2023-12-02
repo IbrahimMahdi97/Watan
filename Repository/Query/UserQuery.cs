@@ -32,4 +32,7 @@ public static class UserQuery
     
     public const string UserByCredentialsEmailOrPhoneNumberQuery = 
         @"SELECT * FROM Users WHERE ( Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ) AND Password = @Password";
+    
+    public const string UserDeviceIdQuery = 
+        @"SELECT DeviceId FROM Users WHERE Id = @id";
 }

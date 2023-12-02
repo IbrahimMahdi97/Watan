@@ -15,6 +15,7 @@ public class RepositoryManager : IRepositoryManager
     private readonly Lazy<IEventAttendanceRepository> _eventAttendanceRepository;
     private readonly Lazy<IPostCommentRepository> _postCommentRepository;
     private readonly Lazy<IPostLikeRepository> _postLikeRepository;
+    private readonly Lazy<INotificationRepository> _notificationRepository;
     public RepositoryManager(DapperContext dapperContext)
     {
         _userRepository = new Lazy<IUserRepository>(() => new UserRepository(dapperContext));
@@ -30,6 +31,7 @@ public class RepositoryManager : IRepositoryManager
         _postCommentRepository = new Lazy<IPostCommentRepository>(
             () => new PostCommentRepository(dapperContext));
         _postLikeRepository = new Lazy<IPostLikeRepository>(() => new PostLikeRepository(dapperContext));
+        _notificationRepository = new Lazy<INotificationRepository>(() => new NotificationRepository(dapperContext));
     }
     public IUserRepository User => _userRepository.Value;
     public IRoleRepository Role => _roleRepository.Value;
@@ -42,4 +44,5 @@ public class RepositoryManager : IRepositoryManager
     public IEventAttendanceRepository EventAttendance => _eventAttendanceRepository.Value;
     public IPostCommentRepository PostComment => _postCommentRepository.Value;
     public IPostLikeRepository PostLike => _postLikeRepository.Value;
+    public INotificationRepository Notification => _notificationRepository.Value;
 }

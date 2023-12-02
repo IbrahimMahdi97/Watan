@@ -16,13 +16,17 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<IEventAttendanceService> _eventAttendanceService;
     private readonly Lazy<IPostCommentService> _postCommentService;
     private readonly Lazy<IPostLikeService> _postLikeService;
+    private readonly Lazy<INotificationService> _notificationService;
 
     public ServiceManager(IRepositoryManager repositoryManager, IConfiguration configuration)
     {
         Lazy<IFileStorageService> fileStorageService = new(() =>
             new FileStorageService());
-        
-        _userService = new Lazy<IUserService>(() => 
+
+        Lazy<IFirebaseService> firebaseService = new(() =>
+            new FirebaseService());
+
+        _userService = new Lazy<IUserService>(() =>
             new UserService(repositoryManager, fileStorageService.Value, configuration));
         _postService = new Lazy<IPostService>(() =>
             new PostService(repositoryManager, fileStorageService.Value, configuration));
@@ -33,10 +37,12 @@ public class ServiceManager : IServiceManager
         _provinceService = new Lazy<IProvinceService>(() => new ProvinceService(repositoryManager));
         _townService = new Lazy<ITownService>(() => new TownService(repositoryManager));
         _regionService = new Lazy<IRegionService>(() => new RegionService(repositoryManager));
-        _eventAttendanceService = new Lazy<IEventAttendanceService>(() => 
+        _eventAttendanceService = new Lazy<IEventAttendanceService>(() =>
             new EventAttendanceService(repositoryManager));
         _postCommentService = new Lazy<IPostCommentService>(() => new PostCommentService(repositoryManager));
         _postLikeService = new Lazy<IPostLikeService>(() => new PostLikeService(repositoryManager));
+        _notificationService = new Lazy<INotificationService>(() =>
+            new NotificationService(repositoryManager, firebaseService.Value));
     }
 
     public IUserService UserService => _userService.Value;
@@ -49,4 +55,5 @@ public class ServiceManager : IServiceManager
     public IEventAttendanceService EventAttendanceService => _eventAttendanceService.Value;
     public IPostCommentService PostCommentService => _postCommentService.Value;
     public IPostLikeService PostLikeService => _postLikeService.Value;
+    public INotificationService NotificationService => _notificationService.Value;
 }

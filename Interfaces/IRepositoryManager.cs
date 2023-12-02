@@ -13,4 +13,5 @@ public interface IRepositoryManager
     IEventAttendanceRepository EventAttendance { get; }
     IPostCommentRepository PostComment { get; }
     IPostLikeRepository PostLike { get; }
+    INotificationRepository Notification { get; }
 }

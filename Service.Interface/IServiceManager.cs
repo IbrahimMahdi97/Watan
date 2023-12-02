@@ -12,4 +12,5 @@ public interface IServiceManager
     IEventAttendanceService EventAttendanceService { get; }
     IPostCommentService PostCommentService { get; }
     IPostLikeService PostLikeService { get; }
+    INotificationService NotificationService { get; }
 }

@@ -122,4 +122,12 @@ public class UserRepository : IUserRepository
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, new { Id = userId, DeviceId = deviceId });
     }
+    
+    public async Task<string?> GetUserDeviceId(int id)
+    {
+        const string query = UserQuery.UserDeviceIdQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        return await connection.QueryFirstOrDefaultAsync<string>(query, new {Id = id});
+    }
 }
