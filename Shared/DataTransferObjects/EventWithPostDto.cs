@@ -9,4 +9,5 @@ public class EventWithPostDto : EventForManipulationDto
     public DateTime RecordDate { get; set; }
     public int Id { get; set; }
     public PostDto PostDetails { get; set; } = null!;
+    public int AttendanceCount { get; set; }
 }

@@ -10,4 +10,6 @@ public static class RoleQuery
     public const string InsertUserRolesQuery = 
         @"INSERT INTO UserRoles (UserId, RoleId)
               VALUES(@UserId, @RoleId);";
+
+    public const string AllQuery = @"SELECT Id, Description FROM Roles";
 }

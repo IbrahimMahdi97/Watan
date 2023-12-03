@@ -6,4 +6,5 @@ public static class PostLikeQuery
                                         VALUES (@PostId, @UserId)";
     public const string DeleteQuery = @"DELETE FROM PostLikes WHERE PostId = @PostId AND UserId = @UserId";
     public const string CheckIfLikeExistQuery = @"SELECT PostId FROM PostLikes WHERE PostId = @PostId AND UserId = @UserId";
+    public const string CountByPostId = @"SELECT COUNT(UserId) FROM PostLikes WHERE PostId = @PostId";
 }
