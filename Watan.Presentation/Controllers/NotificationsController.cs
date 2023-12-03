@@ -44,10 +44,10 @@ public class NotificationsController : ControllerBase
     
     [Authorize]
     [HttpGet("my-notifications")]
-    public async Task<ActionResult<Notification>> GetMyNotification()
+    public async Task<ActionResult<Notification>> GetMyNotification([FromQuery] NotificationsParameters notificationsParameters)
     {
-        var id = User.RetrieveUserIdFromPrincipal();
-        var notificationToReturn = await _service.NotificationService.GetNotification(id);
+        notificationsParameters.UserId = User.RetrieveUserIdFromPrincipal();
+        var notificationToReturn = await _service.NotificationService.GetNotifications(notificationsParameters);
         return Ok(notificationToReturn);
     }
     
