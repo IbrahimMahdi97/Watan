@@ -43,6 +43,15 @@ public class NotificationsController : ControllerBase
     }
     
     [Authorize]
+    [HttpGet("my-notifications")]
+    public async Task<ActionResult<Notification>> GetMyNotification()
+    {
+        var id = User.RetrieveUserIdFromPrincipal();
+        var notificationToReturn = await _service.NotificationService.GetNotification(id);
+        return Ok(notificationToReturn);
+    }
+    
+    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateNotificationIsRead(int id)
     {
