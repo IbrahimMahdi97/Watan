@@ -1,7 +1,9 @@
+using Entities.Enums;
+
 namespace Shared.RequestFeatures;
 
 public class ComplaintsParameters : RequestParameters
 {
-    public int TypeId { get; set; }
+    public ComplaintStatus Status { get; set; }
     public string? Details { get; set; }
 }

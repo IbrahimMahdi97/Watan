@@ -1,3 +1,4 @@
+using Entities.Enums;
 using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;
@@ -60,7 +61,7 @@ internal sealed class ComplaintService : IComplaintService
         return result;
     }
 
-    public async Task UpdateComplaint(int id, ComplaintForManipulationDto complaint)
+    public async Task UpdateComplaint(int id, ComplaintForUpdateDto complaint)
     {
         await _repository.Complaint.UpdateComplaint(id, complaint);
         if (complaint.ComplaintImage is not null)
@@ -73,7 +74,7 @@ internal sealed class ComplaintService : IComplaintService
         await _repository.Complaint.DeleteComplaint(id);
     }
 
-    public async Task<IEnumerable<ComplaintDto>> GetUserComplaints(int userId, ComplaintsParameters parameters)
+    public async Task<MyComplaintsDto> GetUserComplaints(int userId, ComplaintsParameters parameters)
     {
         var complaints = await _repository.Complaint.GetUserComplaints(userId, parameters);
         var complaintsDto = complaints.ToList();
@@ -88,6 +89,12 @@ internal sealed class ComplaintService : IComplaintService
             complaint.ImageUrl = images.Any() ? images.First() : string.Empty;
         }
 
-        return complaintsDto;
+        return new MyComplaintsDto
+        {
+            OnHoldComplaintsCount = complaintsDto.Count(c => c.Status == ComplaintStatus.OnHold),
+            CancelledComplaintsCount = complaintsDto.Count(c => c.Status == ComplaintStatus.Cancelled),
+            DoneComplaintsCount = complaintsDto.Count(c => c.Status == ComplaintStatus.Done),
+            Complaints = complaintsDto.Where(c => c.Status == parameters.Status)
+        };
     }
 }

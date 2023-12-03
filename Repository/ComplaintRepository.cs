@@ -60,7 +60,7 @@ public class ComplaintRepository : IComplaintRepository
         trans.Commit();
         return id;
     }
-    public async Task UpdateComplaint(int id, ComplaintForManipulationDto complaintDto)
+    public async Task UpdateComplaint(int id, ComplaintForUpdateDto complaintDto)
     {
         const string query = ComplaintQuery.UpdateComplaintQuery;
         var param = new DynamicParameters(complaintDto);

@@ -41,7 +41,7 @@ public class ComplaintsController : ControllerBase
     
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Update(int id, ComplaintForManipulationDto complaintDto)
+    public async Task<ActionResult> Update(int id, ComplaintForUpdateDto complaintDto)
     {
         await _service.ComplaintService.UpdateComplaint(id, complaintDto);
         return NoContent();
@@ -57,7 +57,7 @@ public class ComplaintsController : ControllerBase
 
     [Authorize]
     [HttpGet("my_complaints")]
-    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetUserComplaints([FromQuery] ComplaintsParameters parameters)
+    public async Task<ActionResult<MyComplaintsDto>> GetUserComplaints([FromQuery] ComplaintsParameters parameters)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var complaints = await _service.ComplaintService.GetUserComplaints(userId, parameters);

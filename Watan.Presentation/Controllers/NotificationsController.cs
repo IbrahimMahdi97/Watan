@@ -18,7 +18,7 @@ public class NotificationsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetNotifications([FromQuery] NotificationsParameters notificationsParameters)
+    public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications([FromQuery] NotificationsParameters notificationsParameters)
     {
         var pagedResult = await _service.NotificationService.GetNotifications(notificationsParameters);
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.MetaData));
