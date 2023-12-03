@@ -13,7 +13,7 @@ public class NotificationRepository : INotificationRepository
 
     public NotificationRepository(DapperContext context) => _context = context;
 
-    public async Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters)
+    public async Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters, int userId)
     {
         var skip = (notificationsParameters.PageNumber - 1) * notificationsParameters.PageSize;
         const string countQuery = NotificationQuery.SelectCountQuery;
@@ -22,7 +22,7 @@ public class NotificationRepository : INotificationRepository
         var param = new DynamicParameters();
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", notificationsParameters.PageSize, DbType.Int32);
-        param.Add("userId", notificationsParameters.UserId, DbType.Int32);
+        param.Add("userId", userId, DbType.Int32);
 
         using var connection = _context.CreateConnection();
         var count = await connection.QueryFirstOrDefaultAsync<int>(countQuery, param);

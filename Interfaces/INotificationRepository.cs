@@ -5,7 +5,7 @@ namespace Interfaces;
 
 public interface INotificationRepository
 {
-    Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters);
+    Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters, int userId);
     Task<int> GetNewNotificationsCount(int userId);
     Task<int> AddNotification(Notification notification);
     Task<Notification?> GetNotificationById(int id);

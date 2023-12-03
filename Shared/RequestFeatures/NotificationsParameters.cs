@@ -2,5 +2,4 @@
 
 public class NotificationsParameters: RequestParameters
 {
-    public int UserId { get; set; }
 }

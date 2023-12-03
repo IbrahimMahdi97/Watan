@@ -16,14 +16,14 @@ public class NotificationsController : ControllerBase
     private readonly IServiceManager _service;
     public NotificationsController(IServiceManager service) => _service = service;
     
-    [Authorize]
+    /*[Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications([FromQuery] NotificationsParameters notificationsParameters)
     {
         var pagedResult = await _service.NotificationService.GetNotifications(notificationsParameters);
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.MetaData));
         return Ok(pagedResult);
-    }
+    }*/
     
     [Authorize]
     [HttpPost]
@@ -46,8 +46,8 @@ public class NotificationsController : ControllerBase
     [HttpGet("my-notifications")]
     public async Task<ActionResult<Notification>> GetMyNotification([FromQuery] NotificationsParameters notificationsParameters)
     {
-        notificationsParameters.UserId = User.RetrieveUserIdFromPrincipal();
-        var notificationToReturn = await _service.NotificationService.GetNotifications(notificationsParameters);
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var notificationToReturn = await _service.NotificationService.GetNotifications(notificationsParameters, userId);
         return Ok(notificationToReturn);
     }
     

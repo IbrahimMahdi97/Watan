@@ -19,9 +19,9 @@ public class NotificationService : INotificationService
         _firebaseService = firebaseService;
     }
 
-    public async Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters)
+    public async Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters, int userId)
     {
-        var notifications = await _repository.Notification.GetNotifications(notificationsParameters);
+        var notifications = await _repository.Notification.GetNotifications(notificationsParameters, userId);
         return notifications;
     }
 

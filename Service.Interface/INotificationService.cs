@@ -6,7 +6,7 @@ namespace Service.Interface;
 
 public interface INotificationService
 {
-    Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters);
+    Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters, int userId);
     Task<Notification?> SendNotification(NotificationForCreationDto notification, int userId);
     Task<Notification?> GetNotification(int id);
     Task UpdateNotificationIsRead(int id);
