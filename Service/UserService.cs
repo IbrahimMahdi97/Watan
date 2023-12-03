@@ -96,7 +96,7 @@ internal sealed class UserService : IUserService
         user.RefreshToken = tokens.RefreshToken;
 
         user.Roles = await _repository.User.GetUserRoles(user.Id);
-
+        user.Regions = await _repository.User.GetUserRegions(user.Id);
         return user;
     }
 
