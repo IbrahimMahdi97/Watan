@@ -4,7 +4,7 @@ public static class ComplaintQuery
 {
     public const string AllComplaintsQuery = @"SELECT * FROM Complaints WHERE Details LIKE '%' + @Search + '%' AND IsDeleted=0";
     public const string ComplaintsByParametersQuery = @"SELECT Co.Details AS Details, Co.RecordDate AS RecordDate, 
-                                                        Co.Id AS Id, Co.UserId AS UserId, Co.TypeId AS TypeId, 
+                                                        Co.Id AS Id, Co.UserId AS UserId, Co.TypeId AS TypeId, Co.Status, 
                                                         Type.Description AS ComplaintType
                                                         FROM Complaints Co 
                                                         INNER JOIN ComplaintTypes Type ON  Co.TypeId = Type.Id 
