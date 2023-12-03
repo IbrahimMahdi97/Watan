@@ -2,8 +2,7 @@
 
 public enum ComplaintStatus
 {
-    New,
-    Fixed,
+    OnHold = 1,
     Cancelled,
-    OnHold
+    Done
 }

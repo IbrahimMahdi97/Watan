@@ -57,7 +57,7 @@ public class ComplaintsController : ControllerBase
 
     [Authorize]
     [HttpGet("my_complaints")]
-    public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetUserComplaints([FromQuery] ComplaintsParameters parameters)
+    public async Task<ActionResult<MyComplaintsDto>> GetUserComplaints([FromQuery] ComplaintsParameters parameters)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var complaints = await _service.ComplaintService.GetUserComplaints(userId, parameters);

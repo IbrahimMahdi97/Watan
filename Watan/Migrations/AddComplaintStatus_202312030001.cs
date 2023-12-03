@@ -7,7 +7,7 @@ public class AddComplaintStatus_202312030001 : Migration
 {
     public override void Up()
     {
-        Alter.Table("Complaints").AddColumn("Status").AsInt32().NotNullable().WithDefaultValue(0);
+        Alter.Table("Complaints").AddColumn("Status").AsInt32().NotNullable().WithDefaultValue(1);
     }
 
     public override void Down()

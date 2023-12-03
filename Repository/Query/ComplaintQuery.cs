@@ -8,7 +8,7 @@ public static class ComplaintQuery
                                                         Type.Description AS ComplaintType
                                                         FROM Complaints Co 
                                                         INNER JOIN ComplaintTypes Type ON  Co.TypeId = Type.Id 
-                                                        WHERE IIF(@TypeId = 0, 0, Co.TypeId) = @TypeId AND 
+                                                        WHERE IIF(@Status = 0, 0, Co.Status) = @Status AND 
                                                               IIF(@UserId = 0, 0, Co.UserId) = @UserId AND 
                                                         (@Details IS NULL OR Co.Details LIKE '%' + @Details + '%') AND 
                                                         Co.IsDeleted = 0 
@@ -16,7 +16,7 @@ public static class ComplaintQuery
                                                         OFFSET @Skip ROWS FETCH NEXT @PageSize ROWS ONLY";
     public const string ComplaintsCountByParametersQuery = @"SELECT COUNT(Id)
                                                                 FROM Complaints  
-                                                                WHERE IIF(@TypeId = 0, 0, TypeId) = @TypeId AND 
+                                                                WHERE IIF(@Status = 0, 0, Status) = @Status AND 
                                                                       IIF(@UserId = 0, 0, UserId) = @UserId AND 
                                                                 (@Details IS NULL OR Details LIKE '%' + @Details + '%')  AND 
                                                                 IsDeleted = 0";
