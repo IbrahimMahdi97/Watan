@@ -3,6 +3,7 @@
 public interface IServiceManager
 {
     IUserService UserService { get; }
+    IRoleService RoleService { get; }
     IPostService PostService { get; }
     IEventService EventService { get; }
     IComplaintService ComplaintService { get; }
