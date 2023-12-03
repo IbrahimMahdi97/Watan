@@ -27,6 +27,6 @@ public static class ComplaintQuery
                                                 VALUES (@UserId, @TypeId, @Details, @RecordDate)";
 
     public const string DeleteComplaintQuery = @"UPDATE Complaints SET IsDeleted=1 WHERE Id=@Id";
-    public const string UpdateComplaintQuery = @"UPDATE Complaints SET Details=@Details, TypeId=@TypeId WHERE Id=@Id";
+    public const string UpdateComplaintQuery = @"UPDATE Complaints SET Details=@Details, TypeId=@TypeId, Status=@Status WHERE Id=@Id";
     public const string GetComplaintsByUserId = @"SELECT * FROM Complaints WHERE UserId=@UserId AND IsDeleted=0";
 }

@@ -60,7 +60,7 @@ internal sealed class ComplaintService : IComplaintService
         return result;
     }
 
-    public async Task UpdateComplaint(int id, ComplaintForManipulationDto complaint)
+    public async Task UpdateComplaint(int id, ComplaintForUpdateDto complaint)
     {
         await _repository.Complaint.UpdateComplaint(id, complaint);
         if (complaint.ComplaintImage is not null)

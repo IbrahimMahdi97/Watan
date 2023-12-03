@@ -41,7 +41,7 @@ public class ComplaintsController : ControllerBase
     
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Update(int id, ComplaintForManipulationDto complaintDto)
+    public async Task<ActionResult> Update(int id, ComplaintForUpdateDto complaintDto)
     {
         await _service.ComplaintService.UpdateComplaint(id, complaintDto);
         return NoContent();
