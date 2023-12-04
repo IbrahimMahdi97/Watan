@@ -1,6 +1,7 @@
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -13,9 +14,9 @@ internal sealed class ProvinceService : IProvinceService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<ProvinceDto>> GetAll()
+    public async Task<IEnumerable<ProvinceDto>> GetByParameters(ProvincesParameters parameters)
     {
-        var provinces = await _repository.Province.GetAllProvinces();
+        var provinces = await _repository.Province.GetByParameters(parameters);
         return provinces;
     }
     
@@ -24,12 +25,12 @@ internal sealed class ProvinceService : IProvinceService
         var province = await _repository.Province.GetProvinceById(id);
         return province;
     }
-
+/*
     public async Task<ProvinceDto> GetByName(string name)
     {
         var province = await _repository.Province.GetProvinceByName(name);
         return province;
-    }
+    }*/
 
     public async Task<int> Create(ProvinceForManipulationDto provinceDto)
     {

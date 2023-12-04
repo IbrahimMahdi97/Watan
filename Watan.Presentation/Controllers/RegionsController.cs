@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace WatanPresentation.Controllers;
 
@@ -14,9 +15,9 @@ public class RegionsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RegionDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<RegionDto>>> GetByParameters([FromQuery] RegionsParameters parameters)
     {
-        var regions = await _service.RegionService.GetAll();
+        var regions = await _service.RegionService.GetByParameters(parameters);
         return Ok(regions);
     }
     
@@ -27,7 +28,7 @@ public class RegionsController : ControllerBase
         var region = await _service.RegionService.GetById(id);
         return Ok(region);
     }
-    
+    /*
     [Authorize]
     [HttpGet("name")]
     public async Task<ActionResult<RegionDto>> GetByName(string name)
@@ -42,11 +43,11 @@ public class RegionsController : ControllerBase
     {
         var regions = await _service.RegionService.GetByTownId(town);
         return Ok(regions);
-    }
+    }*/
     
     [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create([FromForm] RegionForManipulationDto regionDto)
+    public async Task<ActionResult<int>> Create(RegionForManipulationDto regionDto)
     {
         var id = await _service.RegionService.Create(regionDto);
         return Ok(id);

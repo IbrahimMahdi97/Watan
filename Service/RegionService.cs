@@ -1,6 +1,7 @@
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -13,18 +14,18 @@ internal sealed class RegionService : IRegionService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<RegionDto>> GetAll()
+    public async Task<IEnumerable<RegionDto>> GetByParameters(RegionsParameters parameters)
     {
-        var regions = await _repository.Region.GetAll();
+        var regions = await _repository.Region.GetByParameters(parameters);
         return regions;
     }
     
-    public async Task<RegionDto> GetById(int id)
+   public async Task<RegionDto> GetById(int id)
     {
         var region = await _repository.Region.GetById(id);
         return region;
     }
-
+ /*
     public async Task<RegionDto> GetByName(string name)
     {
         var region = await _repository.Region.GetByName(name);
@@ -35,7 +36,7 @@ internal sealed class RegionService : IRegionService
     {
         var regions = await _repository.Region.GetByTownId(townId);
         return regions;
-    }
+    }*/
 
     public async Task<int> Create(RegionForManipulationDto regionDto)
     {

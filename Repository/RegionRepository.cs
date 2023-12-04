@@ -2,6 +2,7 @@ using Dapper;
 using Interfaces;
 using Repository.Query;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -14,14 +15,15 @@ public class RegionRepository : IRegionRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<RegionDto>> GetAll()
+    public async Task<IEnumerable<RegionDto>> GetByParameters(RegionsParameters parameters)
     {
-        const string query = RegionQuery.AllRegionsQuery;
+        const string query = RegionQuery.SelectByParametersQuery;
         using var connection = _context.CreateConnection();
-        var regions = await connection.QueryAsync<RegionDto>(query);
+        var regions = await connection.QueryAsync<RegionDto>(query, parameters);
         return regions.ToList();
     }
     
+ 
     public async Task<RegionDto> GetById(int id)
     {
         const string query = RegionQuery.RegionByIdQuery;
@@ -29,7 +31,7 @@ public class RegionRepository : IRegionRepository
         var region = await connection.QuerySingleOrDefaultAsync<RegionDto>(query, new { Id = id });
         return region;
     }
-    
+       /*
     public async Task<RegionDto> GetByName(string name)
     {
         const string query = RegionQuery.RegionByNameQuery;
@@ -37,14 +39,14 @@ public class RegionRepository : IRegionRepository
         var region = await connection.QuerySingleOrDefaultAsync<RegionDto>(query, new { Description = name });
         return region;
     }
-    
-    public async Task<IEnumerable<RegionDto>> GetByTownId(int townId)
+   
+   public async Task<IEnumerable<RegionDto>> GetByTownId(int townId)
     {
         const string query = RegionQuery.AllTownRegionsQuery;
         using var connection = _context.CreateConnection();
         var regions = await connection.QueryAsync<RegionDto>(query, new { Id = townId });
         return regions.ToList();
-    }
+    }*/
     
     public async Task<int> Create(RegionForManipulationDto regionDto)
     {
