@@ -94,7 +94,7 @@ internal sealed class ComplaintService : IComplaintService
             OnHoldComplaintsCount = complaintsDto.Count(c => c.Status == ComplaintStatus.OnHold),
             CancelledComplaintsCount = complaintsDto.Count(c => c.Status == ComplaintStatus.Cancelled),
             DoneComplaintsCount = complaintsDto.Count(c => c.Status == ComplaintStatus.Done),
-            Complaints = complaintsDto.Where(c => c.Status == parameters.Status)
+            Complaints = complaintsDto.Where(c => c.Status == parameters.Status || parameters.Status == 0)
         };
     }
 }
