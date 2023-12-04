@@ -26,7 +26,8 @@ public class PostCommentsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<PostCommentDto>> GetById(int id)
     {
-        var comment = await _service.PostCommentService.GetById(id);
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var comment = await _service.PostCommentService.GetById(id, userId);
         return Ok(comment);
     }
 
@@ -51,7 +52,8 @@ public class PostCommentsController : ControllerBase
     [HttpGet("post-comments")]
     public async Task<ActionResult<IEnumerable<PostCommentDto>>> GetPostComments(int postId)
     {
-        var comments = await _service.PostCommentService.GetPostComments(postId);
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var comments = await _service.PostCommentService.GetPostComments(postId, userId);
         return Ok(comments);
     }
     

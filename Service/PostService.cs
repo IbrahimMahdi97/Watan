@@ -20,9 +20,9 @@ internal sealed class PostService : IPostService
         _configuration = configuration;
     }
 
-    public async Task<IEnumerable<PostDto>> GetAllPosts()
+    public async Task<IEnumerable<PostDto>> GetAllPosts(int userId)
     {
-        var posts = (await _repository.Post.GetAllPosts()).ToList();
+        var posts = (await _repository.Post.GetAllPosts(userId)).ToList();
 
         foreach (var post in posts)
         {
@@ -36,7 +36,7 @@ internal sealed class PostService : IPostService
         return posts;
     }
 
-    public async Task<PostDetailsDto> GetPostById(int id)
+    public async Task<PostDetailsDto> GetPostById(int id, int userId)
     {
         var post = await _repository.Post.GetPostById(id);
 
@@ -45,15 +45,28 @@ internal sealed class PostService : IPostService
             _configuration["PostImagesGetStorageUrl"]!).ToList();
 
         post.ImageUrl = images.Any() ? images.First() : "";
-        var comments = await _repository.PostComment.GetPostComments(id);
+        var comments = await _repository.PostComment.GetPostComments(id, userId);
         var postComments = comments.ToList();
         foreach (var comment in postComments)
         {
-            comment.Replies = await _repository.PostComment.GetCommentReplies(comment.Id);
+            comment.Replies = await _repository.PostComment.GetCommentReplies(comment.Id, userId);
         }
 
         post.Comments = postComments;
-        post.Likes = await _repository.PostLike.GetPostLikes(id);
+        var likes = await _repository.PostLike.GetPostLikes(id);
+        
+        var likesArray = likes as LikeDto[] ?? likes.ToArray();
+        foreach (var like in likesArray)
+        {
+            var userImages = _fileStorageService.GetFilesUrlsFromServer(like.UserId,
+                _configuration["UserImagesSetStorageUrl"]!,
+                _configuration["UserImagesGetStorageUrl"]!).ToList();
+
+            like.UserImageUrl = userImages.Any() ? userImages.First() : "";
+        }
+
+        post.Likes = likesArray;
+
         return post;
     }
 

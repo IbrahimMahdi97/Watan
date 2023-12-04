@@ -16,17 +16,19 @@ public class PostsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Post>>> GetAllPosts()
+    public async Task<ActionResult<IEnumerable<PostDto>>> GetAllPosts()
     {
-        var posts = await _service.PostService.GetAllPosts();
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var posts = await _service.PostService.GetAllPosts(userId);
         return Ok(posts);
     }
     
     [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<PostDetailsDto>> GetPostById(int id)
-    {
-        var post = await _service.PostService.GetPostById(id);
+    {        
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var post = await _service.PostService.GetPostById(id, userId);
         return Ok(post);
     }
     

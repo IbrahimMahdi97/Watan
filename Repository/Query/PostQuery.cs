@@ -4,13 +4,15 @@ public static class PostQuery
 {
     public const string AllPostsQuery = @"SELECT Posts.*, 
                                 (SELECT COUNT(POL.UserId) FROM PostLikes POL WHERE POL.PostId = Posts.Id) AS LikesCount, 
-                                (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount 
+                                (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount,
+                                 IIF((SELECT 1 FROM PostLikes WHERE PostId = Posts.Id AND UserId = @UserId) = 1, 1, 0) AS IsLikedByLoggedInUser 
                                             FROM Posts 
                                             WHERE Posts.IsDeleted=0 AND TypeId = @TypeId";
     
     public const string PostById = @"SELECT *, 
                                 (SELECT COUNT(POL.UserId) FROM PostLikes POL WHERE POL.PostId = Posts.Id) AS LikesCount, 
-                                (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount  
+                                (SELECT COUNT(POC.Id) FROM PostComments POC WHERE POC.PostId = Posts.Id) AS CommentsCount,
+                                   IIF((SELECT 1 FROM PostLikes WHERE PostId = Posts.Id AND UserId = @UserId) = 1, 1, 0) AS IsLikedByLoggedInUser   
                                 FROM Posts WHERE Id = @id";
     
     public const string InsertPostQuery = @"INSERT INTO Posts (Title, Description, TypeId, AddedByUserId, RecordDate) 

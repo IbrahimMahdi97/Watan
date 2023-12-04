@@ -50,21 +50,21 @@ public class PostCommentRepository : IPostCommentRepository
         await connection.ExecuteAsync(query, param);
     }
 
-    public async Task<IEnumerable<PostCommentDto>> GetPostComments(int postId)
+    public async Task<IEnumerable<PostCommentDto>> GetPostComments(int postId, int userId)
     {
         const string query = PostCommentsQuery.GetByPostIdQuery;
         using var connection = _context.CreateConnection();
         var comments = 
-            await connection.QueryAsync<PostCommentDto>(query, new { PostId = postId });
+            await connection.QueryAsync<PostCommentDto>(query, new { PostId = postId, UserId = userId });
         return comments.ToList();
     }
     
-    public async Task<IEnumerable<PostCommentDto>> GetCommentReplies(int commentId)
+    public async Task<IEnumerable<PostCommentDto>> GetCommentReplies(int commentId, int userId)
     {
         const string query = PostCommentsQuery.GetCommentRepliesQuery;
         using var connection = _context.CreateConnection();
         var comments = 
-            await connection.QueryAsync<PostCommentDto>(query, new { CommentId = commentId });
+            await connection.QueryAsync<PostCommentDto>(query, new { CommentId = commentId, UserId = userId });
         return comments.ToList();
     }
 

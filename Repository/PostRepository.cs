@@ -14,7 +14,7 @@ public class PostRepository : IPostRepository
     {
         _context = context;
     }
-    public async Task<IEnumerable<PostDto>> GetAllPosts()
+    public async Task<IEnumerable<PostDto>> GetAllPosts(int userId)
     {
         const string query = PostQuery.AllPostsQuery;
         var param = new DynamicParameters();
@@ -25,6 +25,8 @@ public class PostRepository : IPostRepository
         var trans = connection.BeginTransaction();
         var typeId = await connection.QuerySingleAsync<int>(prefixQuery, new {Prefix = "NWS"}, trans);
         param.Add("TypeId", typeId);
+        param.Add("UserId", userId);
+        
         var posts = await connection.QueryAsync<PostDto>(query, param, trans);
         return posts.ToList();
     }

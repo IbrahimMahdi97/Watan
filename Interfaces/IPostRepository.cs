@@ -5,7 +5,7 @@ namespace Interfaces;
 
 public interface IPostRepository
 {
-    Task<IEnumerable<PostDto>> GetAllPosts();
+    Task<IEnumerable<PostDto>> GetAllPosts(int userId);
     Task<PostDetailsDto> GetPostById(int id);
     Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId, string postType);
     Task UpdatePost(int id, PostForManipulationDto postDto);

@@ -41,7 +41,8 @@ public class ServiceManager : IServiceManager
         _regionService = new Lazy<IRegionService>(() => new RegionService(repositoryManager));
         _eventAttendanceService = new Lazy<IEventAttendanceService>(() =>
             new EventAttendanceService(repositoryManager));
-        _postCommentService = new Lazy<IPostCommentService>(() => new PostCommentService(repositoryManager));
+        _postCommentService = new Lazy<IPostCommentService>(() => new PostCommentService(repositoryManager,
+            fileStorageService.Value, configuration));
         _postLikeService = new Lazy<IPostLikeService>(() => new PostLikeService(repositoryManager));
         _notificationService = new Lazy<INotificationService>(() =>
             new NotificationService(repositoryManager, firebaseService.Value));

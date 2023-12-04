@@ -11,7 +11,8 @@ public static class PostCommentsQuery
                                             PC.UserId AS UserId, PC.ParentCommentId AS ParentCommentId, 
                                             PC.RecordDate AS RecordDate, US.FullName AS FullName, 
                                             (SELECT COUNT(Id) FROM PostComments WHERE ParentCommentId=PC.Id) AS RepliesCount, 
-                                            (SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId=PC.Id) AS LikesCount 
+                                            (SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId=PC.Id) AS LikesCount,
+                                   IIF((SELECT 1 FROM CommentLikes WHERE CommentId = PC.Id AND UserId = @UserId) = 1, 1, 0) AS IsLikedByLoggedInUser 
                                             FROM PostComments PC INNER JOIN Users US ON (PC.UserId=US.Id) 
                                             WHERE PostId=@PostId AND PC.IsDeleted=0";
 
@@ -19,7 +20,8 @@ public static class PostCommentsQuery
                                             PC.UserId AS UserId, PC.ParentCommentId AS ParentCommentId, 
                                             PC.RecordDate AS RecordDate, US.FullName AS FullName, 
                                             (SELECT COUNT(Id) FROM PostComments WHERE ParentCommentId=PC.Id) AS RepliesCount, 
-                                            (SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId=PC.Id) AS LikesCount 
+                                            (SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId=PC.Id) AS LikesCount,
+                                    IIF((SELECT 1 FROM CommentLikes WHERE CommentId = PC.Id AND UserId = @UserId) = 1, 1, 0) AS IsLikedByLoggedInUser 
                                             FROM PostComments PC INNER JOIN Users US ON (PC.UserId=US.Id) 
                                             WHERE ParentCommentId=@CommentId AND PC.IsDeleted=0";
     public const string GetByIdQuery = @"SELECT * FROM PostComments WHERE Id=@Id";
