@@ -2,5 +2,5 @@ namespace Service.Interface;
 
 public interface IPostLikeService
 {
-    Task Create(int postId, int userId);
+    Task AddLike(int postId, int userId);
 }

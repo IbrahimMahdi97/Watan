@@ -36,7 +36,7 @@ internal sealed class PostService : IPostService
         return posts;
     }
 
-    public async Task<ActionResult<PostDetailsDto>> GetPostById(int id)
+    public async Task<PostDetailsDto> GetPostById(int id)
     {
         var post = await _repository.Post.GetPostById(id);
 

@@ -75,6 +75,7 @@ public class PostCommentRepository : IPostCommentRepository
         await connection.ExecuteAsync(query, new {Id = commentId});
     }
 
+    /*
     public async Task AddLike(int commentId, int userId)
     {
         const string query = PostCommentsQuery.AddCommentLikeQuery;
@@ -88,16 +89,14 @@ public class PostCommentRepository : IPostCommentRepository
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, new {CommentId = commentId, UserId = userId});
     }
+    */
     
-    public async Task<bool> CheckIfLikeExist(int commentId, int userId)
+    public async Task AddLike(int commentId, int userId)
     {
-        const string query = PostCommentsQuery.CheckIfLikeExistQuery;
+        const string query = PostCommentsQuery.InsertOrDeleteQuery;
         using var connection = _context.CreateConnection();
-        var post = await connection.QuerySingleOrDefaultAsync<int>(query, 
+        await connection.ExecuteAsync(query, 
             new { CommentId = commentId, UserId = userId });
-        if (post > 0)
-            return true;
-        return false;
     }
 
     public async Task<IEnumerable<LikeDto>> GetCommentLikes(int commentId)

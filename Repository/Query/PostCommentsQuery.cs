@@ -26,13 +26,22 @@ public static class PostCommentsQuery
     public const string UpdateQuery = @"Update PostComments SET Comment = @Comment WHERE Id = @Id";
     public const string DeleteQuery = @"Update PostComments SET IsDeleted=1 WHERE Id = @Id";
     public const string CountByPostId = @"SELECT COUNT(Id) FROM PostComments WHERE PostId=@PostId";
-    public const string AddCommentLikeQuery = @"INSERT INTO CommentLikes (CommentId, UserId) 
+ /*   public const string AddCommentLikeQuery = @"INSERT INTO CommentLikes (CommentId, UserId) 
                                                 VALUES (@CommentId, @UserId)";
 
+    
     public const string DeleteCommentLikeQuery = @"DELETE FROM CommentLikes WHERE CommentId = @CommentId AND UserId = @UserId";
     public const string GetLikesCountQuery = @"SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId = @CommentId";
-    public const string CheckIfLikeExistQuery = @"SELECT CommentId FROM CommentLikes WHERE CommentId = @CommentId 
-                                                    AND UserId = @UserId";
+    */
+    
+    public const string InsertOrDeleteQuery = @"
+                                    IF EXISTS (SELECT CommentId FROM CommentLikes WHERE CommentId = @CommentId 
+                                                    AND UserId = @UserId)
+                                    DELETE FROM CommentLikes WHERE CommentId = @CommentId AND UserId = @UserId
+                                    ELSE
+                                    INSERT INTO CommentLikes (CommentId, UserId) 
+                                                VALUES (@CommentId, @UserId)";
+
 
     public const string GetLikesDetailsQuery = @"SELECT CL.UserId AS UserId, US.FullName AS FullName 
                                                 FROM CommentLikes CL INNER JOIN Users US ON (CL.UserId = US.Id) 

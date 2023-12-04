@@ -17,7 +17,7 @@ public class PostLikesController : ControllerBase
     public async Task<ActionResult> Create([FromForm] int postId)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
-        await _service.PostLikeService.Create(postId, userId);
+        await _service.PostLikeService.AddLike(postId, userId);
         return NoContent();
     }
 }

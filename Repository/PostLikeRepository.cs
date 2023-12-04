@@ -14,16 +14,14 @@ public class PostLikeRepository : IPostLikeRepository
         _context = context;
     }
 
-    public async Task<bool> CheckIfExist(int postId, int userId)
+    public async Task AddLike(int postId, int userId)
     {
-        const string query = PostLikeQuery.CheckIfLikeExistQuery;
+        const string query = PostLikeQuery.InsertOrDeleteQuery;
         using var connection = _context.CreateConnection();
-        var post = await connection.QuerySingleOrDefaultAsync<int>(query, new { PostId = postId, UserId = userId });
-        if (post > 0)
-            return true;
-        return false;
+        await connection.ExecuteAsync(query, new { PostId = postId, UserId = userId });
     }
 
+    /*
     public async Task Create(int postId, int userId)
     {
         const string query = PostLikeQuery.InsertQuery;
@@ -37,6 +35,7 @@ public class PostLikeRepository : IPostLikeRepository
         using var connection = _context.CreateConnection();
         await connection.QuerySingleOrDefaultAsync<int>(query, new { PostId = postId, UserId = userId });
     }
+    */
     
     public async Task<IEnumerable<LikeDto>> GetPostLikes(int postId)
     {
