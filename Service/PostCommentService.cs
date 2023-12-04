@@ -1,3 +1,4 @@
+using System.Collections;
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
@@ -21,8 +22,14 @@ internal sealed class PostCommentService : IPostCommentService
     public async Task<PostCommentDto> GetById(int commentId)
     {
         var comment = await _repository.PostComment.GetById(commentId);
-        comment.Likes = await _repository.PostComment.GetCommentLikes(commentId);
+        comment.Replies = await GetCommentRelies(comment.Id);
         return comment;
+    }
+
+    public async Task<IEnumerable<PostCommentDto>> GetCommentRelies(int commentId)
+    {
+        var comments = await _repository.PostComment.GetCommentReplies(commentId);
+        return comments;
     }
 
     public async Task Update(PostCommentForManiupulationDto postComment, int commentId)
@@ -36,7 +43,7 @@ internal sealed class PostCommentService : IPostCommentService
         var postComments = comments.ToList();
         foreach (var comment in postComments)
         {
-            comment.Likes = await _repository.PostComment.GetCommentLikes(comment.Id);
+            comment.Replies = await GetCommentRelies(comment.Id);
         }
         return postComments;
     }

@@ -6,5 +6,7 @@ public class PostCommentDto : PostCommentForManiupulationDto
     public int UserId { get; set; }
     public DateTime RecordDate { get; set; }
     public string? FullName { get; set; }
-    public IEnumerable<LikeDto>? Likes { get; set; }
+    public int LikesCount { get; set; }
+    public int RepliesCount { get; set; }
+    public IEnumerable<PostCommentDto>? Replies { get; set; }
 }

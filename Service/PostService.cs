@@ -45,14 +45,14 @@ internal sealed class PostService : IPostService
             _configuration["PostImagesGetStorageUrl"]!).ToList();
 
         post.ImageUrl = images.Any() ? images.First() : "";
-        var postComments = await _repository.PostComment.GetPostComments(id);
-        var comments = postComments.ToList();
-        foreach (var comment in comments)
+        var comments = await _repository.PostComment.GetPostComments(id);
+        var postComments = comments.ToList();
+        foreach (var comment in postComments)
         {
-            comment.Likes = await _repository.PostComment.GetCommentLikes(comment.Id);
+            comment.Replies = await _repository.PostComment.GetCommentReplies(comment.Id);
         }
 
-        post.Comments = comments;
+        post.Comments = postComments;
         post.Likes = await _repository.PostLike.GetPostLikes(id);
         return post;
     }

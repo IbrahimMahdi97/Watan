@@ -13,4 +13,5 @@ public interface IPostCommentRepository
     Task RemoveLike(int commentId, int userId);
     Task<bool> CheckIfLikeExist(int commentId, int userId);
     Task<IEnumerable<LikeDto>> GetCommentLikes(int commentId);
+    Task<IEnumerable<PostCommentDto>> GetCommentReplies(int commentId);
 }

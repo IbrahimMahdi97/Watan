@@ -9,9 +9,19 @@ public static class PostCommentsQuery
     public const string GetAllQuery = @"SELECT * FROM PostComments WHERE IsDeleted=0";
     public const string GetByPostIdQuery = @"SELECT PC.PostId AS PostId, PC.Comment AS Comment, PC.Id AS Id, 
                                             PC.UserId AS UserId, PC.ParentCommentId AS ParentCommentId, 
-                                            PC.RecordDate AS RecordDate, US.FullName AS FullName 
+                                            PC.RecordDate AS RecordDate, US.FullName AS FullName, 
+                                            (SELECT COUNT(Id) FROM PostComments WHERE ParentCommentId=PC.Id) AS RepliesCount, 
+                                            (SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId=PC.Id) AS LikesCount 
                                             FROM PostComments PC INNER JOIN Users US ON (PC.UserId=US.Id) 
                                             WHERE PostId=@PostId AND PC.IsDeleted=0";
+
+    public const string GetCommentRepliesQuery = @"SELECT PC.PostId AS PostId, PC.Comment AS Comment, PC.Id AS Id, 
+                                            PC.UserId AS UserId, PC.ParentCommentId AS ParentCommentId, 
+                                            PC.RecordDate AS RecordDate, US.FullName AS FullName, 
+                                            (SELECT COUNT(Id) FROM PostComments WHERE ParentCommentId=PC.Id) AS RepliesCount, 
+                                            (SELECT COUNT(UserId) FROM CommentLikes WHERE CommentId=PC.Id) AS LikesCount 
+                                            FROM PostComments PC INNER JOIN Users US ON (PC.UserId=US.Id) 
+                                            WHERE ParentCommentId=@CommentId AND PC.IsDeleted=0";
     public const string GetByIdQuery = @"SELECT * FROM PostComments WHERE Id=@Id";
     public const string UpdateQuery = @"Update PostComments SET Comment = @Comment WHERE Id = @Id";
     public const string DeleteQuery = @"Update PostComments SET IsDeleted=1 WHERE Id = @Id";
