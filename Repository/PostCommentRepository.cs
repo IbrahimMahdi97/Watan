@@ -58,11 +58,53 @@ public class PostCommentRepository : IPostCommentRepository
             await connection.QueryAsync<PostCommentDto>(query, new { PostId = postId });
         return comments.ToList();
     }
+    
+    public async Task<IEnumerable<PostCommentDto>> GetCommentReplies(int commentId)
+    {
+        const string query = PostCommentsQuery.GetCommentRepliesQuery;
+        using var connection = _context.CreateConnection();
+        var comments = 
+            await connection.QueryAsync<PostCommentDto>(query, new { CommentId = commentId });
+        return comments.ToList();
+    }
 
     public async Task Delete(int commentId)
     {
         const string query = PostCommentsQuery.DeleteQuery;
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, new {Id = commentId});
+    }
+
+    public async Task AddLike(int commentId, int userId)
+    {
+        const string query = PostCommentsQuery.AddCommentLikeQuery;
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, new {CommentId = commentId, UserId = userId});
+    }
+    
+    public async Task RemoveLike(int commentId, int userId)
+    {
+        const string query = PostCommentsQuery.DeleteCommentLikeQuery;
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, new {CommentId = commentId, UserId = userId});
+    }
+    
+    public async Task<bool> CheckIfLikeExist(int commentId, int userId)
+    {
+        const string query = PostCommentsQuery.CheckIfLikeExistQuery;
+        using var connection = _context.CreateConnection();
+        var post = await connection.QuerySingleOrDefaultAsync<int>(query, 
+            new { CommentId = commentId, UserId = userId });
+        if (post > 0)
+            return true;
+        return false;
+    }
+
+    public async Task<IEnumerable<LikeDto>> GetCommentLikes(int commentId)
+    {
+        const string query = PostCommentsQuery.GetLikesDetailsQuery;
+        using var connection = _context.CreateConnection();
+        var likes = await connection.QueryAsync<LikeDto>(query, new { CommentId = commentId });
+        return likes.ToList();
     }
 }

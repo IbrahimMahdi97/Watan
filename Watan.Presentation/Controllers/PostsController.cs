@@ -24,7 +24,7 @@ public class PostsController : ControllerBase
     
     [Authorize]
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<PostDto>> GetPostById(int id)
+    public async Task<ActionResult<PostDetailsDto>> GetPostById(int id)
     {
         var post = await _service.PostService.GetPostById(id);
         return Ok(post);
