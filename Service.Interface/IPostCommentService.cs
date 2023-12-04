@@ -9,4 +9,5 @@ public interface IPostCommentService
     Task Update(PostCommentForManiupulationDto postComment, int commentId);
     Task<IEnumerable<PostCommentDto>> GetPostComments(int postId);
     Task Delete(int commentId);
+    Task Like(int commentId, int userId);
 }

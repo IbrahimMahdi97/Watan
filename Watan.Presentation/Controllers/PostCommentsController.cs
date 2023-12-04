@@ -54,4 +54,13 @@ public class PostCommentsController : ControllerBase
         var comments = await _service.PostCommentService.GetPostComments(postId);
         return Ok(comments);
     }
+    
+    [Authorize]
+    [HttpPost("like")]
+    public async Task<ActionResult> Create([FromForm] int commentId)
+    {
+        var userId = User.RetrieveUserIdFromPrincipal();
+        await _service.PostCommentService.Like(commentId, userId);
+        return NoContent();
+    }
 }

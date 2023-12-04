@@ -21,6 +21,7 @@ internal sealed class PostCommentService : IPostCommentService
     public async Task<PostCommentDto> GetById(int commentId)
     {
         var comment = await _repository.PostComment.GetById(commentId);
+        comment.Likes = await _repository.PostComment.GetCommentLikes(commentId);
         return comment;
     }
 
@@ -32,11 +33,24 @@ internal sealed class PostCommentService : IPostCommentService
     public async Task<IEnumerable<PostCommentDto>> GetPostComments(int postId)
     {
         var comments = await _repository.PostComment.GetPostComments(postId);
-        return comments;
+        var postComments = comments.ToList();
+        foreach (var comment in postComments)
+        {
+            comment.Likes = await _repository.PostComment.GetCommentLikes(comment.Id);
+        }
+        return postComments;
     }
 
     public async Task Delete(int commentId)
     {
         await _repository.PostComment.Delete(commentId);
+    }
+
+    public async Task Like(int commentId, int userId)
+    {
+        var isLikeExist = await _repository.PostComment.CheckIfLikeExist(commentId, userId);
+        if (isLikeExist)
+            await _repository.PostComment.RemoveLike(commentId, userId);
+        await _repository.PostComment.AddLike(commentId, userId);
     }
 }
