@@ -24,9 +24,9 @@ public class PostCommentsController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<PostCommentDto>> GetById(int commentId)
+    public async Task<ActionResult<PostCommentDto>> GetById(int id)
     {
-        var comment = await _service.PostCommentService.GetById(commentId);
+        var comment = await _service.PostCommentService.GetById(id);
         return Ok(comment);
     }
 
@@ -62,5 +62,13 @@ public class PostCommentsController : ControllerBase
         var userId = User.RetrieveUserIdFromPrincipal();
         await _service.PostCommentService.Like(commentId, userId);
         return NoContent();
+    }
+    
+    [Authorize]
+    [HttpGet("comment-likes")]
+    public async Task<ActionResult<IEnumerable<LikeDto>>> GetCommentsLikes(int commentId)
+    {
+        var comments = await _service.PostCommentService.GetLikes(commentId);
+        return Ok(comments);
     }
 }

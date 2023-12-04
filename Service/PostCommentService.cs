@@ -60,4 +60,10 @@ internal sealed class PostCommentService : IPostCommentService
             await _repository.PostComment.RemoveLike(commentId, userId);
         await _repository.PostComment.AddLike(commentId, userId);
     }
+
+    public async Task<IEnumerable<LikeDto>> GetLikes(int commentId)
+    {
+        var likes = await _repository.PostComment.GetCommentLikes(commentId);
+        return likes;
+    }
 }

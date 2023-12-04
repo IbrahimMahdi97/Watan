@@ -1,3 +1,4 @@
+using System.Collections;
 using Shared.DataTransferObjects;
 
 namespace Service.Interface;
@@ -11,4 +12,5 @@ public interface IPostCommentService
     Task<IEnumerable<PostCommentDto>> GetCommentRelies(int commentId);
     Task Delete(int commentId);
     Task Like(int commentId, int userId);
+    Task<IEnumerable<LikeDto>> GetLikes(int commentId);
 }
