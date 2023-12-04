@@ -29,11 +29,11 @@ public class PostRepository : IPostRepository
         return posts.ToList();
     }
 
-    public async Task<PostDto> GetPostById(int id)
+    public async Task<PostDetailsDto> GetPostById(int id)
     {
         const string query = PostQuery.PostById;
         using var connection = _context.CreateConnection();
-        var post = await connection.QuerySingleOrDefaultAsync<PostDto>(query, new { Id = id });
+        var post = await connection.QuerySingleOrDefaultAsync<PostDetailsDto>(query, new { Id = id });
         return post;
     }
 

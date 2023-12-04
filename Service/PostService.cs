@@ -36,7 +36,7 @@ internal sealed class PostService : IPostService
         return posts;
     }
 
-    public async Task<ActionResult<PostDto>> GetPostById(int id)
+    public async Task<ActionResult<PostDetailsDto>> GetPostById(int id)
     {
         var post = await _repository.Post.GetPostById(id);
 
@@ -45,7 +45,8 @@ internal sealed class PostService : IPostService
             _configuration["PostImagesGetStorageUrl"]!).ToList();
 
         post.ImageUrl = images.Any() ? images.First() : "";
-
+        post.Comments = await _repository.PostComment.GetPostComments(id);
+        post.Likes = await _repository.PostLike.GetPostLikes(id);
         return post;
     }
 
