@@ -28,26 +28,10 @@ public class TownsController : ControllerBase
         var town = await _service.TownService.GetById(id);
         return Ok(town);
     }
-    /*
-    [Authorize]
-    [HttpGet("name")]
-    public async Task<ActionResult<TownDto>> GetByName(string name)
-    {
-        var town = await _service.TownService.GetByName(name);
-        return Ok(town);
-    }
-    
-    [Authorize]
-    [HttpGet("province")]
-    public async Task<ActionResult<IEnumerable<TownDto>>> GetByProvince(int province)
-    {
-        var towns = await _service.TownService.GetByProvince(province);
-        return Ok(towns);
-    }*/
     
     [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create([FromForm] TownForManipulationDto townDto)
+    public async Task<ActionResult<int>> Create(TownForManipulationDto townDto)
     {
         var id = await _service.TownService.Create(townDto);
         return Ok(id);
