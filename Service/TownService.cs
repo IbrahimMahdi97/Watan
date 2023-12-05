@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
@@ -16,6 +17,7 @@ internal sealed class TownService : ITownService
 
     public async Task<IEnumerable<TownDto>> GetByParameters(TownsParameters parameters)
     {
+        await IsProvinceExist(parameters.ProvinceId);
         var towns = await _repository.Town.GetByParameters(parameters);
         return towns;
     }
@@ -24,22 +26,32 @@ internal sealed class TownService : ITownService
     public async Task<TownDto> GetById(int id)
     {
         var town = await _repository.Town.GetById(id);
+        if (town is null) throw new TownNotFoundException(id);
         return town;
     }
 
     public async Task<int> Create(TownForManipulationDto townDto)
     {
+        await IsProvinceExist(townDto.ProvinceId);
         var result = await _repository.Town.Create(townDto);
         return result;
     }
 
     public async Task Update(int id, TownForManipulationDto townDto)
     {
+        await IsProvinceExist(townDto.ProvinceId);
         await _repository.Town.Update(id, townDto);
     }
 
     public async Task Delete(int id)
     {
+        var town = GetById(id);
         await _repository.Town.Delete(id);
+    }
+
+    private async Task IsProvinceExist(int provinceId)
+    {
+        var provinceService = new ProvinceService(_repository);
+        var province = await provinceService.GetById(provinceId);
     }
 }

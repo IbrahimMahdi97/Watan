@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
@@ -23,6 +24,7 @@ internal sealed class ProvinceService : IProvinceService
     public async Task<ProvinceDto> GetById(int id)
     {
         var province = await _repository.Province.GetProvinceById(id);
+        if (province is null) throw new ProvinceNotFoundException(id);
         return province;
     }
 
