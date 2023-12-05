@@ -17,7 +17,8 @@ internal sealed class RegionService : IRegionService
 
     public async Task<IEnumerable<RegionDto>> GetByParameters(RegionsParameters parameters)
     {
-        await IsTownExist(parameters.TownId);
+        if (parameters.TownId > 0) await IsTownExist(parameters.TownId);
+        if (parameters.Id > 0) await GetById(parameters.Id);
         var regions = await _repository.Region.GetByParameters(parameters);
         return regions;
     }

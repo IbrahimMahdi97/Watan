@@ -17,7 +17,8 @@ internal sealed class TownService : ITownService
 
     public async Task<IEnumerable<TownDto>> GetByParameters(TownsParameters parameters)
     {
-        await IsProvinceExist(parameters.ProvinceId);
+        if (parameters.ProvinceId > 0) await IsProvinceExist(parameters.ProvinceId);
+        if (parameters.Id > 0) await GetById(parameters.Id);
         var towns = await _repository.Town.GetByParameters(parameters);
         return towns;
     }
