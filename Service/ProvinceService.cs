@@ -25,12 +25,6 @@ internal sealed class ProvinceService : IProvinceService
         var province = await _repository.Province.GetProvinceById(id);
         return province;
     }
-/*
-    public async Task<ProvinceDto> GetByName(string name)
-    {
-        var province = await _repository.Province.GetProvinceByName(name);
-        return province;
-    }*/
 
     public async Task<int> Create(ProvinceForManipulationDto provinceDto)
     {

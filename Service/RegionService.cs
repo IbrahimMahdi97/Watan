@@ -25,18 +25,6 @@ internal sealed class RegionService : IRegionService
         var region = await _repository.Region.GetById(id);
         return region;
     }
- /*
-    public async Task<RegionDto> GetByName(string name)
-    {
-        var region = await _repository.Region.GetByName(name);
-        return region;
-    }
-
-    public async Task<IEnumerable<RegionDto>> GetByTownId(int townId)
-    {
-        var regions = await _repository.Region.GetByTownId(townId);
-        return regions;
-    }*/
 
     public async Task<int> Create(RegionForManipulationDto regionDto)
     {
