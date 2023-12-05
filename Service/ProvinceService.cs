@@ -36,11 +36,13 @@ internal sealed class ProvinceService : IProvinceService
 
     public async Task Update(int id, ProvinceForManipulationDto province)
     {
+        await GetById(id);
         await _repository.Province.UpdateProvince(id, province);
     }
 
     public async Task Delete(int id)
     {
+        await GetById(id);
         await _repository.Province.DeleteProvince(id);
     }
 }

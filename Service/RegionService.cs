@@ -40,6 +40,7 @@ internal sealed class RegionService : IRegionService
     public async Task Update(int id, RegionForManipulationDto regionDto)
     {
         await IsTownExist(regionDto.TownId);
+        await GetById(id);
         await _repository.Region.Update(id, regionDto);
     }
 

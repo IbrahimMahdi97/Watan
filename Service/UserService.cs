@@ -28,6 +28,11 @@ internal sealed class UserService : IUserService
 
     public async Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId)
     {
+        if (userForCreationDto.UserRegion.RegionId > 0 
+            || userForCreationDto.UserRegion.ProvinceId > 0 
+            || userForCreationDto.UserRegion.TownId > 0) 
+            await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.ProvinceId,
+                userForCreationDto.UserRegion.TownId);
         var result = await _repository.User.CreateUser(userForCreationDto);
 
         if (result <= 0)
@@ -226,6 +231,47 @@ internal sealed class UserService : IUserService
 
     public async Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto)
     {
+        var user = await GetById(userRatingForUpdateDto.UserId);
         await _repository.User.UpdateRating(userRatingForUpdateDto);
+    }
+
+    private async Task IsRegionExist(int? regionId, int? townId, int? provinceId)
+    {
+        var regionService = new RegionService(_repository);
+        var townService = new TownService(_repository);
+        var provinceService = new ProvinceService(_repository);
+        
+        if (provinceId is > 0)
+        {
+            var province = await provinceService.GetById(provinceId.Value);
+        }
+        
+        if (townId is > 0)
+        {
+            if (provinceId is not > 0)
+            {
+                throw new TownWithoutProvinceException(townId.Value);
+            }
+
+            var town = await townService.GetById(townId.Value);
+            if (provinceId.HasValue && town.ProvinceId != provinceId.Value)
+            {
+                throw new InvalidTownProvinceException(townId.Value, provinceId.Value);
+            }
+        }
+
+        if (regionId is > 0)
+        {
+            if (townId is not > 0)
+            {
+                throw new RegionWithoutTownException(regionId.Value);
+            }
+
+            var region = await regionService.GetById(regionId.Value);
+            if (townId.HasValue && region.TownId != townId.Value)
+            {
+                throw new InvalidRegionTownException(regionId.Value, townId.Value);
+            }
+        }
     }
 }

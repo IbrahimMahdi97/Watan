@@ -41,6 +41,7 @@ internal sealed class TownService : ITownService
     public async Task Update(int id, TownForManipulationDto townDto)
     {
         await IsProvinceExist(townDto.ProvinceId);
+        await GetById(id);
         await _repository.Town.Update(id, townDto);
     }
 
