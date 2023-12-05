@@ -43,10 +43,10 @@ internal sealed class EventService : IEventService
         return events;
     }
 
-    public async Task<EventWithPostDto> GetEventById(int id)
+    public async Task<EventWithPostDto> GetEventById(int id, int userId)
     {
         var eventDetails = await _repository.Event.GetEventById(id);
-        eventDetails.PostDetails = await _repository.Post.GetPostById(id);
+        eventDetails.PostDetails = await _repository.Post.GetPostById(id, userId);
         var images = _fileStorageService.GetFilesUrlsFromServer(eventDetails.PostDetails.Id,
             _configuration["PostImagesSetStorageUrl"]!,
             _configuration["PostImagesGetStorageUrl"]!).ToList();
