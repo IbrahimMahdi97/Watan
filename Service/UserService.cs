@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Service.Interface;
 using Shared.DataTransferObjects;
 using Shared.Helpers;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -233,6 +234,24 @@ internal sealed class UserService : IUserService
     {
         var user = await GetById(userRatingForUpdateDto.UserId);
         await _repository.User.UpdateRating(userRatingForUpdateDto);
+    }
+
+    public async Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters)
+    {
+        var users = await _repository.User.GetByParameters(parameters);
+        
+        foreach (var user in users)
+        {
+            var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
+                _configuration["UserImagesSetStorageUrl"]!,
+                _configuration["UserImagesGetStorageUrl"]!).ToList();
+
+            user.ImageUrl = images.Any() ? images.First() : "";
+            user.Roles = await _repository.User.GetUserRoles(user.Id);
+            user.Regions = await _repository.User.GetUserRegions(user.Id);
+        }
+
+        return users;
     }
 
     private async Task IsRegionExist(int? regionId, int? townId, int? provinceId)
