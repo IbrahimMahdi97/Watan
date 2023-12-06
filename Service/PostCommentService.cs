@@ -86,11 +86,6 @@ internal sealed class PostCommentService : IPostCommentService
     public async Task Like(int commentId, int userId)
     {
         await _repository.PostComment.AddLike(commentId, userId);
-        /*
-        if (isLikeExist)
-            await _repository.PostComment.RemoveLike(commentId, userId);
-        await _repository.PostComment.AddLike(commentId, userId);
-    */
     }
 
     public async Task<IEnumerable<LikeDto>> GetLikes(int commentId)

@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
@@ -16,43 +17,43 @@ internal sealed class TownService : ITownService
 
     public async Task<IEnumerable<TownDto>> GetByParameters(TownsParameters parameters)
     {
+        if (parameters.ProvinceId > 0) await IsProvinceExist(parameters.ProvinceId);
+        if (parameters.Id > 0) await GetById(parameters.Id);
         var towns = await _repository.Town.GetByParameters(parameters);
         return towns;
     }
-    
-  
+
+
     public async Task<TownDto> GetById(int id)
     {
         var town = await _repository.Town.GetById(id);
+        if (town is null) throw new TownNotFoundException(id);
         return town;
     }
-  /*
-    public async Task<TownDto> GetByName(string name)
-    {
-        var town = await _repository.Town.GetByName(name);
-        return town;
-    }
-
-    public async Task<IEnumerable<TownDto>> GetByProvince(int provinceId)
-    {
-        var towns = await _repository.Town.GetByProvinceId(provinceId);
-        return towns;
-    }
-    */
 
     public async Task<int> Create(TownForManipulationDto townDto)
     {
+        await IsProvinceExist(townDto.ProvinceId);
         var result = await _repository.Town.Create(townDto);
         return result;
     }
 
     public async Task Update(int id, TownForManipulationDto townDto)
     {
+        await IsProvinceExist(townDto.ProvinceId);
+        await GetById(id);
         await _repository.Town.Update(id, townDto);
     }
 
     public async Task Delete(int id)
     {
+        var town = GetById(id);
         await _repository.Town.Delete(id);
+    }
+
+    private async Task IsProvinceExist(int provinceId)
+    {
+        var provinceService = new ProvinceService(_repository);
+        var province = await provinceService.GetById(provinceId);
     }
 }

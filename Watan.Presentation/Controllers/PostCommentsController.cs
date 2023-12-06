@@ -15,7 +15,7 @@ public class PostCommentsController : ControllerBase
     
     [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create([FromForm] PostCommentForManiupulationDto postComment)
+    public async Task<ActionResult<int>> Create(PostCommentForManiupulationDto postComment)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         var result = await _service.PostCommentService.Create(postComment, userId);
@@ -34,7 +34,7 @@ public class PostCommentsController : ControllerBase
 
     [Authorize]
     [HttpPut]
-    public async Task<ActionResult> Update([FromForm] PostCommentForManiupulationDto postComment, int commentId)
+    public async Task<ActionResult> Update(PostCommentForManiupulationDto postComment, int commentId)
     {
         await _service.PostCommentService.Update(postComment, commentId);
         return NoContent();
@@ -59,7 +59,7 @@ public class PostCommentsController : ControllerBase
     
     [Authorize]
     [HttpPost("like")]
-    public async Task<ActionResult> Create([FromForm] int commentId)
+    public async Task<ActionResult> Create(int commentId)
     {
         var userId = User.RetrieveUserIdFromPrincipal();
         await _service.PostCommentService.Like(commentId, userId);

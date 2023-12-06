@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Interfaces;
 using Service.Interface;
 using Shared.DataTransferObjects;
@@ -23,14 +24,9 @@ internal sealed class ProvinceService : IProvinceService
     public async Task<ProvinceDto> GetById(int id)
     {
         var province = await _repository.Province.GetProvinceById(id);
+        if (province is null) throw new ProvinceNotFoundException(id);
         return province;
     }
-/*
-    public async Task<ProvinceDto> GetByName(string name)
-    {
-        var province = await _repository.Province.GetProvinceByName(name);
-        return province;
-    }*/
 
     public async Task<int> Create(ProvinceForManipulationDto provinceDto)
     {
@@ -40,11 +36,13 @@ internal sealed class ProvinceService : IProvinceService
 
     public async Task Update(int id, ProvinceForManipulationDto province)
     {
+        await GetById(id);
         await _repository.Province.UpdateProvince(id, province);
     }
 
     public async Task Delete(int id)
     {
+        await GetById(id);
         await _repository.Province.DeleteProvince(id);
     }
 }
