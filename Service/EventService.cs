@@ -61,6 +61,12 @@ internal sealed class EventService : IEventService
         if (eventDto.ProvinceId > 0) await IsProvinceExist(eventDto.ProvinceId);
         if (eventDto.TownId > 0) await IsTownExist(eventDto.TownId);
         
+        if (eventDto.PostDetails.Title is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Title", 50);
+        
+        if (eventDto.Type is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Type", 50);
+
         var (postId, connection, transaction) = await _repository.Post.CreatePost(eventDto.PostDetails, userId, "EVT");
         await _repository.Event.Create(eventDto, postId, connection, transaction);
         

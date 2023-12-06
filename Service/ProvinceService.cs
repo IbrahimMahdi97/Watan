@@ -30,6 +30,9 @@ internal sealed class ProvinceService : IProvinceService
 
     public async Task<int> Create(ProvinceForManipulationDto provinceDto)
     {
+        if (provinceDto.Description is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Description", 50);
+        
         var result = await _repository.Province.CreateProvince(provinceDto);
         return result;
     }

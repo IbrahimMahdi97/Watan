@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;
@@ -71,6 +72,9 @@ internal sealed class PostService : IPostService
 
     public async Task<int> CreatePost(PostForManipulationDto postDto, int userId, string postType)
     {
+        if (postDto.Title is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Title", 50);
+
         var (result, connection, transaction) = await _repository.Post.CreatePost(postDto, userId, postType);
 
         //boolean flag can be added to move these lines into repo

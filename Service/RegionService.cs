@@ -33,6 +33,10 @@ internal sealed class RegionService : IRegionService
     public async Task<int> Create(RegionForManipulationDto regionDto)
     {
         await IsTownExist(regionDto.TownId);
+        
+        if (regionDto.Description is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Description", 50);
+
         var result = await _repository.Region.Create(regionDto);
         return result;
     }

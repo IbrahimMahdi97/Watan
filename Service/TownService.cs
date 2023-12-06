@@ -34,6 +34,10 @@ internal sealed class TownService : ITownService
     public async Task<int> Create(TownForManipulationDto townDto)
     {
         await IsProvinceExist(townDto.ProvinceId);
+        
+        if (townDto.Description is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Description", 50);
+
         var result = await _repository.Town.Create(townDto);
         return result;
     }
