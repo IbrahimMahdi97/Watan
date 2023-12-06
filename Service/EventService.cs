@@ -83,7 +83,7 @@ internal sealed class EventService : IEventService
     private async Task IsProvinceExist(int provinceId)
     {
         var provinceService = new ProvinceService(_repository);
-        var province = await provinceService.GetById(provinceId);
+        await provinceService.GetById(provinceId);
     }
 
     private async Task IsTownExist(int townId, int? provinceId = null)

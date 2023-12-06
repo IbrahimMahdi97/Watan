@@ -1,4 +1,3 @@
-using System.Collections;
 using Shared.DataTransferObjects;
 
 namespace Service.Interface;

@@ -47,13 +47,13 @@ internal sealed class TownService : ITownService
 
     public async Task Delete(int id)
     {
-        var town = GetById(id);
+        await GetById(id);
         await _repository.Town.Delete(id);
     }
 
     private async Task IsProvinceExist(int provinceId)
     {
         var provinceService = new ProvinceService(_repository);
-        var province = await provinceService.GetById(provinceId);
+        await provinceService.GetById(provinceId);
     }
 }

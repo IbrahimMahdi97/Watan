@@ -1,4 +1,3 @@
-using System.Collections;
 using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;

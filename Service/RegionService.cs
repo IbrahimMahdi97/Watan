@@ -46,13 +46,13 @@ internal sealed class RegionService : IRegionService
 
     public async Task Delete(int id)
     {
-        var region = GetById(id); 
+        await GetById(id); 
         await _repository.Region.Delete(id);
     }
 
     private async Task IsTownExist(int townId)
     {
         var townService = new TownService(_repository);
-        var town = await townService.GetById(townId);
+        await townService.GetById(townId);
     }
 }
