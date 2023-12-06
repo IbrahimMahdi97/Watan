@@ -7,5 +7,4 @@ public interface IRoleRepository
 {
     Task<IEnumerable<Role>> GetUserRoles(int id);
     Task<IEnumerable<UserRoleDto>> GetAll();
-    Task<UserRole> GetRole(string description);
 }
