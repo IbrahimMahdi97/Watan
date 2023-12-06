@@ -38,7 +38,7 @@ internal sealed class PostService : IPostService
 
     public async Task<PostDetailsDto> GetPostById(int id, int userId)
     {
-        var post = await _repository.Post.GetPostById(id);
+        var post = await _repository.Post.GetPostById(id, userId);
 
         var images = _fileStorageService.GetFilesUrlsFromServer(post.Id,
             _configuration["PostImagesSetStorageUrl"]!,

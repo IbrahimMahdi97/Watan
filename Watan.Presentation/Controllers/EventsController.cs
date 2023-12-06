@@ -29,7 +29,8 @@ public class EventsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<EventWithPostDto>> GetEventById(int id)
     {
-        var eventDetails = await _service.EventService.GetEventById(id);
+        var userId = User.RetrieveUserIdFromPrincipal();
+        var eventDetails = await _service.EventService.GetEventById(id, userId);
         return Ok(eventDetails);
     }
     
