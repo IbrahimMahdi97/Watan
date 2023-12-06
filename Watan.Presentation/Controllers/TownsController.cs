@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace WatanPresentation.Controllers;
 
@@ -14,9 +15,9 @@ public class TownsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TownDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<TownDto>>> GetByParameters([FromQuery] TownsParameters parameters)
     {
-        var towns = await _service.TownService.GetAll();
+        var towns = await _service.TownService.GetByParameters(parameters);
         return Ok(towns);
     }
     
@@ -29,24 +30,8 @@ public class TownsController : ControllerBase
     }
     
     [Authorize]
-    [HttpGet("name")]
-    public async Task<ActionResult<TownDto>> GetByName(string name)
-    {
-        var town = await _service.TownService.GetByName(name);
-        return Ok(town);
-    }
-    
-    [Authorize]
-    [HttpGet("province")]
-    public async Task<ActionResult<IEnumerable<TownDto>>> GetByProvince(int province)
-    {
-        var towns = await _service.TownService.GetByProvince(province);
-        return Ok(towns);
-    }
-    
-    [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create([FromForm] TownForManipulationDto townDto)
+    public async Task<ActionResult<int>> Create(TownForManipulationDto townDto)
     {
         var id = await _service.TownService.Create(townDto);
         return Ok(id);

@@ -11,11 +11,8 @@ internal sealed class PostLikeService : IPostLikeService
         _repository = repository;
     }
     
-    public async Task Create(int postId, int userId)
+    public async Task AddLike(int postId, int userId)
     {
-        var exist = await _repository.PostLike.CheckIfExist(postId, userId);
-        if (exist)
-            await _repository.PostLike.Delete(postId, userId);
-        await _repository.PostLike.Create(postId, userId);
+        await _repository.PostLike.AddLike(postId, userId);
     }
 }

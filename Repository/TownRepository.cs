@@ -2,6 +2,7 @@ using Interfaces;
 using Shared.DataTransferObjects;
 using Repository.Query;
 using Dapper;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -14,14 +15,15 @@ public class TownRepository : ITownRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<TownDto>> GetAll()
+    public async Task<IEnumerable<TownDto>> GetByParameters(TownsParameters parameters)
     {
-        const string query = TownQuery.AllTownsQuery;
+        const string query = TownQuery.SelectByParametersQuery;
         using var connection = _context.CreateConnection();
-        var towns = await connection.QueryAsync<TownDto>(query);
+        var towns = await connection.QueryAsync<TownDto>(query, parameters);
         return towns.ToList();
     }
     
+   
     public async Task<TownDto> GetById(int id)
     {
         const string query = TownQuery.TownByIdQuery;
@@ -29,7 +31,7 @@ public class TownRepository : ITownRepository
         var town = await connection.QuerySingleOrDefaultAsync<TownDto>(query, new { Id = id });
         return town;
     }
-    
+     /*
     public async Task<TownDto> GetByName(string name)
     {
         const string query = TownQuery.TownByNameQuery;
@@ -45,6 +47,7 @@ public class TownRepository : ITownRepository
         var towns = await connection.QueryAsync<TownDto>(query, new { Id = provinceId });
         return towns.ToList();
     }
+    */
     
     public async Task<int> Create(TownForManipulationDto townDto)
     {

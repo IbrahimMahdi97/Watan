@@ -1,4 +1,5 @@
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Interfaces;
 
@@ -16,4 +17,5 @@ public interface IUserRepository
     Task UpdateDeviceId(int userId, string deviceId);
     Task<string?> GetUserDeviceId(int userId);
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
+    Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
 }

@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;
@@ -43,10 +44,10 @@ internal sealed class EventService : IEventService
         return events;
     }
 
-    public async Task<EventWithPostDto> GetEventById(int id)
+    public async Task<EventWithPostDto> GetEventById(int id, int userId)
     {
         var eventDetails = await _repository.Event.GetEventById(id);
-        eventDetails.PostDetails = await _repository.Post.GetPostById(id);
+        eventDetails.PostDetails = await _repository.Post.GetPostById(id, userId);
         var images = _fileStorageService.GetFilesUrlsFromServer(eventDetails.PostDetails.Id,
             _configuration["PostImagesSetStorageUrl"]!,
             _configuration["PostImagesGetStorageUrl"]!).ToList();
@@ -57,6 +58,9 @@ internal sealed class EventService : IEventService
 
     public async Task<int> Create(EventWithPostForCreationDto eventDto, int userId)
     {
+        if (eventDto.ProvinceId > 0) await IsProvinceExist(eventDto.ProvinceId);
+        if (eventDto.TownId > 0) await IsTownExist(eventDto.TownId);
+        
         var (postId, connection, transaction) = await _repository.Post.CreatePost(eventDto.PostDetails, userId, "EVT");
         await _repository.Event.Create(eventDto, postId, connection, transaction);
         
@@ -69,7 +73,27 @@ internal sealed class EventService : IEventService
 
     public async Task Update(int id, EventWithPostForCreationDto eventDto)
     {
+        if (eventDto.ProvinceId > 0) await IsProvinceExist(eventDto.ProvinceId);
+        if (eventDto.TownId > 0) await IsTownExist(eventDto.TownId);
+        
         await _repository.Post.UpdatePost(id, eventDto.PostDetails);
         await _repository.Event.Update(id, eventDto);
     }
+
+    private async Task IsProvinceExist(int provinceId)
+    {
+        var provinceService = new ProvinceService(_repository);
+        var province = await provinceService.GetById(provinceId);
+    }
+
+    private async Task IsTownExist(int townId, int? provinceId = null)
+    {
+        var townService = new TownService(_repository);
+        var town = await townService.GetById(townId);
+        if (provinceId.HasValue && town.ProvinceId != provinceId.Value)
+        {
+            throw new InvalidTownProvinceException(townId, provinceId.Value);
+        }
+    }
+
 }

@@ -9,12 +9,13 @@ namespace Repository;
 public class PostRepository : IPostRepository
 {
     private readonly DapperContext _context;
-    
+
     public PostRepository(DapperContext context)
     {
         _context = context;
     }
-    public async Task<IEnumerable<PostDto>> GetAllPosts()
+
+    public async Task<IEnumerable<PostDto>> GetAllPosts(int userId)
     {
         const string query = PostQuery.AllPostsQuery;
         var param = new DynamicParameters();
@@ -23,21 +24,24 @@ public class PostRepository : IPostRepository
         connection.Open();
 
         var trans = connection.BeginTransaction();
-        var typeId = await connection.QuerySingleAsync<int>(prefixQuery, new {Prefix = "NWS"}, trans);
+        var typeId = await connection.QuerySingleAsync<int>(prefixQuery, new { Prefix = "NWS" }, trans);
         param.Add("TypeId", typeId);
+        param.Add("UserId", userId);
+
         var posts = await connection.QueryAsync<PostDto>(query, param, trans);
         return posts.ToList();
     }
 
-    public async Task<PostDetailsDto> GetPostById(int id)
+    public async Task<PostDetailsDto> GetPostById(int id, int userId)
     {
         const string query = PostQuery.PostById;
         using var connection = _context.CreateConnection();
-        var post = await connection.QuerySingleOrDefaultAsync<PostDetailsDto>(query, new { Id = id });
+        var post = await connection.QuerySingleOrDefaultAsync<PostDetailsDto>(query, new { Id = id, UserId = userId });
         return post;
     }
 
-    public async Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId, string postType)
+    public async Task<(int, IDbConnection, IDbTransaction)> CreatePost(PostForManipulationDto postDto, int userId,
+        string postType)
     {
         const string prefixQuery = PostTypeQuery.PostTypeIdByPrefixQuery;
         var prefixParam = new DynamicParameters();

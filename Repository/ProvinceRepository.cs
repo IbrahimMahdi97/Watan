@@ -2,6 +2,7 @@ using Dapper;
 using Interfaces;
 using Repository.Query;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -14,29 +15,29 @@ public class ProvinceRepository : IProvinceRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<ProvinceDto>> GetAllProvinces()
+    public async Task<IEnumerable<ProvinceDto>> GetByParameters(ProvincesParameters parameters)
     {
-        const string query = ProvinceQuery.AllProvincesQuery;
+        const string query = ProvinceQuery.SelectByParametersQuery;
         using var connection = _context.CreateConnection();
-        var provinces = await connection.QueryAsync<ProvinceDto>(query);
+        var provinces = await connection.QueryAsync<ProvinceDto>(query, parameters);
         return provinces.ToList();
     }
     
-    public async Task<ProvinceDto> GetProvinceById(int id)
+   public async Task<ProvinceDto> GetProvinceById(int id)
     {
         const string query = ProvinceQuery.ProvinceByIdQuery;
         using var connection = _context.CreateConnection();
         var province = await connection.QuerySingleOrDefaultAsync<ProvinceDto>(query, new { Id = id });
         return province;
     }
-    
+     /*
     public async Task<ProvinceDto> GetProvinceByName(string name)
     {
         const string query = ProvinceQuery.ProvinceByNameQuery;
         using var connection = _context.CreateConnection();
         var province = await connection.QuerySingleOrDefaultAsync<ProvinceDto>(query, new { Description = name });
         return province;
-    }
+    }*/
     
     public async Task<int> CreateProvince(ProvinceForManipulationDto provinceDto)
     {

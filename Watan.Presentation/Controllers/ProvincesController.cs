@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace WatanPresentation.Controllers;
 
@@ -14,12 +15,13 @@ public class ProvincesController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProvinceDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<ProvinceDto>>> GetByParameters([FromQuery] ProvincesParameters parameters)
     {
-        var provinces = await _service.ProvinceService.GetAll();
+        var provinces = await _service.ProvinceService.GetByParameters(parameters);
         return Ok(provinces);
     }
     
+  
     [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProvinceDto>> GetById(int id)
@@ -28,6 +30,7 @@ public class ProvincesController : ControllerBase
         return Ok(province);
     }
     
+    /*
     [Authorize]
     [HttpGet("{name}")]
     public async Task<ActionResult<ProvinceDto>> GetByName(string name)
@@ -35,10 +38,11 @@ public class ProvincesController : ControllerBase
         var province = await _service.ProvinceService.GetByName(name);
         return Ok(province);
     }
+    */
     
     [Authorize]
     [HttpPost("create")]
-    public async Task<ActionResult<int>> Create([FromForm] ProvinceForManipulationDto provinceDto)
+    public async Task<ActionResult<int>> Create(ProvinceForManipulationDto provinceDto)
     {
         var id = await _service.ProvinceService.Create(provinceDto);
         return Ok(id);
