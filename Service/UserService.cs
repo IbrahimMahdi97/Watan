@@ -33,6 +33,9 @@ internal sealed class UserService : IUserService
             || userForCreationDto.UserRegion.TownId > 0) 
             await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.ProvinceId,
                 userForCreationDto.UserRegion.TownId);
+
+        ValidateFields(userForCreationDto);
+        
         var result = await _repository.User.CreateUser(userForCreationDto);
 
         if (result <= 0)
@@ -47,6 +50,35 @@ internal sealed class UserService : IUserService
                 _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
 
         return result;
+    }
+
+    private static void ValidateFields(UserForManipulationDto userForCreationDto)
+    {
+        if (userForCreationDto.FullName.Length > 250)
+            throw new StringLimitExceededBadRequestException("FullName", 250);
+        if (userForCreationDto.MotherName is { Length: > 250 })
+            throw new StringLimitExceededBadRequestException("MotherName", 250);
+        if (userForCreationDto.ProvinceOfBirth is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("ProvinceOfBirth", 50);
+        if (userForCreationDto.PhoneNumber is { Length: > 15 })
+            throw new StringLimitExceededBadRequestException("PhoneNumber", 15);
+        if (userForCreationDto.EmergencyPhoneNumber is { Length: > 15 }) 
+            throw new StringLimitExceededBadRequestException("EmergencyPhoneNumber", 15);
+        if (userForCreationDto.Email is { Length: > 250 })
+            throw new StringLimitExceededBadRequestException("Email", 250);
+        
+        if (userForCreationDto.District is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("District", 50);
+        if (userForCreationDto.StreetNumber is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("StreetNumber", 50);
+        if (userForCreationDto.HouseNumber is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("HouseNumber", 50);
+        if (userForCreationDto.NationalIdNumber is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("NationalIdNumber", 50);
+        if (userForCreationDto.ResidenceCardNumber is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("ResidenceCardNumber", 50);
+        if (userForCreationDto.VoterCardNumber is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("VoterCardNumber", 50);
     }
 
     public async Task<UserDto> ValidateUser(UserForAuthenticationDto userForAuth)
@@ -231,7 +263,7 @@ internal sealed class UserService : IUserService
 
     public async Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto)
     {
-        var user = await GetById(userRatingForUpdateDto.UserId);
+        await GetById(userRatingForUpdateDto.UserId);
         await _repository.User.UpdateRating(userRatingForUpdateDto);
     }
 
@@ -243,7 +275,7 @@ internal sealed class UserService : IUserService
         
         if (provinceId is > 0)
         {
-            var province = await provinceService.GetById(provinceId.Value);
+            await provinceService.GetById(provinceId.Value);
         }
         
         if (townId is > 0)

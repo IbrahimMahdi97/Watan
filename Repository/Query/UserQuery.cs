@@ -6,9 +6,9 @@ public static class UserQuery
         @"IF EXISTS(SELECT PhoneNumber FROM Users WHERE PhoneNumber = @PhoneNumber)
             SELECT 0;
             ELSE
-            INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, ProvinceOfBirth, DateOfBirth, Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber, VoterCardNumber)
+            INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth, Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber, VoterCardNumber)
               OUTPUT inserted.Id
-              VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @ProvinceOfBirth, @DateOfBirth, @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber, @VoterCardNumber);";
+              VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth, @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber, @VoterCardNumber);";
     
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";
