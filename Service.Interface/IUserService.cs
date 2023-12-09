@@ -1,4 +1,6 @@
+using System.Collections;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service.Interface;
 
@@ -9,4 +11,5 @@ public interface IUserService
     Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId);
     Task<TokenDto> RefreshToken(TokenDto tokenDto);
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
+    Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
 }

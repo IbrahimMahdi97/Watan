@@ -9,33 +9,52 @@ public static class UserQuery
             INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth, Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber, VoterCardNumber)
               OUTPUT inserted.Id
               VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth, @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber, @VoterCardNumber);";
-    
+
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";
-    
+
     public const string UserRolesByUserIdQuery =
         @"SELECT Id, Description, UR.UserId FROM Roles R
                        JOIN UserRoles UR on R.Id = UR.RoleId
                        WHERE UR.UserId = @Id";
-    
+
     public const string UpdateRefreshTokenByIdQuery =
         @"UPDATE Users SET RefreshToken = @refreshToken, RefreshTokenExpiryTime = @refreshTokenExpiryTime WHERE Id = @id;";
-    
+
     public const string UserIdByEmailOrPhoneNumberQuery =
         @"SELECT Id FROM Users WHERE Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ";
-    
+
     public const string UserByIdQuery =
         @"SELECT * FROM Users WHERE Id = @id";
-    
+
     public const string UpdateDeviceIdByIdQuery =
         @"UPDATE Users SET DeviceId = @deviceId WHERE Id = @id";
-    
+
     public const string UpdateRatingByIdQuery =
         @"UPDATE Users SET Rating = @Rating WHERE Id = @UserId";
-    
-    public const string UserByCredentialsEmailOrPhoneNumberQuery = 
+
+    public const string UserByCredentialsEmailOrPhoneNumberQuery =
         @"SELECT * FROM Users WHERE ( Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ) AND Password = @Password";
-    
-    public const string UserDeviceIdQuery = 
+
+    public const string UserDeviceIdQuery =
         @"SELECT DeviceId FROM Users WHERE Id = @id";
+
+    public const string SelectByParametersQuery = @"SELECT U.Id, U.FullName FROM Users U 
+                                            JOIN UserRegions UR on U.Id = UR.UserId
+                                            WHERE
+                                              (UR.ProvinceId = 0 OR IIF(@ProvinceId = 0, 0, UR.ProvinceId) = @ProvinceId) AND
+                                              (UR.TownId = 0 OR IIF(@TownId = 0, 0, UR.TownId) = @TownId) AND
+                                              (UR.RegionId = 0 OR IIF(@RegionId = 0, 0, UR.RegionId) = @RegionId) AND
+                                              U.IsDeleted = 0
+                                              ORDER BY U.RecordDate DESC
+                                              OFFSET @Skip ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+    public const string SelectCountByParametersQuery =
+        @"SELECT COUNT( U.Id) FROM Users U 
+                                            JOIN UserRegions UR on U.Id = UR.UserId
+                                            WHERE
+                                              (UR.ProvinceId = 0 OR IIF(@ProvinceId = 0, 0, UR.ProvinceId) = @ProvinceId) AND
+                                              (UR.TownId = 0 OR IIF(@TownId = 0, 0, UR.TownId) = @TownId) AND
+                                              (UR.RegionId = 0 OR IIF(@RegionId = 0, 0, UR.RegionId) = @RegionId) AND
+                                              U.IsDeleted = 0";
 }
