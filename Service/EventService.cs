@@ -58,8 +58,7 @@ internal sealed class EventService : IEventService
 
     public async Task<int> Create(EventWithPostForCreationDto eventDto, int userId)
     {
-        if (eventDto.ProvinceId > 0) await IsProvinceExist(eventDto.ProvinceId);
-        if (eventDto.TownId > 0) await IsTownExist(eventDto.TownId);
+        await TownProvinceExist(eventDto.TownId, eventDto.ProvinceId);
         
         if (eventDto.PostDetails.Title is { Length: > 50 })
             throw new StringLimitExceededBadRequestException("Title", 50);
@@ -79,27 +78,19 @@ internal sealed class EventService : IEventService
 
     public async Task Update(int id, EventWithPostForCreationDto eventDto)
     {
-        if (eventDto.ProvinceId > 0) await IsProvinceExist(eventDto.ProvinceId);
-        if (eventDto.TownId > 0) await IsTownExist(eventDto.TownId);
-        
+        await TownProvinceExist(eventDto.TownId, eventDto.ProvinceId);
+        var post = await _repository.Post.GetPostById(id, 0);
+        if (post is null) throw new PostNotFoundException(id);
         await _repository.Post.UpdatePost(id, eventDto.PostDetails);
         await _repository.Event.Update(id, eventDto);
     }
 
-    private async Task IsProvinceExist(int provinceId)
+    private async Task TownProvinceExist(int townId, int provinceId)
     {
-        var provinceService = new ProvinceService(_repository);
-        await provinceService.GetById(provinceId);
+        var town = await _repository.Town.GetById(townId);
+        if (town is null) throw new TownNotFoundException(townId);
+        if (town.ProvinceId != provinceId) throw new InvalidTownProvinceException(townId, provinceId);
+        var province = await _repository.Province.GetProvinceById(provinceId);
+        if (province is null) throw new ProvinceNotFoundException(provinceId);
     }
-
-    private async Task IsTownExist(int townId, int? provinceId = null)
-    {
-        var townService = new TownService(_repository);
-        var town = await townService.GetById(townId);
-        if (provinceId.HasValue && town.ProvinceId != provinceId.Value)
-        {
-            throw new InvalidTownProvinceException(townId, provinceId.Value);
-        }
-    }
-
 }

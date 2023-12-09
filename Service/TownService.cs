@@ -17,7 +17,7 @@ internal sealed class TownService : ITownService
 
     public async Task<IEnumerable<TownDto>> GetByParameters(TownsParameters parameters)
     {
-        if (parameters.ProvinceId > 0) await IsProvinceExist(parameters.ProvinceId);
+        if (parameters.ProvinceId > 0) await ProvinceExist(parameters.ProvinceId);
         if (parameters.Id > 0) await GetById(parameters.Id);
         var towns = await _repository.Town.GetByParameters(parameters);
         return towns;
@@ -33,7 +33,7 @@ internal sealed class TownService : ITownService
 
     public async Task<int> Create(TownForManipulationDto townDto)
     {
-        await IsProvinceExist(townDto.ProvinceId);
+        await ProvinceExist(townDto.ProvinceId);
         
         if (townDto.Description is { Length: > 50 })
             throw new StringLimitExceededBadRequestException("Description", 50);
@@ -44,7 +44,7 @@ internal sealed class TownService : ITownService
 
     public async Task Update(int id, TownForManipulationDto townDto)
     {
-        await IsProvinceExist(townDto.ProvinceId);
+        await ProvinceExist(townDto.ProvinceId);
         await GetById(id);
         await _repository.Town.Update(id, townDto);
     }
@@ -55,9 +55,9 @@ internal sealed class TownService : ITownService
         await _repository.Town.Delete(id);
     }
 
-    private async Task IsProvinceExist(int provinceId)
+    private async Task ProvinceExist(int provinceId)
     {
-        var provinceService = new ProvinceService(_repository);
-        await provinceService.GetById(provinceId);
+        var province = await _repository.Province.GetProvinceById(provinceId);
+        if (province is null) throw new ProvinceNotFoundException(provinceId);
     }
 }

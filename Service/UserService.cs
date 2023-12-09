@@ -269,13 +269,10 @@ internal sealed class UserService : IUserService
 
     private async Task IsRegionExist(int? regionId, int? townId, int? provinceId)
     {
-        var regionService = new RegionService(_repository);
-        var townService = new TownService(_repository);
-        var provinceService = new ProvinceService(_repository);
-        
         if (provinceId is > 0)
         {
-            await provinceService.GetById(provinceId.Value);
+            var province = await _repository.Province.GetProvinceById(provinceId.Value);
+            if (province is null) throw new ProvinceNotFoundException(provinceId.Value);
         }
         
         if (townId is > 0)
@@ -285,7 +282,8 @@ internal sealed class UserService : IUserService
                 throw new TownWithoutProvinceException(townId.Value);
             }
 
-            var town = await townService.GetById(townId.Value);
+            var town = await _repository.Town.GetById(townId.Value);
+            if (town is null) throw new TownNotFoundException(townId.Value);
             if (provinceId.HasValue && town.ProvinceId != provinceId.Value)
             {
                 throw new InvalidTownProvinceException(townId.Value, provinceId.Value);
@@ -299,7 +297,8 @@ internal sealed class UserService : IUserService
                 throw new RegionWithoutTownException(regionId.Value);
             }
 
-            var region = await regionService.GetById(regionId.Value);
+            var region = await _repository.Region.GetById(regionId.Value);
+            if (region is null) throw new RegionNotFoundException(regionId.Value);
             if (townId.HasValue && region.TownId != townId.Value)
             {
                 throw new InvalidRegionTownException(regionId.Value, townId.Value);
