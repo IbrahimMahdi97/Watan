@@ -1,10 +1,8 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Shared.DataTransferObjects;
 using Shared.Helpers;
-using Shared.RequestFeatures;
 
 namespace WatanPresentation.Controllers;
 
@@ -62,14 +60,5 @@ public class UsersController : ControllerBase
     {
         var token = await _service.UserService.RefreshToken(tokenDto);
         return Ok(token);
-    }
-
-    [Authorize(Roles = "admin")]
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDetailsDto>>> GetByParameters([FromQuery] UsersParameters parameters)
-    {
-        var users = await _service.UserService.GetByParameters(parameters);
-        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(users.MetaData));
-        return Ok(users);
     }
 }

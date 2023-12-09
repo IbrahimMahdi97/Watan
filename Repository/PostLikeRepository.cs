@@ -20,6 +20,22 @@ public class PostLikeRepository : IPostLikeRepository
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, new { PostId = postId, UserId = userId });
     }
+
+    /*
+    public async Task Create(int postId, int userId)
+    {
+        const string query = PostLikeQuery.InsertQuery;
+        using var connection = _context.CreateConnection();
+        await connection.QuerySingleOrDefaultAsync<int>(query, new { PostId = postId, UserId = userId });
+    }
+
+    public async Task Delete(int postId, int userId)
+    {
+        const string query = PostLikeQuery.DeleteQuery;
+        using var connection = _context.CreateConnection();
+        await connection.QuerySingleOrDefaultAsync<int>(query, new { PostId = postId, UserId = userId });
+    }
+    */
     
     public async Task<IEnumerable<LikeDto>> GetPostLikes(int postId)
     {

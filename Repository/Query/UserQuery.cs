@@ -38,30 +38,4 @@ public static class UserQuery
     
     public const string UserDeviceIdQuery = 
         @"SELECT DeviceId FROM Users WHERE Id = @id";
-
-    public const string UsersByParametersQuery = @"SELECT US.Id AS Id, US.FullName AS FullName, 
-                                                    US.MotherName AS MotherName, US.ProvinceOfBirth AS ProvinceOfBirth, 
-                                                    US.Gender AS Gender, US.DateOfBirth AS DateOfBirth, 
-                                                    US.District AS District, US.StreetNumber AS StreetNumber, 
-                                                    US.HouseNumber AS HouseNumber, US.NationalIdNumber AS NationalIdNumber,
-                                                    US.ResidenceCardNumber AS ResidenceCardNumber, 
-                                                    US.VoterCardNumber AS VoterCardNumber,
-                                                    US.PhoneNumber AS PhoneNumber, US.Email AS Email, US.Rating AS Rating 
-                                                    FROM Users US INNER JOIN UserRoles UR ON US.Id = UR.UserId 
-                                                    INNER JOIN UserRegions UG ON US.Id = UG.UserId 
-                                                    WHERE IIF(@ProvinceId = 0, 0, UG.ProvinceId) = @ProvinceId AND
-                                                    IIF(@TownId = 0, 0, UG.TownId) = @TownId AND 
-                                                    IIF(@RegionId = 0, 0, UG.RegionId) = @RegionId AND 
-                                                    IIF(@RoleId = 0, 0, UR.RoleId) = @RoleId AND 
-                                                    IIF(@Id = 0, 0, US.Id) = @Id AND US.IsDeleted = 0 
-                                                    ORDER BY US.RecordDate DESC
-                                                    OFFSET @Skip ROWS FETCH NEXT @PageSize ROWS ONLY";
-    public const string UsersCountByParametersQuery = @"SELECT COUNT(US.Id) 
-                                                        FROM Users US INNER JOIN UserRoles UR ON US.Id = UR.UserId 
-                                                        INNER JOIN UserRegions UG ON US.Id = UG.UserId 
-                                                        WHERE IIF(@ProvinceId = 0, 0, UG.ProvinceId) = @ProvinceId AND
-                                                        IIF(@TownId = 0, 0, UG.TownId) = @TownId AND 
-                                                        IIF(@RegionId = 0, 0, UG.RegionId) = @RegionId AND 
-                                                        IIF(@RoleId = 0, 0, UR.RoleId) = @RoleId AND 
-                                                        IIF(@Id = 0, 0, US.Id) = @Id AND US.IsDeleted = 0 ";
 }

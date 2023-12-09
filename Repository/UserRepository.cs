@@ -3,7 +3,6 @@ using Interfaces;
 using Repository.Query;
 using Shared.DataTransferObjects;
 using Shared.Helpers;
-using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -139,22 +138,5 @@ public class UserRepository : IUserRepository
         const string query = UserQuery.UpdateRatingByIdQuery;
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, userRatingForUpdateDto);
-    }
-
-    public async Task<PagedList<UserDetailsDto>> GetByParameters(UsersParameters parameters)
-    {
-        const string query = UserQuery.UsersByParametersQuery;
-        const string countQuery = UserQuery.UsersCountByParametersQuery;
-        
-        var skip = (parameters.PageNumber - 1) * parameters.PageSize;
-        var param = new DynamicParameters(parameters);
-        param.Add("skip", skip);
-        
-        using var connection = _context.CreateConnection();
-        
-        var count = await connection.QueryFirstOrDefaultAsync<int>(countQuery, param);
-        var users = await connection.QueryAsync<UserDetailsDto>(query, param: param);
-        
-        return new PagedList<UserDetailsDto>(users, count, parameters.PageNumber, parameters.PageSize);
     }
 }
