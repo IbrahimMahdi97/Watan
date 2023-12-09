@@ -15,5 +15,6 @@ public class UserForManipulationDto
     public string? ResidenceCardNumber { get; set; } = null!;
     public string? VoterCardNumber { get; set; } = null!;
     public string? PhoneNumber { get; set; }
+    public string? EmergencyPhoneNumber { get; set; }
     public string? Email { get; set; }
 }

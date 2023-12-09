@@ -30,9 +30,4 @@ internal sealed class RoleRepository : IRoleRepository
         var roles = await connection.QueryAsync<UserRoleDto>(query);
         return roles;
     }
-
-    public Task<UserRole> GetRole(string description)
-    {
-        throw new NotImplementedException();
-    }
 }

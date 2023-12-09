@@ -33,6 +33,9 @@ public class NotificationService : INotificationService
 
     public async Task<Notification?> SendNotification(NotificationForCreationDto notification, int userId)
     {
+        if (notification.Title is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Title", 50);
+
         var insertedId = await _repository.Notification.AddNotification(new Notification()
         {
             Title = notification.Title,

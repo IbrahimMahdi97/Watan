@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

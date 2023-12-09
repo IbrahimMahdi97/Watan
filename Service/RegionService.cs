@@ -17,7 +17,7 @@ internal sealed class RegionService : IRegionService
 
     public async Task<IEnumerable<RegionDto>> GetByParameters(RegionsParameters parameters)
     {
-        if (parameters.TownId > 0) await IsTownExist(parameters.TownId);
+        if (parameters.TownId > 0) await TownExist(parameters.TownId);
         if (parameters.Id > 0) await GetById(parameters.Id);
         var regions = await _repository.Region.GetByParameters(parameters);
         return regions;
@@ -32,27 +32,30 @@ internal sealed class RegionService : IRegionService
 
     public async Task<int> Create(RegionForManipulationDto regionDto)
     {
-        await IsTownExist(regionDto.TownId);
+        await TownExist(regionDto.TownId);
+        if (regionDto.Description is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Description", 50);
+
         var result = await _repository.Region.Create(regionDto);
         return result;
     }
 
     public async Task Update(int id, RegionForManipulationDto regionDto)
     {
-        await IsTownExist(regionDto.TownId);
+        await TownExist(regionDto.TownId);
         await GetById(id);
         await _repository.Region.Update(id, regionDto);
     }
 
     public async Task Delete(int id)
     {
-        var region = GetById(id); 
+        await GetById(id); 
         await _repository.Region.Delete(id);
     }
 
-    private async Task IsTownExist(int townId)
+    private async Task TownExist(int townId)
     {
-        var townService = new TownService(_repository);
-        var town = await townService.GetById(townId);
+        var town = await _repository.Town.GetById(townId);
+        if (town is null) throw new TownNotFoundException(townId);
     }
 }

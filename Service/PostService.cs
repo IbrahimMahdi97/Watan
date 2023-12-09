@@ -1,5 +1,5 @@
+using Entities.Exceptions;
 using Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Service.Interface;
 using Shared.DataTransferObjects;
@@ -39,6 +39,7 @@ internal sealed class PostService : IPostService
     public async Task<PostDetailsDto> GetPostById(int id, int userId)
     {
         var post = await _repository.Post.GetPostById(id, userId);
+        if (post is null) throw new PostNotFoundException(id);
 
         var images = _fileStorageService.GetFilesUrlsFromServer(post.Id,
             _configuration["PostImagesSetStorageUrl"]!,
@@ -72,6 +73,9 @@ internal sealed class PostService : IPostService
 
     public async Task<int> CreatePost(PostForManipulationDto postDto, int userId, string postType)
     {
+        if (postDto.Title is { Length: > 50 })
+            throw new StringLimitExceededBadRequestException("Title", 50);
+
         var (result, connection, transaction) = await _repository.Post.CreatePost(postDto, userId, postType);
 
         //boolean flag can be added to move these lines into repo
@@ -87,6 +91,7 @@ internal sealed class PostService : IPostService
 
     public async Task UpdatePost(int id, PostForManipulationDto postDto)
     {
+        await GetPostById(id, 0);
         await _repository.Post.UpdatePost(id, postDto);
         _fileStorageService.DeleteFilesFromServer(id, _configuration["PostImagesSetStorageUrl"]!);
 
@@ -98,6 +103,7 @@ internal sealed class PostService : IPostService
 
     public async Task DeletePost(int id)
     {
+        await GetPostById(id, 0);
         await _repository.Post.DeletePost(id);
     }
 }
