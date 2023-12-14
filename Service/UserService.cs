@@ -30,10 +30,11 @@ internal sealed class UserService : IUserService
     public async Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId)
     {
         if (userForCreationDto.UserRegion.RegionId > 0 
-            || userForCreationDto.UserRegion.ProvinceId > 0 
-            || userForCreationDto.UserRegion.TownId > 0) 
-            await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.ProvinceId,
-                userForCreationDto.UserRegion.TownId);
+            || userForCreationDto.UserRegion.TownId > 0
+            || userForCreationDto.UserRegion.ProvinceId > 0) 
+            await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.TownId, 
+                    userForCreationDto.UserRegion.ProvinceId)
+                ;
 
         ValidateFields(userForCreationDto);
         
