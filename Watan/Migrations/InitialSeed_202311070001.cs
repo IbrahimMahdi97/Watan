@@ -17,8 +17,8 @@ namespace Watan.Migrations
             }); 
             
             Delete.FromTable("ComplaintTypes").Row(new {
-                Description = "شكوى",
-                Prefix= "CMP"
+                Description = "طلب",
+                Prefix= "REQ"
             }).Row(new {
                 Description = "اقتراح",
                 Prefix= "SUG"
@@ -123,8 +123,8 @@ namespace Watan.Migrations
             }); 
             
             Insert.IntoTable("ComplaintTypes").Row(new {
-                Description = "شكوى",
-                Prefix= "CMP"
+                Description = "طلب",
+                Prefix= "REQ"
             }).Row(new {
                 Description = "اقتراح",
                 Prefix= "SUG"
