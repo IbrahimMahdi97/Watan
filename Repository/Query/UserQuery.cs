@@ -4,11 +4,19 @@ public static class UserQuery
 {
     public const string CreateUserQuery =
         @"IF EXISTS(SELECT PhoneNumber FROM Users WHERE PhoneNumber = @PhoneNumber)
-            SELECT 0;
-            ELSE
-            INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth, Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber, VoterCardNumber)
-              OUTPUT inserted.Id
-              VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth, @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber, @VoterCardNumber);";
+    SELECT 0;
+ELSE
+    INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth,
+                       Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber,
+                       VoterCardNumber, Rating, MaritalStatus, JobPlace, RecruitmentYear, JobTitle, JobSector, JobType, GraduatedYear, GraduatedFromDepartment, GraduatedFromCollege, 
+                       GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDgree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
+                       SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition)
+    OUTPUT inserted.Id
+    VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
+           @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber,
+           @VoterCardNumber, @Rating, @MaritalStatus, @JobPlace, @RecruitmentYear, @JobTitle, @JobSector, @JobType, @GraduatedYear, @GraduatedFromDepartment, @GraduatedFromCollege,
+           @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDgree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
+           @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition);";
 
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";

@@ -96,7 +96,27 @@ namespace Watan.Migrations
                 NationalIdNumber = "123456789123456789",
                 ResidenceCardNumber = "12345",
                 VoterCardNumber = "1234567",
-                Password = "b6b329ed260338df68892554b8efcf8dbc18933035aa57c40308e4008f0cdeaad9570eec79c5d48e06edc1af07ea212223e33d75ef61af4594e6e669c4b3aeb6"
+                Password = "b6b329ed260338df68892554b8efcf8dbc18933035aa57c40308e4008f0cdeaad9570eec79c5d48e06edc1af07ea212223e33d75ef61af4594e6e669c4b3aeb6",
+                AcademicAchievement ="بكالوريوس",
+                GraduatedFromUniversity ="جامعة بغداد",
+                GraduatedFromCollege ="كلية الهندسة",
+                GraduatedFromDepartment ="هندسة حاسبات",
+                GraduatedYear ="2000 - 2001",
+                StudyingYearsCount =4,
+                JobType ="مكتبي",
+                JobSector ="قطاع خاص",
+                JobTitle ="مبرمج",
+                JobDgree =0,
+                RecruitmentYear =new DateTime(2021, 01, 01),
+                JobPlace ="الكرادة - العرصات",
+                MaritalStatus ="أعزب",
+                FamilyMembersCount =7,
+                ChildrenCount =0,
+                JoiningDate =new DateTime(2022, 11, 01),
+                ClanName ="سوداني",
+                SubclanName ="بو العزيز",
+                IsFamiliesOfMartyrs =false,
+                FinancialCondition ="جيدة"
                 });
             
             Delete.FromTable("UserRoles").Row(new {
@@ -188,20 +208,41 @@ namespace Watan.Migrations
             
             Insert.IntoTable("Users").Row(new {
                 FullName = "رئيس الحزب",
-                MotherName = "الست الوالدة",
+                MotherName = "اسم الام",
                 ProvinceOfBirth = "بغداد / الكرخ",
                 Gender = true,
                 DateOfBirth = new DateTime(1998, 10, 15),
-                PhoneNumber = "07733810890",
+                PhoneNumber = "07712345678",
                 ProvinceId = 3,
                 TownId = 1,
                 District = "123",
+                Email="tadmin@tadmin.com",
                 StreetNumber = "12",
                 HouseNumber = "1",
                 NationalIdNumber = "123456789123456789",
                 ResidenceCardNumber = "12345",
                 VoterCardNumber = "1234567",
-                Password = "58b5444cf1b6253a4317fe12daff411a78bda0a95279b1d5768ebf5ca60829e78da944e8a9160a0b6d428cb213e813525a72650dac67b88879394ff624da482f"
+                Password = "b6b329ed260338df68892554b8efcf8dbc18933035aa57c40308e4008f0cdeaad9570eec79c5d48e06edc1af07ea212223e33d75ef61af4594e6e669c4b3aeb6",
+                AcademicAchievement ="بكالوريوس",
+                GraduatedFromUniversity ="جامعة بغداد",
+                GraduatedFromCollege ="كلية الهندسة",
+                GraduatedFromDepartment ="هندسة حاسبات",
+                GraduatedYear ="2000 - 2001",
+                StudyingYearsCount =4,
+                JobType ="مكتبي",
+                JobSector ="قطاع خاص",
+                JobTitle ="مبرمج",
+                JobDgree =0,
+                RecruitmentYear =new DateTime(2021, 01, 01),
+                JobPlace ="الكرادة - العرصات",
+                MaritalStatus ="أعزب",
+                FamilyMembersCount =7,
+                ChildrenCount =0,
+                JoiningDate =new DateTime(2022, 11, 01),
+                ClanName ="سوداني",
+                SubclanName ="بو العزيز",
+                IsFamiliesOfMartyrs =false,
+                FinancialCondition ="جيدة"
             });
 
             Insert.IntoTable("UserRoles").Row(new {
