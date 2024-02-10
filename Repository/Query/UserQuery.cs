@@ -53,6 +53,26 @@ ELSE
                                               (UR.ProvinceId = 0 OR IIF(@ProvinceId = 0, 0, UR.ProvinceId) = @ProvinceId) AND
                                               (UR.TownId = 0 OR IIF(@TownId = 0, 0, UR.TownId) = @TownId) AND
                                               (UR.RegionId = 0 OR IIF(@RegionId = 0, 0, UR.RegionId) = @RegionId) AND
+                                              (@SearchText IS NULL OR U.FullName LIKE '%' + @SearchText + '%'
+                                                  OR U.MotherName LIKE '%' + @SearchText + '%'
+                                                  OR U.ProvinceOfBirth LIKE '%' + @SearchText + '%'
+                                                  OR U.PhoneNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.EmergencyPhoneNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.Email LIKE '%' + @SearchText + '%'
+                                                  OR U.StreetNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.HouseNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.NationalIdNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.ResidenceCardNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.VoterCardNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.AcademicAchievement LIKE '%' + @SearchText + '%'
+                                                  OR U.GraduatedFromUniversity LIKE '%' + @SearchText + '%'
+                                                  OR U.GraduatedFromCollege LIKE '%' + @SearchText + '%'
+                                                  OR U.GraduatedFromDepartment LIKE '%' + @SearchText + '%') AND
+                                                (@Gender IS NULL OR U.Gender = @Gender) AND
+                                                (@FromDateOfBirth IS NULL OR U.DateOfBirth >= @FromDateOfBirth) AND
+                                                (@ToDateOfBirth IS NULL OR U.DateOfBirth <= @ToDateOfBirth) AND
+                                                (@FromJoiningDate IS NULL OR U.JoiningDate >= @FromJoiningDate) AND
+                                                (@ToJoiningDate IS NULL OR U.JoiningDate <= @ToJoiningDate) AND
                                               U.IsDeleted = 0
                                               ORDER BY U.RecordDate DESC
                                               OFFSET @Skip ROWS FETCH NEXT @PageSize ROWS ONLY";
@@ -64,5 +84,25 @@ ELSE
                                               (UR.ProvinceId = 0 OR IIF(@ProvinceId = 0, 0, UR.ProvinceId) = @ProvinceId) AND
                                               (UR.TownId = 0 OR IIF(@TownId = 0, 0, UR.TownId) = @TownId) AND
                                               (UR.RegionId = 0 OR IIF(@RegionId = 0, 0, UR.RegionId) = @RegionId) AND
+                                              (@SearchText IS NULL OR U.FullName LIKE '%' + @SearchText + '%'
+                                                  OR U.MotherName LIKE '%' + @SearchText + '%'
+                                                  OR U.ProvinceOfBirth LIKE '%' + @SearchText + '%'
+                                                  OR U.PhoneNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.EmergencyPhoneNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.Email LIKE '%' + @SearchText + '%'
+                                                  OR U.StreetNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.HouseNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.NationalIdNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.ResidenceCardNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.VoterCardNumber LIKE '%' + @SearchText + '%'
+                                                  OR U.AcademicAchievement LIKE '%' + @SearchText + '%'
+                                                  OR U.GraduatedFromUniversity LIKE '%' + @SearchText + '%'
+                                                  OR U.GraduatedFromCollege LIKE '%' + @SearchText + '%'
+                                                  OR U.GraduatedFromDepartment LIKE '%' + @SearchText + '%') AND
+                                                (@Gender IS NULL OR U.Gender = @Gender) AND
+                                                (@FromDateOfBirth IS NULL OR U.DateOfBirth >= @FromDateOfBirth) AND
+                                                (@ToDateOfBirth IS NULL OR U.DateOfBirth <= @ToDateOfBirth) AND
+                                                (@FromJoiningDate IS NULL OR U.JoiningDate >= @FromJoiningDate) AND
+                                                (@ToJoiningDate IS NULL OR U.JoiningDate <= @ToJoiningDate) AND
                                               U.IsDeleted = 0";
 }

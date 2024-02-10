@@ -4,8 +4,8 @@ public class UserDetailsDto
 {
     public int Id { get; set; }
     public string FullName { get; set; } = null!;
-    public string? MotherName { get; set; }  = null!;
-    public string? ProvinceOfBirth { get; set; }  = null!;
+    public string? MotherName { get; set; } = null!;
+    public string? ProvinceOfBirth { get; set; } = null!;
     public bool Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string? District { get; set; } = string.Empty;
@@ -23,5 +23,5 @@ public class UserDetailsDto
     public TokenDto? UserToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
     public string? RefreshToken { get; set; }
-    public int Rating { get; set; }
+    public float Rating { get; set; }
 }

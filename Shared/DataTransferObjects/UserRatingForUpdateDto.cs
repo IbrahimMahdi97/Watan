@@ -3,5 +3,5 @@
 public class UserRatingForUpdateDto
 {
     public int UserId { get; set; }
-    public int Rating { get; set; }
+    public float Rating { get; set; }
 }

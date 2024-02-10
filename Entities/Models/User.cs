@@ -23,7 +23,7 @@ public class User
     public string? NationalIdNumber { get; set; }
     public string? ResidenceCardNumber { get; set; }
     public string? VoterCardNumber { get; set; }
-    public int Rating { get; set; }
+    public float Rating { get; set; }
     public string? DeviceId { get; set; }
     public string? MaritalStatus { get; set; }
     public string? JobPlace { get; set; }

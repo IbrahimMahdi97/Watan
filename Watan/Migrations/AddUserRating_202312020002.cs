@@ -7,7 +7,7 @@ public class AddUserRating_202312020002 : Migration
 {
     public override void Up()
     {
-        Alter.Table("Users").AddColumn("Rating").AsInt32().NotNullable().WithDefaultValue(0);
+        Alter.Table("Users").AddColumn("Rating").AsFloat().NotNullable().WithDefaultValue(0.0);
     }
 
     public override void Down()

@@ -18,7 +18,7 @@ public class UserForManipulationDto
     public string? EmergencyPhoneNumber { get; set; }
     public string? Email { get; set; }
     
-    public int Rating { get; set; }
+    public float Rating { get; set; }
     public string? MaritalStatus { get; set; }
     public string? JobPlace { get; set; }
     public DateTime RecruitmentYear { get; set; }

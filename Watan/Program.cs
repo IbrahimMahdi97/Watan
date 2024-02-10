@@ -31,12 +31,12 @@ builder.Services.AddControllers()
 
 var app = builder.Build();
 
-/*app.UsePathBase("/Watan");
+app.UsePathBase("/Watan");
 app.Use((context, next) =>
 {
     context.Request.PathBase = "/Watan";
     return next();
-});*/
+});
 
 var logger = app.Services.GetRequiredService<ILoggerManager>();
 app.ConfigureExceptionHandler(logger);
@@ -58,17 +58,17 @@ app.UseCors("CorsPolicy");
 
 app.UseSwagger();
 
-app.UseSwaggerUI(s =>
+/*app.UseSwaggerUI(s =>
 {
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "Watan API v1");
     s.RoutePrefix = string.Empty;
-});
+});*/
 
-/*app.UseSwaggerUI(s =>
+app.UseSwaggerUI(s =>
 {
     s.SwaggerEndpoint("/Watan/swagger/v1/swagger.json", "Watan API v1");
     s.RoutePrefix = string.Empty;
-});*/
+});
 
 app.UseAuthentication();
 app.UseMiddleware<ExpiredOrMissedTokenMiddleware>();
