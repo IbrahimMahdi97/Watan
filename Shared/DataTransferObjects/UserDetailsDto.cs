@@ -19,6 +19,7 @@ public class UserDetailsDto
     public string ImageUrl { get; set; } = string.Empty;
     public IEnumerable<UserRoleDto>? Roles { get; set; }
     public IEnumerable<UserRegionDto>? Regions { get; set; }
+    public IEnumerable<UserHierarchyDto> SubordinateManagers { get; set; } = Array.Empty<UserHierarchyDto>();
     public TokenDto? UserToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
     public string? RefreshToken { get; set; }

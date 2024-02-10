@@ -12,4 +12,5 @@ public interface IUserService
     Task<TokenDto> RefreshToken(TokenDto tokenDto);
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
     Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
+    Task<UserHierarchyDto> GetHierarchy();
 }

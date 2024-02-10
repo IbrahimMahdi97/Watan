@@ -16,7 +16,7 @@ public class ExpiredOrMissedTokenMiddleware
         if (context.Request.Path.Value != null)
         {
             var path = context.Request.Path.Value.ToLower();
-            if (!path.Contains("login") && !path.Contains("refresh_token"))
+            if (!path.Contains("login") && !path.Contains("refresh_token")&& !path.Contains("hierarchy"))
             {
                 if (context.User.Identity is null || !context.User.Identity.IsAuthenticated)
                 {

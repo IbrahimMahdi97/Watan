@@ -29,15 +29,15 @@ internal sealed class UserService : IUserService
 
     public async Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId)
     {
-        if (userForCreationDto.UserRegion.RegionId > 0 
+        if (userForCreationDto.UserRegion.RegionId > 0
             || userForCreationDto.UserRegion.TownId > 0
-            || userForCreationDto.UserRegion.ProvinceId > 0) 
-            await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.TownId, 
+            || userForCreationDto.UserRegion.ProvinceId > 0)
+            await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.TownId,
                     userForCreationDto.UserRegion.ProvinceId)
                 ;
 
         ValidateFields(userForCreationDto);
-        
+
         var result = await _repository.User.CreateUser(userForCreationDto);
 
         if (result <= 0)
@@ -64,11 +64,11 @@ internal sealed class UserService : IUserService
             throw new StringLimitExceededBadRequestException("ProvinceOfBirth", 50);
         if (userForCreationDto.PhoneNumber is { Length: > 15 })
             throw new StringLimitExceededBadRequestException("PhoneNumber", 15);
-        if (userForCreationDto.EmergencyPhoneNumber is { Length: > 15 }) 
+        if (userForCreationDto.EmergencyPhoneNumber is { Length: > 15 })
             throw new StringLimitExceededBadRequestException("EmergencyPhoneNumber", 15);
         if (userForCreationDto.Email is { Length: > 250 })
             throw new StringLimitExceededBadRequestException("Email", 250);
-        
+
         if (userForCreationDto.District is { Length: > 50 })
             throw new StringLimitExceededBadRequestException("District", 50);
         if (userForCreationDto.StreetNumber is { Length: > 50 })
@@ -92,8 +92,8 @@ internal sealed class UserService : IUserService
         user.RefreshToken = tokens.RefreshToken;
 
         user.Roles = await _repository.User.GetUserRoles(user.Id);
-        
-        if(!string.IsNullOrEmpty(userForAuth.DeviceId))
+
+        if (!string.IsNullOrEmpty(userForAuth.DeviceId))
             await _repository.User.UpdateDeviceId(user.Id, userForAuth.DeviceId);
 
         return user;
@@ -101,9 +101,26 @@ internal sealed class UserService : IUserService
 
     public async Task<UserDetailsDto> GetById(int id)
     {
+        var users = await GetByParameters(new UsersParameters());
+
+        var userHierarchyDto = users.Select(u => new UserHierarchyDto
+        {
+            Id = u.Id,
+            FullName = u.FullName,
+            RoleDescription = u.Roles!.FirstOrDefault()?.Description ?? string.Empty,
+            SubordinateManagers = Array.Empty<UserHierarchyDto>(),
+            Region = u.Regions!.First()
+        }).ToList();
+
+        var hierarchy = userHierarchyDto
+            .Find(u => u.Id == id);
+
+        BuildHierarchyForUser(hierarchy!, userHierarchyDto, "manager");
+
         var user = await GetUserAndCheckIfItExists(id);
         user.Roles = await _repository.User.GetUserRoles(user.Id);
         user.Regions = await _repository.User.GetUserRegions(user.Id);
+        user.SubordinateManagers = hierarchy!.SubordinateManagers;
 
         var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
             _configuration["UserImagesSetStorageUrl"]!,
@@ -272,7 +289,7 @@ internal sealed class UserService : IUserService
     public async Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters)
     {
         var users = await _repository.User.GetByParameters(parameters);
-        
+
         foreach (var user in users)
         {
             var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
@@ -287,6 +304,51 @@ internal sealed class UserService : IUserService
         return users;
     }
 
+    public async Task<UserHierarchyDto> GetHierarchy()
+    {
+        var users = await GetByParameters(new UsersParameters());
+
+        var userHierarchyDto = users.Select(u => new UserHierarchyDto
+        {
+            Id = u.Id,
+            FullName = u.FullName,
+            RoleDescription = u.Roles!.FirstOrDefault()?.Description ?? string.Empty,
+            SubordinateManagers = Array.Empty<UserHierarchyDto>(),
+            Region = u.Regions!.First()
+        }).ToList();
+
+        var hierarchy = userHierarchyDto
+            .Find(u => u.RoleDescription == "admin");
+
+        BuildHierarchyForUser(hierarchy!, userHierarchyDto, "manager");
+
+        return hierarchy!;
+    }
+
+    private static void BuildHierarchyForUser(UserHierarchyDto manager, List<UserHierarchyDto> allUsers, string role)
+    {
+        var subordinates = allUsers
+            .Where(u => IsSubordinateOf(u, manager, role) && !u.Equals(manager))
+            .ToList();
+
+        foreach (var subordinate in subordinates)
+        {
+            BuildHierarchyForUser(subordinate, allUsers, role);
+        }
+
+        manager.SubordinateManagers = subordinates;
+    }
+
+    private static bool IsSubordinateOf(UserHierarchyDto subordinate, UserHierarchyDto manager, string role)
+    {
+        var roleIsManager = subordinate.RoleDescription.Equals(role);
+        var sameProvince = manager.Region.ProvinceId == 0 ||
+                           manager.Region.ProvinceId.Equals(subordinate.Region.ProvinceId);
+        var sameTown = manager.Region.TownId == 0 || manager.Region.TownId.Equals(subordinate.Region.TownId);
+
+        return roleIsManager & (sameProvince || sameTown);
+    }
+
     private async Task IsRegionExist(int? regionId, int? townId, int? provinceId)
     {
         if (provinceId is > 0)
@@ -294,7 +356,7 @@ internal sealed class UserService : IUserService
             var province = await _repository.Province.GetProvinceById(provinceId.Value);
             if (province is null) throw new ProvinceNotFoundException(provinceId.Value);
         }
-        
+
         if (townId is > 0)
         {
             if (provinceId is not > 0)

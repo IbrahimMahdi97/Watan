@@ -64,6 +64,14 @@ public class UsersController : ControllerBase
         var userDto = await _service.UserService.GetById(userId);
         return Ok(userDto);
     }
+    
+    [Authorize]
+    [HttpGet("hierarchy")]
+    public async Task<ActionResult<UserHierarchyDto>> GetHierarchy()
+    {
+        var hierarchy = await _service.UserService.GetHierarchy();
+        return Ok(hierarchy);
+    }
 
 
     [HttpPost("refresh_token")]
