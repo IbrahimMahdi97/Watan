@@ -9,13 +9,13 @@ ELSE
     INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth,
                        Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber,
                        VoterCardNumber, Rating, MaritalStatus, JobPlace, RecruitmentYear, JobTitle, JobSector, JobType, GraduatedYear, GraduatedFromDepartment, GraduatedFromCollege, 
-                       GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDgree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
+                       GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDegree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
                        SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition)
     OUTPUT inserted.Id
     VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
            @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber,
            @VoterCardNumber, @Rating, @MaritalStatus, @JobPlace, @RecruitmentYear, @JobTitle, @JobSector, @JobType, @GraduatedYear, @GraduatedFromDepartment, @GraduatedFromCollege,
-           @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDgree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
+           @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDegree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
            @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition);";
 
     public const string AddEncryptedPasswordByIdQuery =
