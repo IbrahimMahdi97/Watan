@@ -12,14 +12,18 @@ public class NotificationService : INotificationService
 {
     private readonly IRepositoryManager _repository;
     private readonly IFirebaseService _firebaseService;
+    private readonly IUserService _userService;
 
-    public NotificationService(IRepositoryManager repository, IFirebaseService firebaseService)
+    public NotificationService(IRepositoryManager repository, IFirebaseService firebaseService,
+        IUserService userService)
     {
         _repository = repository;
         _firebaseService = firebaseService;
+        _userService = userService;
     }
 
-    public async Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters, int userId)
+    public async Task<PagedList<Notification>> GetNotifications(NotificationsParameters notificationsParameters,
+        int userId)
     {
         var notifications = await _repository.Notification.GetNotifications(notificationsParameters, userId);
         return notifications;
@@ -29,6 +33,16 @@ public class NotificationService : INotificationService
     {
         var count = await _repository.Notification.GetNewNotificationsCount(userId);
         return count;
+    }
+
+    public async Task SendNotifications(UsersParameters parameters, NotificationForCreationDto notification, int userId)
+    {
+        var users = await _userService.GetByParameters(parameters);
+        foreach (var user in users)
+        {
+            notification.UserId = user.Id;
+            await SendNotification(notification, userId);
+        }
     }
 
     public async Task<Notification?> SendNotification(NotificationForCreationDto notification, int userId)

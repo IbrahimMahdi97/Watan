@@ -13,4 +13,5 @@ public interface IUserService
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
     Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
     Task<UserHierarchyDto> GetHierarchy();
+    Task Update(UserForCreationDto userForCreationDto, int userId);
 }

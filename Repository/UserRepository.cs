@@ -157,4 +157,22 @@ public class UserRepository : IUserRepository
 
         return new PagedList<UserForListingDto>(users, count, parameters.PageNumber, parameters.PageSize);
     }
+
+    public async Task Update(UserForCreationDto userForCreationDto, int userId)
+    {
+        const string query = UserQuery.UpdateByIdQuery;
+        const string deleteRolesQuery = UserQuery.DeleteRolesByIdQuery;
+        const string deleteRegionsQuery = UserQuery.DeleteRegionsByIdQuery;
+
+        var parameters = new DynamicParameters(userForCreationDto);
+        parameters.Add("UserId", userId);
+
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, parameters);
+        await connection.ExecuteAsync(deleteRolesQuery, new { UserId = userId });
+        await connection.ExecuteAsync(deleteRegionsQuery, new { UserId = userId });
+
+        await AddUserRoles(userForCreationDto.Roles, userId);
+        await AddUserRegion(userForCreationDto.UserRegion, userId);
+    }
 }

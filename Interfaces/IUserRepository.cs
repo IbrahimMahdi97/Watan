@@ -19,4 +19,5 @@ public interface IUserRepository
     Task<string?> GetUserDeviceId(int userId);
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
     Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
+    Task Update(UserForCreationDto userForCreationDto, int userId);
 }

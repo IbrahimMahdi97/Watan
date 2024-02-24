@@ -45,7 +45,7 @@ public class ServiceManager : IServiceManager
             fileStorageService.Value, configuration));
         _postLikeService = new Lazy<IPostLikeService>(() => new PostLikeService(repositoryManager));
         _notificationService = new Lazy<INotificationService>(() =>
-            new NotificationService(repositoryManager, firebaseService.Value));
+            new NotificationService(repositoryManager, firebaseService.Value, _userService.Value));
     }
 
     public IUserService UserService => _userService.Value;

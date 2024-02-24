@@ -23,6 +23,14 @@ public class UsersController : ControllerBase
         var id = await _service.UserService.CreateUser(userForCreationDto, userId);
         return id > 0 ? Ok(new { Id = id }) : BadRequest();
     }
+    
+    [Authorize]
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromForm] UserForCreationDto userForCreationDto)
+    {
+        await _service.UserService.Update(userForCreationDto, id);
+        return NoContent();
+    }
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Authenticate([FromBody] UserForAuthenticationDto user)
@@ -36,8 +44,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserForListingDto>>> GetUserByParameters([FromQuery] UsersParameters parameters)
     {
         var users = await _service.UserService.GetByParameters(parameters);
-        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(users.MetaData));
-        return Ok(users);
+      //  Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(users.MetaData));
+        return Ok(new {users, users.MetaData});
     }
     
     [Authorize]

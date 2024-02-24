@@ -105,4 +105,47 @@ ELSE
                                                 (@FromJoiningDate IS NULL OR U.JoiningDate >= @FromJoiningDate) AND
                                                 (@ToJoiningDate IS NULL OR U.JoiningDate <= @ToJoiningDate) AND
                                               U.IsDeleted = 0";
+
+    public const string UpdateByIdQuery = @"UPDATE Users SET
+                                                    FullName = @FullName,
+                                                    MotherName = @MotherName,
+                                                    ProvinceOfBirth = @ProvinceOfBirth,
+                                                    Gender = @Gender,
+                                                    DateOfBirth = @DateOfBirth,
+                                                    District = @District,
+                                                    StreetNumber = @StreetNumber,
+                                                    HouseNumber = @HouseNumber,
+                                                    NationalIdNumber = @NationalIdNumber,
+                                                    ResidenceCardNumber = @ResidenceCardNumber,
+                                                    VoterCardNumber = @VoterCardNumber,
+                                                    PhoneNumber = @PhoneNumber,
+                                                    EmergencyPhoneNumber = @EmergencyPhoneNumber,
+                                                    Rating = @Rating,
+                                                    MaritalStatus = @MaritalStatus,
+                                                    JobPlace = @JobPlace,
+                                                    RecruitmentYear = @RecruitmentYear,
+                                                    JobTitle = @JobTitle,
+                                                    JobSector = @JobSector,
+                                                    JobType = @JobType,
+                                                    GraduatedYear = @GraduatedYear,
+                                                    GraduatedFromDepartment = @GraduatedFromDepartment,
+                                                    GraduatedFromCollege = @GraduatedFromCollege,
+                                                    GraduatedFromUniversity = @GraduatedFromUniversity,
+                                                    AcademicAchievement = @AcademicAchievement,
+                                                    StudyingYearsCount = @StudyingYearsCount,
+                                                    JobDegree = @JobDegree,
+                                                    FamilyMembersCount = @FamilyMembersCount,
+                                                    ChildrenCount = @ChildrenCount,
+                                                    JoiningDate = @JoiningDate,
+                                                    ClanName = @ClanName,
+                                                    SubClanName = @SubClanName,
+                                                    IsFamiliesOfMartyrs = @IsFamiliesOfMartyrs,
+                                                    MartyrRelationship = @MartyrRelationship,
+                                                    Password = @Password,
+                                                    FinancialCondition = @FinancialCondition
+                                                    WHERE Id = @UserId
+                                            ";
+
+    public const string DeleteRolesByIdQuery = "DELETE FROM UserRoles WHERE  UserId = @UserId";
+    public const string DeleteRegionsByIdQuery = "DELETE FROM UserRegions WHERE  UserId = @UserId";
 }

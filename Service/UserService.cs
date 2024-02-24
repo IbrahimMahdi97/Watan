@@ -33,8 +33,7 @@ internal sealed class UserService : IUserService
             || userForCreationDto.UserRegion.TownId > 0
             || userForCreationDto.UserRegion.ProvinceId > 0)
             await IsRegionExist(userForCreationDto.UserRegion.RegionId, userForCreationDto.UserRegion.TownId,
-                    userForCreationDto.UserRegion.ProvinceId)
-                ;
+                userForCreationDto.UserRegion.ProvinceId);
 
         ValidateFields(userForCreationDto);
 
@@ -312,6 +311,7 @@ internal sealed class UserService : IUserService
         {
             Id = u.Id,
             FullName = u.FullName,
+            ImageUrl = u.ImageUrl,
             RoleDescription = u.Roles!.FirstOrDefault()?.Description ?? string.Empty,
             SubordinateManagers = Array.Empty<UserHierarchyDto>(),
             Region = u.Regions!.First()
@@ -325,6 +325,19 @@ internal sealed class UserService : IUserService
         return hierarchy!;
     }
 
+    public async Task Update(UserForCreationDto userForCreationDto, int userId)
+    {
+        ValidateFields(userForCreationDto);
+        userForCreationDto.Password = userForCreationDto.Password.ToSha512();
+        await _repository.User.Update(userForCreationDto, userId);
+
+        _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
+
+        if (userForCreationDto.UserImage is not null)
+            await _fileStorageService.CopyFileToServer(userId,
+                _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
+    }
+
     private static void BuildHierarchyForUser(UserHierarchyDto manager, List<UserHierarchyDto> allUsers, string role)
     {
         var subordinates = allUsers
@@ -333,7 +346,7 @@ internal sealed class UserService : IUserService
 
         foreach (var subordinate in subordinates)
         {
-            BuildHierarchyForUser(subordinate, allUsers, role);
+            BuildHierarchyForUser(subordinate, allUsers.Except(subordinates).ToList(), role);
         }
 
         manager.SubordinateManagers = subordinates;

@@ -11,4 +11,5 @@ public interface INotificationService
     Task<Notification?> GetNotification(int id);
     Task UpdateNotificationIsRead(int id);
     Task<int> GetNewNotificationsCount(int userId);
+    Task SendNotifications(UsersParameters parameters, NotificationForCreationDto notification, int userId);
 }

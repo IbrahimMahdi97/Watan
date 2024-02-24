@@ -21,8 +21,8 @@ public class EventsController : ControllerBase
     public async Task<ActionResult<IEnumerable<EventWithPostDto>>> GetAllEvents([FromQuery] EventsParameters eventsParameters)
     {
         var events = await _service.EventService.GetAllEvents(eventsParameters);
-        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.MetaData));
-        return Ok(events);
+     // Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.MetaData));
+        return Ok(new {events, events.MetaData});
     }
     
     [Authorize]
