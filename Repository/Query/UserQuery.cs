@@ -107,26 +107,49 @@ ELSE
                                               (UR.ProvinceId = 0 OR IIF(@ProvinceId = 0, 0, UR.ProvinceId) = @ProvinceId) AND
                                               (UR.TownId = 0 OR IIF(@TownId = 0, 0, UR.TownId) = @TownId) AND
                                               (UR.RegionId = 0 OR IIF(@RegionId = 0, 0, UR.RegionId) = @RegionId) AND
-                                              (@SearchText IS NULL OR U.FullName LIKE '%' + @SearchText + '%'
-                                                  OR U.MotherName LIKE '%' + @SearchText + '%'
-                                                  OR U.ProvinceOfBirth LIKE '%' + @SearchText + '%'
-                                                  OR U.PhoneNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.EmergencyPhoneNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.Email LIKE '%' + @SearchText + '%'
-                                                  OR U.StreetNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.HouseNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.NationalIdNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.ResidenceCardNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.VoterCardNumber LIKE '%' + @SearchText + '%'
-                                                  OR U.AcademicAchievement LIKE '%' + @SearchText + '%'
-                                                  OR U.GraduatedFromUniversity LIKE '%' + @SearchText + '%'
-                                                  OR U.GraduatedFromCollege LIKE '%' + @SearchText + '%'
-                                                  OR U.GraduatedFromDepartment LIKE '%' + @SearchText + '%') AND
+                                              
+                                              (@StudyingYearsCount IS NULL OR U.StudyingYearsCount = @StudyingYearsCount) AND
+                                              (@JobDegree IS NULL OR U.JobDegree = @JobDegree) AND
+                                              (@FamilyMembersCount IS NULL OR U.FamilyMembersCount = @FamilyMembersCount) AND
+                                              (@ChildrenCount IS NULL OR U.ChildrenCount = @ChildrenCount) AND
+                                              
+                                              (@FullName IS NULL OR U.FullName LIKE '%' + @FullName + '%') AND
+                                              (@MotherName IS NULL OR U.MotherName LIKE '%' + @MotherName + '%') AND
+                                              (@ProvinceOfBirth IS NULL OR U.ProvinceOfBirth LIKE '%' + @ProvinceOfBirth + '%') AND
+                                              (@PhoneNumber IS NULL OR U.PhoneNumber LIKE '%' + @PhoneNumber + '%') AND
+                                              (@WhatsAppNumber IS NULL OR U.WhatsAppNumber LIKE '%' + @WhatsAppNumber + '%') AND
+                                              (@EmergencyPhoneNumber IS NULL OR U.EmergencyPhoneNumber LIKE '%' + @EmergencyPhoneNumber + '%') AND
+                                              (@Email IS NULL OR U.Email LIKE '%' + @Email + '%') AND
+                                              (@District IS NULL OR U.District LIKE '%' + @District + '%') AND
+                                              (@StreetNumber IS NULL OR U.StreetNumber LIKE '%' + @StreetNumber + '%') AND
+                                              (@HouseNumber IS NULL OR U.HouseNumber LIKE '%' + @HouseNumber + '%') AND
+                                              (@NationalIdNumber IS NULL OR U.NationalIdNumber LIKE '%' + @NationalIdNumber + '%') AND
+                                              (@ResidenceCardNumber IS NULL OR U.ResidenceCardNumber LIKE '%' + @ResidenceCardNumber + '%') AND
+                                              (@VoterCardNumber IS NULL OR U.VoterCardNumber LIKE '%' + @VoterCardNumber + '%') AND
+                                              (@AcademicAchievement IS NULL OR U.AcademicAchievement LIKE '%' + @AcademicAchievement + '%') AND
+                                              (@GraduatedFromUniversity IS NULL OR U.GraduatedFromUniversity LIKE '%' + @GraduatedFromUniversity + '%') AND
+                                              (@GraduatedFromCollege IS NULL OR U.GraduatedFromCollege LIKE '%' + @GraduatedFromCollege + '%') AND
+                                              (@GraduatedFromDepartment IS NULL OR U.GraduatedFromDepartment LIKE '%' + @GraduatedFromDepartment + '%') AND
+                                              (@GraduatedYear IS NULL OR U.GraduatedYear LIKE '%' + @GraduatedYear + '%') AND
+                                              (@JobType IS NULL OR U.JobType LIKE '%' + @JobType + '%') AND
+                                              (@JobSector IS NULL OR U.JobSector LIKE '%' + @JobSector + '%') AND
+                                              (@JobTitle IS NULL OR U.JobTitle LIKE '%' + @JobTitle + '%') AND
+                                              (@JobPlace IS NULL OR U.JobPlace LIKE '%' + @JobPlace + '%') AND
+                                              (@MaritalStatus IS NULL OR U.MaritalStatus LIKE '%' + @MaritalStatus + '%') AND
+                                              (@ClanName IS NULL OR U.ClanName LIKE '%' + @ClanName + '%') AND
+                                              (@SubClanName IS NULL OR U.SubClanName LIKE '%' + @SubClanName + '%') AND
+                                              (@MartyrRelationship IS NULL OR U.MartyrRelationship LIKE '%' + @MartyrRelationship + '%') AND
+                                              (@FinancialCondition IS NULL OR U.FinancialCondition LIKE '%' + @FinancialCondition + '%') AND
+
                                                 (@Gender IS NULL OR U.Gender = @Gender) AND
+                                                (@IsFamiliesOfMartyrs IS NULL OR U.IsFamiliesOfMartyrs = @IsFamiliesOfMartyrs) AND
+                                                
                                                 (@FromDateOfBirth IS NULL OR U.DateOfBirth >= @FromDateOfBirth) AND
                                                 (@ToDateOfBirth IS NULL OR U.DateOfBirth <= @ToDateOfBirth) AND
                                                 (@FromJoiningDate IS NULL OR U.JoiningDate >= @FromJoiningDate) AND
                                                 (@ToJoiningDate IS NULL OR U.JoiningDate <= @ToJoiningDate) AND
+                                                (@FromRecruitmentYear IS NULL OR U.RecruitmentYear >= @FromRecruitmentYear) AND
+                                                (@ToRecruitmentYear IS NULL OR U.RecruitmentYear <= @ToRecruitmentYear) AND
                                               U.IsDeleted = 0";
 
     public const string UpdateByIdQuery = @"UPDATE Users SET
