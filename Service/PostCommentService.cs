@@ -32,7 +32,19 @@ internal sealed class PostCommentService : IPostCommentService
     {
         var comment = await _repository.PostComment.GetById(commentId);
         if (comment is null) throw new CommentNotFoundException(commentId);
-        comment.Replies = await GetCommentRelies(comment.Id, userId);
+        
+        var replays = await _repository.PostComment.GetCommentReplies(comment.Id, userId);
+        var commentReplays = replays as PostCommentDto[] ?? replays.ToArray();
+        foreach (var replay in commentReplays)
+        {
+            var replayImages = _fileStorageService.GetFilesUrlsFromServer(comment.UserId,
+                _configuration["UserImagesSetStorageUrl"]!,
+                _configuration["UserImagesGetStorageUrl"]!).ToList();
+
+            replay.UserImageUrl = replayImages.Any() ? replayImages.First() : "";
+        }
+
+        comment.Replies = commentReplays;
         
         var images = _fileStorageService.GetFilesUrlsFromServer(comment.UserId,
             _configuration["UserImagesSetStorageUrl"]!,
@@ -42,24 +54,7 @@ internal sealed class PostCommentService : IPostCommentService
 
         return comment;
     }
-
-    private async Task<IEnumerable<PostCommentDto>> GetCommentRelies(int commentId, int userId)
-    {
-        var askedComment = await GetById(commentId, userId);
-        if (askedComment is null) throw new CommentNotFoundException(commentId);
-        var comments = await _repository.PostComment.GetCommentReplies(commentId, userId);
-        var postComments = comments as PostCommentDto[] ?? comments.ToArray();
-        foreach (var comment in postComments)
-        {
-            var images = _fileStorageService.GetFilesUrlsFromServer(comment.UserId,
-                _configuration["UserImagesSetStorageUrl"]!,
-                _configuration["UserImagesGetStorageUrl"]!).ToList();
-
-            comment.UserImageUrl = images.Any() ? images.First() : "";
-        }
-        return postComments;
-    }
-
+    
     public async Task Update(PostCommentForManiupulationDto postComment, int commentId)
     {
         await GetById(commentId, 0);
@@ -74,7 +69,18 @@ internal sealed class PostCommentService : IPostCommentService
         var postComments = comments.ToList();
         foreach (var comment in postComments)
         {
-            comment.Replies = await GetCommentRelies(comment.Id, userId);
+            var replays = await _repository.PostComment.GetCommentReplies(comment.Id, userId);
+            var commentReplays = replays as PostCommentDto[] ?? replays.ToArray();
+            foreach (var replay in commentReplays)
+            {
+                var replayImages = _fileStorageService.GetFilesUrlsFromServer(comment.UserId,
+                    _configuration["UserImagesSetStorageUrl"]!,
+                    _configuration["UserImagesGetStorageUrl"]!).ToList();
+
+                replay.UserImageUrl = replayImages.Any() ? replayImages.First() : "";
+            }
+            
+            comment.Replies = commentReplays;
             
             var images = _fileStorageService.GetFilesUrlsFromServer(comment.UserId,
                 _configuration["UserImagesSetStorageUrl"]!,
