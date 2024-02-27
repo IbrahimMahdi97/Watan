@@ -51,6 +51,22 @@ public class EventsController : ControllerBase
         return NoContent();
     }
     
+    [Authorize]
+    [HttpGet("count-of-attendees/{provinceId:int}/{townId:int}")]
+    public async Task<ActionResult<IEnumerable<AttendeesCountDto>>> GetAttendeesCountByProvinceIdAndTownId(int provinceId, int townId)
+    {
+        var counts = await _service.EventService.GetAttendeesCountByProvinceIdAndTownId(provinceId, townId);
+        return Ok(counts);
+    }
+    
+    [Authorize]
+    [HttpGet("statistics/from-{fromDate:datetime}-to-{toDate:datetime}")]
+    public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsFromDateToDate(DateTime fromDate, DateTime toDate)
+    {
+        var events = await _service.EventService.GetFromDateToDate(fromDate, toDate);
+        return Ok(events);
+    }
+    
     [Authorize(Roles = "admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)

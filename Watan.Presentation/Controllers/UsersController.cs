@@ -23,6 +23,14 @@ public class UsersController : ControllerBase
         var id = await _service.UserService.CreateUser(userForCreationDto, userId);
         return id > 0 ? Ok(new { Id = id }) : BadRequest();
     }
+
+    [Authorize(Roles = "admin")]
+    [HttpPut("{id:int}/children")]
+    public async Task<IActionResult> AddUserChildren(IEnumerable<UserChildForManipulation> children, int id)
+    {
+        await _service.UserService.AddChildren(id, children);
+        return NoContent();
+    }
     
     [Authorize]
     [HttpPut("{id:int}")]
@@ -54,6 +62,22 @@ public class UsersController : ControllerBase
     {
         var userDto = await _service.UserService.GetById(id);
         return Ok(userDto);
+    }
+    
+    [Authorize]
+    [HttpGet("count/{provinceId:int}/{townId:int}")]
+    public async Task<ActionResult<int>> GetUsersCountByProvinceIdAndTownId(int provinceId, int townId)
+    {
+        var count = await _service.UserService.GetCountByProvinceIdAndTownId(provinceId, townId);
+        return Ok(count);
+    }
+    
+    [Authorize]
+    [HttpGet("count/from-{fromDate:datetime}-to-{toDate:datetime}")]
+    public async Task<ActionResult<UsersCountDto>> GetUsersCountByDates(DateTime fromDate, DateTime toDate)
+    {
+        var count = await _service.UserService.GetCountFromDateToDate(fromDate, toDate);
+        return Ok(count);
     }
 
     [Authorize(Roles = "admin")]

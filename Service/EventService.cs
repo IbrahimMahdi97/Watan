@@ -85,6 +85,18 @@ internal sealed class EventService : IEventService
         await _repository.Event.Update(id, eventDto);
     }
 
+    public async Task<IEnumerable<AttendeesCountDto>> GetAttendeesCountByProvinceIdAndTownId(int provinceId, int townId)
+    {
+        var count = await _repository.Event.GetAttendeesCountByProvinceIdAndTownId(provinceId, townId);
+        return count;
+    }
+
+    public async Task<IEnumerable<EventDto>> GetFromDateToDate(DateTime fromDate, DateTime toDate)
+    {
+        var events = await _repository.Event.GetFromDateToDate(fromDate, toDate);
+        return events;
+    }
+
     private async Task TownProvinceExist(int townId, int provinceId)
     {
         var town = await _repository.Town.GetById(townId);

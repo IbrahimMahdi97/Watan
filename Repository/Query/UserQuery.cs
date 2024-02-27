@@ -6,13 +6,13 @@ public static class UserQuery
         @"IF EXISTS(SELECT PhoneNumber FROM Users WHERE PhoneNumber = @PhoneNumber)
     SELECT 0;
 ELSE
-    INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth,
+    INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, WhatsAppNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth,
                        Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber,
                        VoterCardNumber, Rating, MaritalStatus, JobPlace, RecruitmentYear, JobTitle, JobSector, JobType, GraduatedYear, GraduatedFromDepartment, GraduatedFromCollege, 
                        GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDegree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
                        SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition)
     OUTPUT inserted.Id
-    VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
+    VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @WhatsAppNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
            @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber,
            @VoterCardNumber, @Rating, @MaritalStatus, @JobPlace, @RecruitmentYear, @JobTitle, @JobSector, @JobType, @GraduatedYear, @GraduatedFromDepartment, @GraduatedFromCollege,
            @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDegree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
@@ -119,6 +119,7 @@ ELSE
                                                     ResidenceCardNumber = @ResidenceCardNumber,
                                                     VoterCardNumber = @VoterCardNumber,
                                                     PhoneNumber = @PhoneNumber,
+                                                    WhatsAppNumber = @WhatsAppNumber,
                                                     EmergencyPhoneNumber = @EmergencyPhoneNumber,
                                                     Rating = @Rating,
                                                     MaritalStatus = @MaritalStatus,
@@ -148,4 +149,63 @@ ELSE
 
     public const string DeleteRolesByIdQuery = "DELETE FROM UserRoles WHERE  UserId = @UserId";
     public const string DeleteRegionsByIdQuery = "DELETE FROM UserRegions WHERE  UserId = @UserId";
+
+    public const string SelectCountByProvinceIdAndTownIdQuery = """
+                                                                SELECT COUNT(Id) FROM Users
+                                                                    WHERE IIF(@ProvinceId = 0, 0, ProvinceId) = @ProvinceId
+                                                                    AND IIF(@TownId = 0, 0, TownId) = @TownId
+                                                                """;
+
+    public const string SelectCountFromDateToDateQuery = """
+                                                         WITH UserCounts AS (
+                                                             SELECT
+                                                                 COUNT(*) AS TotalCount,
+                                                                 COUNT(CASE WHEN JoiningDate BETWEEN @FromDate AND @ToDate THEN 1 END) AS NewCount
+                                                             FROM
+                                                                 Users
+                                                         ),
+                                                         ActiveCounts AS (
+                                                             SELECT
+                                                                 COUNT(DISTINCT U.Id) AS ActiveCount
+                                                             FROM
+                                                                 Users U
+                                                             INNER JOIN
+                                                                 EventAttendance EA ON U.Id = EA.UserId
+                                                             INNER JOIN
+                                                                 Posts P ON EA.PostId = P.Id
+                                                             WHERE
+                                                                 P.RecordDate BETWEEN @FromDate AND @ToDate
+                                                         ),
+                                                         InactiveCounts AS (
+                                                             SELECT
+                                                                 COUNT(*) AS InactiveCount
+                                                             FROM
+                                                                 Users U
+                                                             WHERE
+                                                                 NOT EXISTS (
+                                                                     SELECT 1
+                                                                     FROM EventAttendance EA
+                                                                     INNER JOIN Posts P ON EA.PostId = P.Id
+                                                                     WHERE U.Id = EA.UserId
+                                                                       AND P.RecordDate BETWEEN @FromDate AND @ToDate
+                                                                 )
+                                                         )
+                                                         SELECT
+                                                             UC.TotalCount,
+                                                             UC.NewCount,
+                                                             AC.ActiveCount,
+                                                             IC.InactiveCount
+                                                         FROM
+                                                             UserCounts UC
+                                                         CROSS JOIN
+                                                             ActiveCounts AC
+                                                         CROSS JOIN
+                                                             InactiveCounts IC;
+                                                         """;
+
+    public const string InsertUserChildQuery = @"INSERT INTO UserChildren (UserId, ChildName, Age)
+                                                      VALUES(@UserId, @ChildName, @Age);";
+
+    public const string UserChildrenByUserIdQuery = @"SELECT ChildName, Age FROM UserChildren WHERE UserId = @Id";
+    public const string DeleteChildrenByIdQuery = "DELETE FROM UserChildren WHERE  UserId = @UserId";
 }

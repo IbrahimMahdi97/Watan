@@ -74,7 +74,7 @@ namespace Watan.Migrations
                 .WithColumn("IsFamiliesOfMartyrs").AsBoolean().NotNullable()
                 .WithColumn("MartyrRelationship").AsString(8).Nullable()
                 .WithColumn("FinancialCondition").AsString(50).NotNullable()
-
+                
                 .WithColumn("Password").AsString(int.MaxValue).NotNullable()
                 .WithColumn("RefreshToken").AsString().Nullable()
                 .WithColumn("RefreshTokenExpiryTime").AsDateTime2().Nullable()

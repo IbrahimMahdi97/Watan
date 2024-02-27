@@ -14,4 +14,7 @@ public interface IUserService
     Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
     Task<UserHierarchyDto> GetHierarchy();
     Task Update(UserForCreationDto userForCreationDto, int userId);
+    Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId);
+    Task<UsersCountDto> GetCountFromDateToDate(DateTime fromDate, DateTime toDate);
+    Task AddChildren(int id, IEnumerable<UserChildForManipulation> children);
 }

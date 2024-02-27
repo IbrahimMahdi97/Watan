@@ -15,10 +15,12 @@ public class UserDetailsDto
     public string? ResidenceCardNumber { get; set; } = null!;
     public string? VoterCardNumber { get; set; } = null!;
     public string? PhoneNumber { get; set; }
+    public string? WhatsAppNumber { get; set; }
     public string? Email { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
     public IEnumerable<UserRoleDto>? Roles { get; set; }
     public IEnumerable<UserRegionDto>? Regions { get; set; }
+    public IEnumerable<UserChildForManipulation>? Children { get; set; }
     public IEnumerable<UserHierarchyDto> SubordinateManagers { get; set; } = Array.Empty<UserHierarchyDto>();
     public TokenDto? UserToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }

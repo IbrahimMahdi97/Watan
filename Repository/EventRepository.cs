@@ -63,4 +63,21 @@ public class EventRepository : IEventRepository
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(query, param);
     }
+
+    public async Task<IEnumerable<AttendeesCountDto>> GetAttendeesCountByProvinceIdAndTownId(int provinceId, int townId)
+    {
+        const string query = EventQuery.SelectAttendeesCountByProvinceIdAndTownIdQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        return await connection.QueryAsync<AttendeesCountDto>(query,
+            new { ProvinceId = provinceId, TownId = townId });
+    }
+
+    public async Task<IEnumerable<EventDto>> GetFromDateToDate(DateTime fromDate, DateTime toDate)
+    {
+        const string query = EventQuery.SelectFromDateToDateQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        return await connection.QueryAsync<EventDto>(query, new { FromDate = fromDate, ToDate = toDate });
+    }
 }

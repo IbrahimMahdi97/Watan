@@ -65,14 +65,16 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task AddUserRoles(List<UserRoleForCreation> userRoles, int id)
+    public async Task AddUserRoles(IEnumerable<int> userRoles, int id)
     {
         const string queryUserRoles = RoleQuery.InsertUserRolesQuery;
         using var connection = _context.CreateConnection();
         connection.Open();
 
-        foreach (var paramUserRoles in userRoles.Select(role => new DynamicParameters(role)))
+        foreach (var roleId in userRoles)
         {
+            var paramUserRoles = new DynamicParameters();
+            paramUserRoles.Add("RoleId", roleId);
             paramUserRoles.Add("UserId", id);
             await connection.ExecuteAsync(queryUserRoles, paramUserRoles);
         }
@@ -174,5 +176,59 @@ public class UserRepository : IUserRepository
 
         await AddUserRoles(userForCreationDto.Roles, userId);
         await AddUserRegion(userForCreationDto.UserRegion, userId);
+    }
+
+    public async Task UpdateChildren(IEnumerable<UserChildForManipulation> children, int userId)
+    {
+        const string deleteChildrenQuery = UserQuery.DeleteChildrenByIdQuery;
+
+        var parameters = new DynamicParameters();
+        parameters.Add("UserId", userId);
+
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(deleteChildrenQuery, new { UserId = userId });
+
+        await AddUserChildren(children, userId);
+    }
+
+    public async Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId)
+    {
+        const string query = UserQuery.SelectCountByProvinceIdAndTownIdQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        return await connection.QueryFirstOrDefaultAsync<int>(query, new { ProvinceId = provinceId, TownId = townId });
+    }
+
+    public async Task<UsersCountDto> GetCountFromDateToDate(DateTime fromDate, DateTime toDate)
+    {
+        const string query = UserQuery.SelectCountFromDateToDateQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        return await connection.QueryFirstOrDefaultAsync<UsersCountDto>(query,
+            new { FromDate = fromDate, ToDate = toDate });
+    }
+
+    public async Task AddUserChildren(IEnumerable<UserChildForManipulation> children, int id)
+    {
+        const string queryUserRoles = UserQuery.InsertUserChildQuery;
+        using var connection = _context.CreateConnection();
+        connection.Open();
+
+        foreach (var child in children)
+        {
+            var paramUserRoles = new DynamicParameters();
+            paramUserRoles.Add("ChildName", child.ChildName);
+            paramUserRoles.Add("Age", child.Age);
+            paramUserRoles.Add("UserId", id);
+            await connection.ExecuteAsync(queryUserRoles, paramUserRoles);
+        }
+    }
+
+    public async Task<IEnumerable<UserChildForManipulation>?> GetUserChildren(int userId)
+    {
+        const string query = UserQuery.UserChildrenByUserIdQuery;
+        using var connection = _context.CreateConnection();
+        var children = await connection.QueryAsync<UserChildForManipulation>(query, new { Id = userId });
+        return children.ToList();
     }
 }

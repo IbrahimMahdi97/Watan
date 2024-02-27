@@ -45,7 +45,6 @@ internal sealed class UserService : IUserService
 
         await _repository.User.AddUserRoles(userForCreationDto.Roles, result);
         await _repository.User.AddUserRegion(userForCreationDto.UserRegion, result);
-
         if (userForCreationDto.UserImage is not null)
             await _fileStorageService.CopyFileToServer(result,
                 _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
@@ -108,18 +107,26 @@ internal sealed class UserService : IUserService
             FullName = u.FullName,
             RoleDescription = u.Roles!.FirstOrDefault()?.Description ?? string.Empty,
             SubordinateManagers = Array.Empty<UserHierarchyDto>(),
+            ImageUrl = u.ImageUrl,
             Region = u.Regions!.First()
         }).ToList();
 
         var hierarchy = userHierarchyDto
             .Find(u => u.Id == id);
 
-        BuildHierarchyForUser(hierarchy!, userHierarchyDto, "manager");
+        userHierarchyDto = userHierarchyDto.Where(u => u.Id != id).ToList();
 
         var user = await GetUserAndCheckIfItExists(id);
+
+        if (hierarchy != null)
+        {
+            BuildHierarchyForUser(hierarchy, userHierarchyDto, "manager");
+            user.SubordinateManagers = hierarchy.SubordinateManagers;
+        }
+
         user.Roles = await _repository.User.GetUserRoles(user.Id);
         user.Regions = await _repository.User.GetUserRegions(user.Id);
-        user.SubordinateManagers = hierarchy!.SubordinateManagers;
+        user.Children = await _repository.User.GetUserChildren(user.Id);
 
         var images = _fileStorageService.GetFilesUrlsFromServer(user.Id,
             _configuration["UserImagesSetStorageUrl"]!,
@@ -152,6 +159,7 @@ internal sealed class UserService : IUserService
 
         user.Roles = await _repository.User.GetUserRoles(user.Id);
         user.Regions = await _repository.User.GetUserRegions(user.Id);
+        user.Children = await _repository.User.GetUserChildren(user.Id);
         return user;
     }
 
@@ -330,12 +338,28 @@ internal sealed class UserService : IUserService
         ValidateFields(userForCreationDto);
         userForCreationDto.Password = userForCreationDto.Password.ToSha512();
         await _repository.User.Update(userForCreationDto, userId);
+        //  _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
 
-        _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
+        //   if (userForCreationDto.UserImage is not null)
+        //     await _fileStorageService.CopyFileToServer(userId,
+        //       _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
+    }
 
-        if (userForCreationDto.UserImage is not null)
-            await _fileStorageService.CopyFileToServer(userId,
-                _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
+    public async Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId)
+    {
+        var count = await _repository.User.GetCountByProvinceIdAndTownId(provinceId, townId);
+        return count;
+    }
+
+    public async Task<UsersCountDto> GetCountFromDateToDate(DateTime fromDate, DateTime toDate)
+    {
+        var count = await _repository.User.GetCountFromDateToDate(fromDate, toDate);
+        return count;
+    }
+
+    public async Task AddChildren(int id, IEnumerable<UserChildForManipulation> children)
+    {
+        await _repository.User.UpdateChildren(children, id);
     }
 
     private static void BuildHierarchyForUser(UserHierarchyDto manager, List<UserHierarchyDto> allUsers, string role)
