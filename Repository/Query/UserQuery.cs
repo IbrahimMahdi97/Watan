@@ -10,13 +10,13 @@ ELSE
                        Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber,
                        VoterCardNumber, Rating, MaritalStatus, JobPlace, RecruitmentYear, JobTitle, JobSector, JobType, GraduatedYear, GraduatedFromDepartment, GraduatedFromCollege, 
                        GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDegree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
-                       SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition)
+                       SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition, XAccount, FacebookAccount, InstagramAccount, LinkedInAccount)
     OUTPUT inserted.Id
     VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @WhatsAppNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
            @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber,
            @VoterCardNumber, @Rating, @MaritalStatus, @JobPlace, @RecruitmentYear, @JobTitle, @JobSector, @JobType, @GraduatedYear, @GraduatedFromDepartment, @GraduatedFromCollege,
            @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDegree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
-           @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition);";
+           @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition, @XAccount, @FacebookAccount, @InstagramAccount, @LinkedInAccount);";
 
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";
@@ -189,7 +189,11 @@ ELSE
                                                     IsFamiliesOfMartyrs = @IsFamiliesOfMartyrs,
                                                     MartyrRelationship = @MartyrRelationship,
                                                     Password = @Password,
-                                                    FinancialCondition = @FinancialCondition
+                                                    FinancialCondition = @FinancialCondition,
+                                                    XAccount = @XAccount,
+                                                    FacebookAccount = @FacebookAccount,
+                                                    InstagramAccount = @InstagramAccount,
+                                                    LinkedInAccount = @LinkedInAccount
                                                     WHERE Id = @UserId
                                             ";
 

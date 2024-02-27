@@ -41,4 +41,9 @@ public class UserForManipulationDto
     public bool IsFamiliesOfMartyrs { get; set; }
     public string? MartyrRelationship { get; set; }
     public string? FinancialCondition { get; set; }
+    
+    public string? XAccount { get; set; }
+    public string? FacebookAccount { get; set; }
+    public string? InstagramAccount { get; set; }
+    public string? LinkedInAccount { get; set; }
 }
