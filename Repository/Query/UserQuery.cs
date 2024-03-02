@@ -10,13 +10,13 @@ ELSE
                        Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber,
                        VoterCardNumber, Rating, MaritalStatus, JobPlace, RecruitmentYear, JobTitle, JobSector, JobType, GraduatedYear, GraduatedFromDepartment, GraduatedFromCollege, 
                        GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDegree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
-                       SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition, XAccount, FacebookAccount, InstagramAccount, LinkedInAccount)
+                       SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition, XAccount, FacebookAccount, InstagramAccount, LinkedInAccount, AddedByUserId)
     OUTPUT inserted.Id
     VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @WhatsAppNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
            @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber,
            @VoterCardNumber, @Rating, @MaritalStatus, @JobPlace, @RecruitmentYear, @JobTitle, @JobSector, @JobType, @GraduatedYear, @GraduatedFromDepartment, @GraduatedFromCollege,
            @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDegree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
-           @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition, @XAccount, @FacebookAccount, @InstagramAccount, @LinkedInAccount);";
+           @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition, @XAccount, @FacebookAccount, @InstagramAccount, @LinkedInAccount, @AddedByUserId);";
 
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";
@@ -60,9 +60,11 @@ ELSE
                                               (@ChildrenCount IS NULL OR U.ChildrenCount = @ChildrenCount) AND
                                               
                                               (@FullName IS NULL OR U.FullName LIKE '%' + @FullName + '%') AND
+                                              (@SearchText IS NULL OR U.FullName LIKE '%' + @SearchText + '%') AND
                                               (@MotherName IS NULL OR U.MotherName LIKE '%' + @MotherName + '%') AND
                                               (@ProvinceOfBirth IS NULL OR U.ProvinceOfBirth LIKE '%' + @ProvinceOfBirth + '%') AND
                                               (@PhoneNumber IS NULL OR U.PhoneNumber LIKE '%' + @PhoneNumber + '%') AND
+                                              (@SearchText IS NULL OR U.PhoneNumber LIKE '%' + @SearchText + '%') AND
                                               (@WhatsAppNumber IS NULL OR U.WhatsAppNumber LIKE '%' + @WhatsAppNumber + '%') AND
                                               (@EmergencyPhoneNumber IS NULL OR U.EmergencyPhoneNumber LIKE '%' + @EmergencyPhoneNumber + '%') AND
                                               (@Email IS NULL OR U.Email LIKE '%' + @Email + '%') AND
@@ -114,9 +116,11 @@ ELSE
                                               (@ChildrenCount IS NULL OR U.ChildrenCount = @ChildrenCount) AND
                                               
                                               (@FullName IS NULL OR U.FullName LIKE '%' + @FullName + '%') AND
+                                              (@SearchText IS NULL OR U.FullName LIKE '%' + @SearchText + '%') AND
                                               (@MotherName IS NULL OR U.MotherName LIKE '%' + @MotherName + '%') AND
                                               (@ProvinceOfBirth IS NULL OR U.ProvinceOfBirth LIKE '%' + @ProvinceOfBirth + '%') AND
                                               (@PhoneNumber IS NULL OR U.PhoneNumber LIKE '%' + @PhoneNumber + '%') AND
+                                              (@SearchText IS NULL OR U.PhoneNumber LIKE '%' + @SearchText + '%') AND
                                               (@WhatsAppNumber IS NULL OR U.WhatsAppNumber LIKE '%' + @WhatsAppNumber + '%') AND
                                               (@EmergencyPhoneNumber IS NULL OR U.EmergencyPhoneNumber LIKE '%' + @EmergencyPhoneNumber + '%') AND
                                               (@Email IS NULL OR U.Email LIKE '%' + @Email + '%') AND

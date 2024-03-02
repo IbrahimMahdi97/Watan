@@ -37,7 +37,7 @@ internal sealed class UserService : IUserService
 
         ValidateFields(userForCreationDto);
 
-        var result = await _repository.User.CreateUser(userForCreationDto);
+        var result = await _repository.User.CreateUser(userForCreationDto, userId);
 
         if (result <= 0)
             if (userForCreationDto.PhoneNumber != null)
@@ -336,13 +336,13 @@ internal sealed class UserService : IUserService
     public async Task Update(UserForCreationDto userForCreationDto, int userId)
     {
         ValidateFields(userForCreationDto);
-        userForCreationDto.Password = userForCreationDto.Password.ToSha512();
+        userForCreationDto.Password = (userForCreationDto.Password + userId).ToSha512();
         await _repository.User.Update(userForCreationDto, userId);
-        //  _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
+          _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
 
-        //   if (userForCreationDto.UserImage is not null)
-        //     await _fileStorageService.CopyFileToServer(userId,
-        //       _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
+           if (userForCreationDto.UserImage is not null)
+             await _fileStorageService.CopyFileToServer(userId,
+               _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
     }
 
     public async Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId)

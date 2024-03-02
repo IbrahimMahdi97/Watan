@@ -9,7 +9,7 @@ public interface IUserRepository
     Task<UserDto?> FindByCredentialsEmailOrPhoneNumber(string emailOrPhoneNumber, string password);
     Task<int> FindIdByEmailOrPhoneNumber(string emailOrPhoneNumber);
     Task<UserDetailsDto?> FindById(int id);
-    Task<int> CreateUser(UserForCreationDto userForCreationDto);
+    Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId);
     Task AddUserRoles(IEnumerable<int> userRoles, int id);
     Task AddUserRegion(UserRegionForCreationDto userRegion, int userId);
     Task UpdateRefreshToken(int id, string refreshToken, DateTime? refreshTokenExpiryTime);

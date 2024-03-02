@@ -16,12 +16,13 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<int> CreateUser(UserForCreationDto userForCreationDto)
+    public async Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId)
     {
         const string query = UserQuery.CreateUserQuery;
         var param = new DynamicParameters(userForCreationDto);
         param.Add("ProvinceId", userForCreationDto.UserRegion.ProvinceId);
         param.Add("TownId", userForCreationDto.UserRegion.TownId);
+        param.Add("AddedByUserId", userId);
         using var connection = _context.CreateConnection();
         connection.Open();
 

@@ -22,7 +22,7 @@ public class UserForManipulationDto
     public float Rating { get; set; }
     public string? MaritalStatus { get; set; }
     public string? JobPlace { get; set; }
-    public DateTime RecruitmentYear { get; set; }
+    public DateTime? RecruitmentYear { get; set; }
     public string? JobTitle { get; set; }
     public string? JobSector { get; set; }
     public string? JobType { get; set; }
@@ -31,8 +31,8 @@ public class UserForManipulationDto
     public string? GraduatedFromCollege { get; set; }
     public string? GraduatedFromUniversity { get; set; }
     public string? AcademicAchievement { get; set; }
-    public int StudyingYearsCount { get; set; }
-    public int JobDegree { get; set; }
+    public int? StudyingYearsCount { get; set; }
+    public int? JobDegree { get; set; }
     public int FamilyMembersCount { get; set; }
     public int ChildrenCount { get; set; }
     public DateTime JoiningDate { get; set; }

@@ -5,13 +5,13 @@ public class UsersParameters : RequestParameters
     public int ProvinceId { get; set; }
     public int TownId { get; set; }
     public int RegionId { get; set; }
-    
-    
+
+
     public int? StudyingYearsCount { get; set; }
     public int? JobDegree { get; set; }
     public int? FamilyMembersCount { get; set; }
     public int? ChildrenCount { get; set; }
-    
+
     public string? FullName { get; set; }
     public string? MotherName { get; set; }
     public string? ProvinceOfBirth { get; set; }
@@ -39,14 +39,16 @@ public class UsersParameters : RequestParameters
     public string? SubClanName { get; set; }
     public string? MartyrRelationship { get; set; }
     public string? FinancialCondition { get; set; }
-   
+
     public bool? Gender { get; set; }
     public bool? IsFamiliesOfMartyrs { get; set; }
     public DateTime? FromDateOfBirth { get; set; }
     public DateTime? ToDateOfBirth { get; set; }
     public DateTime? FromJoiningDate { get; set; }
     public DateTime? ToJoiningDate { get; set; }
-    
+
     public DateTime? FromRecruitmentYear { get; set; }
     public DateTime? ToRecruitmentYear { get; set; }
+
+    public string? SearchText { get; set; }
 }
