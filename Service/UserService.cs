@@ -99,7 +99,7 @@ internal sealed class UserService : IUserService
 
     public async Task<UserDetailsDto> GetById(int id)
     {
-        var users = await GetByParameters(new UsersParameters());
+        var users = await GetByParameters(new UsersParameters(), false);
 
         var userHierarchyDto = users.Select(u => new UserHierarchyDto
         {
@@ -293,9 +293,9 @@ internal sealed class UserService : IUserService
         await _repository.User.UpdateRating(userRatingForUpdateDto);
     }
 
-    public async Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters)
+    public async Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters, bool isDeleted)
     {
-        var users = await _repository.User.GetByParameters(parameters);
+        var users = await _repository.User.GetByParameters(parameters, isDeleted);
 
         foreach (var user in users)
         {
@@ -313,7 +313,7 @@ internal sealed class UserService : IUserService
 
     public async Task<UserHierarchyDto> GetHierarchy()
     {
-        var users = await GetByParameters(new UsersParameters());
+        var users = await GetByParameters(new UsersParameters(), false);
 
         var userHierarchyDto = users.Select(u => new UserHierarchyDto
         {
@@ -338,11 +338,11 @@ internal sealed class UserService : IUserService
         ValidateFields(userForCreationDto);
         userForCreationDto.Password = (userForCreationDto.Password + userId).ToSha512();
         await _repository.User.Update(userForCreationDto, userId);
-          _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
+        _fileStorageService.DeleteFilesFromServer(userId, _configuration["UserImagesSetStorageUrl"]!);
 
-           if (userForCreationDto.UserImage is not null)
-             await _fileStorageService.CopyFileToServer(userId,
-               _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
+        if (userForCreationDto.UserImage is not null)
+            await _fileStorageService.CopyFileToServer(userId,
+                _configuration["UserImagesSetStorageUrl"]!, userForCreationDto.UserImage);
     }
 
     public async Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId)
@@ -360,6 +360,18 @@ internal sealed class UserService : IUserService
     public async Task AddChildren(int id, IEnumerable<UserChildForManipulation> children)
     {
         await _repository.User.UpdateChildren(children, id);
+    }
+
+    public async Task Undelete(int id)
+    {
+        await GetById(id);
+        await _repository.User.Undelete(id);
+    }
+
+    public async Task Delete(int id)
+    {
+        await GetById(id);
+        await _repository.User.Delete(id);
     }
 
     private static void BuildHierarchyForUser(UserHierarchyDto manager, List<UserHierarchyDto> allUsers, string role)

@@ -51,7 +51,16 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserForListingDto>>> GetUserByParameters([FromQuery] UsersParameters parameters)
     {
-        var users = await _service.UserService.GetByParameters(parameters);
+        var users = await _service.UserService.GetByParameters(parameters, false);
+      //  Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(users.MetaData));
+        return Ok(new {users, users.MetaData});
+    }
+    
+    [Authorize]
+    [HttpGet("deleted")]
+    public async Task<ActionResult<IEnumerable<UserForListingDto>>> GetDeletedUserByParameters([FromQuery] UsersParameters parameters)
+    {
+        var users = await _service.UserService.GetByParameters(parameters, true);
       //  Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(users.MetaData));
         return Ok(new {users, users.MetaData});
     }
@@ -85,6 +94,22 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> UpdateUserRating(UserRatingForUpdateDto userRatingForUpdateDto)
     {
         await _service.UserService.UpdateRating(userRatingForUpdateDto);
+        return NoContent();
+    }
+    
+    [Authorize(Roles = "admin, manager")]
+    [HttpPut("undelete/{id:int}")]
+    public async Task<ActionResult> UndeleteUser(int id)
+    {
+        await _service.UserService.Undelete(id);
+        return NoContent();
+    }
+    
+    [Authorize(Roles = "admin, manager")]
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteUser(int id)
+    {
+        await _service.UserService.Delete(id);
         return NoContent();
     }
 

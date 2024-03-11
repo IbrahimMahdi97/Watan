@@ -9,14 +9,16 @@ ELSE
     INSERT INTO Users (FullName, MotherName, Gender, Email,  PhoneNumber, WhatsAppNumber, EmergencyPhoneNumber, ProvinceOfBirth, DateOfBirth,
                        Password, ProvinceId, TownId, District, StreetNumber, HouseNumber, NationalIdNumber, ResidenceCardNumber,
                        VoterCardNumber, Rating, MaritalStatus, JobPlace, RecruitmentYear, JobTitle, JobSector, JobType, GraduatedYear, GraduatedFromDepartment, GraduatedFromCollege, 
-                       GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDegree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName,
-                       SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition, XAccount, FacebookAccount, InstagramAccount, LinkedInAccount, AddedByUserId)
+                       GraduatedFromUniversity, AcademicAchievement, StudyingYearsCount, JobDegree, FamilyMembersCount, ChildrenCount, JoiningDate, ClanName, InvitedByUsername, VotingCenterName
+                       VotingCenterNumber, PartnerName, IsReceivingSocialSecurity, SubclanName, IsFamiliesOfMartyrs, MartyrRelationship, FinancialCondition, XAccount, FacebookAccount,
+                       InstagramAccount, LinkedInAccount, AddedByUserId)
     OUTPUT inserted.Id
     VALUES(@FullName, @MotherName, @Gender, @Email, @PhoneNumber, @WhatsAppNumber, @EmergencyPhoneNumber, @ProvinceOfBirth, @DateOfBirth,
            @Password, @ProvinceId, @TownId, @District, @StreetNumber, @HouseNumber, @NationalIdNumber, @ResidenceCardNumber,
            @VoterCardNumber, @Rating, @MaritalStatus, @JobPlace, @RecruitmentYear, @JobTitle, @JobSector, @JobType, @GraduatedYear, @GraduatedFromDepartment, @GraduatedFromCollege,
-           @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDegree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName,
-           @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition, @XAccount, @FacebookAccount, @InstagramAccount, @LinkedInAccount, @AddedByUserId);";
+           @GraduatedFromUniversity, @AcademicAchievement, @StudyingYearsCount, @JobDegree, @FamilyMembersCount, @ChildrenCount, @JoiningDate, @ClanName, @InvitedByUsername, @VotingCenterName
+           @VotingCenterNumber, @PartnerName, @IsReceivingSocialSecurity, @SubclanName, @IsFamiliesOfMartyrs, @MartyrRelationship, @FinancialCondition, @XAccount, @FacebookAccount,
+           @InstagramAccount, @LinkedInAccount, @AddedByUserId);";
 
     public const string AddEncryptedPasswordByIdQuery =
         @"UPDATE Users SET Password = @password WHERE Id = @id;";
@@ -30,7 +32,7 @@ ELSE
         @"UPDATE Users SET RefreshToken = @refreshToken, RefreshTokenExpiryTime = @refreshTokenExpiryTime WHERE Id = @id;";
 
     public const string UserIdByEmailOrPhoneNumberQuery =
-        @"SELECT Id FROM Users WHERE Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ";
+        @"SELECT Id FROM Users WHERE (Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber) AND IsDeleted = 0";
 
     public const string UserByIdQuery =
         @"SELECT * FROM Users WHERE Id = @id";
@@ -42,10 +44,10 @@ ELSE
         @"UPDATE Users SET Rating = @Rating WHERE Id = @UserId";
 
     public const string UserByCredentialsEmailOrPhoneNumberQuery =
-        @"SELECT * FROM Users WHERE ( Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ) AND Password = @Password";
+        @"SELECT * FROM Users WHERE ( Email = @EmailOrPhoneNumber OR PhoneNumber = @EmailOrPhoneNumber ) AND Password = @Password  AND IsDeleted = 0";
 
     public const string UserDeviceIdQuery =
-        @"SELECT DeviceId FROM Users WHERE Id = @id";
+        @"SELECT DeviceId FROM Users WHERE Id = @id  AND IsDeleted = 0";
 
     public const string SelectByParametersQuery = @"SELECT U.Id, U.FullName FROM Users U 
                                             JOIN UserRegions UR on U.Id = UR.UserId
@@ -88,8 +90,13 @@ ELSE
                                               (@SubClanName IS NULL OR U.SubClanName LIKE '%' + @SubClanName + '%') AND
                                               (@MartyrRelationship IS NULL OR U.MartyrRelationship LIKE '%' + @MartyrRelationship + '%') AND
                                               (@FinancialCondition IS NULL OR U.FinancialCondition LIKE '%' + @FinancialCondition + '%') AND
+                                              (@InvitedByUsername IS NULL OR U.InvitedByUsername LIKE '%' + @InvitedByUsername + '%') AND
+                                              (@VotingCenterName IS NULL OR U.VotingCenterName LIKE '%' + @VotingCenterName + '%') AND
+                                              (@VotingCenterNumber IS NULL OR U.VotingCenterNumber LIKE '%' + @VotingCenterNumber + '%') AND
+                                              (@PartnerName IS NULL OR U.PartnerName LIKE '%' + @PartnerName + '%') AND
 
                                                 (@Gender IS NULL OR U.Gender = @Gender) AND
+                                                (@IsReceivingSocialSecurity IS NULL OR U.IsReceivingSocialSecurity = @IsReceivingSocialSecurity) AND
                                                 (@IsFamiliesOfMartyrs IS NULL OR U.IsFamiliesOfMartyrs = @IsFamiliesOfMartyrs) AND
                                                 
                                                 (@FromDateOfBirth IS NULL OR U.DateOfBirth >= @FromDateOfBirth) AND
@@ -98,7 +105,7 @@ ELSE
                                                 (@ToJoiningDate IS NULL OR U.JoiningDate <= @ToJoiningDate) AND
                                                 (@FromRecruitmentYear IS NULL OR U.RecruitmentYear >= @FromRecruitmentYear) AND
                                                 (@ToRecruitmentYear IS NULL OR U.RecruitmentYear <= @ToRecruitmentYear) AND
-                                              U.IsDeleted = 0
+                                              U.IsDeleted = @isDeleted
                                               ORDER BY U.RecordDate DESC
                                               OFFSET @Skip ROWS FETCH NEXT @PageSize ROWS ONLY";
 
@@ -144,8 +151,13 @@ ELSE
                                               (@SubClanName IS NULL OR U.SubClanName LIKE '%' + @SubClanName + '%') AND
                                               (@MartyrRelationship IS NULL OR U.MartyrRelationship LIKE '%' + @MartyrRelationship + '%') AND
                                               (@FinancialCondition IS NULL OR U.FinancialCondition LIKE '%' + @FinancialCondition + '%') AND
+                                              (@InvitedByUsername IS NULL OR U.InvitedByUsername LIKE '%' + @InvitedByUsername + '%') AND
+                                              (@VotingCenterName IS NULL OR U.VotingCenterName LIKE '%' + @VotingCenterName + '%') AND
+                                              (@VotingCenterNumber IS NULL OR U.VotingCenterNumber LIKE '%' + @VotingCenterNumber + '%') AND
+                                              (@PartnerName IS NULL OR U.PartnerName LIKE '%' + @PartnerName + '%') AND
 
                                                 (@Gender IS NULL OR U.Gender = @Gender) AND
+                                                (@IsReceivingSocialSecurity IS NULL OR U.IsReceivingSocialSecurity = @IsReceivingSocialSecurity) AND
                                                 (@IsFamiliesOfMartyrs IS NULL OR U.IsFamiliesOfMartyrs = @IsFamiliesOfMartyrs) AND
                                                 
                                                 (@FromDateOfBirth IS NULL OR U.DateOfBirth >= @FromDateOfBirth) AND
@@ -154,7 +166,7 @@ ELSE
                                                 (@ToJoiningDate IS NULL OR U.JoiningDate <= @ToJoiningDate) AND
                                                 (@FromRecruitmentYear IS NULL OR U.RecruitmentYear >= @FromRecruitmentYear) AND
                                                 (@ToRecruitmentYear IS NULL OR U.RecruitmentYear <= @ToRecruitmentYear) AND
-                                              U.IsDeleted = 0";
+                                              U.IsDeleted = @isDeleted";
 
     public const string UpdateByIdQuery = @"UPDATE Users SET
                                                     FullName = @FullName,
@@ -197,7 +209,12 @@ ELSE
                                                     XAccount = @XAccount,
                                                     FacebookAccount = @FacebookAccount,
                                                     InstagramAccount = @InstagramAccount,
-                                                    LinkedInAccount = @LinkedInAccount
+                                                    LinkedInAccount = @LinkedInAccount,
+                                                    InvitedByUsername = @InvitedByUsername,
+                                                    VotingCenterNumber = @VotingCenterNumber,
+                                                    VotingCenterName = @VotingCenterName,
+                                                    PartnerName = @PartnerName,
+                                                    IsReceivingSocialSecurity = @IsReceivingSocialSecurity
                                                     WHERE Id = @UserId
                                             ";
 
@@ -208,6 +225,7 @@ ELSE
                                                                 SELECT COUNT(Id) FROM Users
                                                                     WHERE IIF(@ProvinceId = 0, 0, ProvinceId) = @ProvinceId
                                                                     AND IIF(@TownId = 0, 0, TownId) = @TownId
+                                                                    AND IsDeleted = 0
                                                                 """;
 
     public const string SelectCountFromDateToDateQuery = """
@@ -217,6 +235,7 @@ ELSE
                                                                  COUNT(CASE WHEN JoiningDate BETWEEN @FromDate AND @ToDate THEN 1 END) AS NewCount
                                                              FROM
                                                                  Users
+                                                             WHERE IsDeleted = 0
                                                          ),
                                                          ActiveCounts AS (
                                                              SELECT
@@ -229,6 +248,7 @@ ELSE
                                                                  Posts P ON EA.PostId = P.Id
                                                              WHERE
                                                                  P.RecordDate BETWEEN @FromDate AND @ToDate
+                                                                 AND U.IsDeleted = 0
                                                          ),
                                                          InactiveCounts AS (
                                                              SELECT
@@ -242,6 +262,7 @@ ELSE
                                                                      INNER JOIN Posts P ON EA.PostId = P.Id
                                                                      WHERE U.Id = EA.UserId
                                                                        AND P.RecordDate BETWEEN @FromDate AND @ToDate
+                                                                       AND U.IsDeleted = 0
                                                                  )
                                                          )
                                                          SELECT
@@ -260,6 +281,8 @@ ELSE
     public const string InsertUserChildQuery = @"INSERT INTO UserChildren (UserId, ChildName, Age)
                                                       VALUES(@UserId, @ChildName, @Age);";
 
-    public const string UserChildrenByUserIdQuery = @"SELECT ChildName, Age FROM UserChildren WHERE UserId = @Id";
+    public const string UserChildrenByUserIdQuery = @"SELECT ChildName, Age FROM UserChildren WHERE UserId = @Id ";
     public const string DeleteChildrenByIdQuery = "DELETE FROM UserChildren WHERE  UserId = @UserId";
+    public const string DeleteByIdQuery = "UPDATE Users SET IsDeleted = 1 WHERE Id = @Id";
+    public const string UndeleteByIdQuery = "UPDATE Users SET IsDeleted = 0 WHERE Id = @Id";
 }

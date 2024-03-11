@@ -37,7 +37,7 @@ public class NotificationService : INotificationService
 
     public async Task SendNotifications(UsersParameters parameters, NotificationForCreationDto notification, int userId)
     {
-        var users = await _userService.GetByParameters(parameters);
+        var users = await _userService.GetByParameters(parameters, false);
         foreach (var user in users)
         {
             notification.UserId = user.Id;

@@ -144,7 +144,7 @@ public class UserRepository : IUserRepository
         await connection.ExecuteAsync(query, userRatingForUpdateDto);
     }
 
-    public async Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters)
+    public async Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters, bool isDeleted)
     {
         const string query = UserQuery.SelectByParametersQuery;
         const string countQuery = UserQuery.SelectCountByParametersQuery;
@@ -152,6 +152,7 @@ public class UserRepository : IUserRepository
         var skip = (parameters.PageNumber - 1) * parameters.PageSize;
         var param = new DynamicParameters(parameters);
         param.Add("skip", skip);
+        param.Add("isDeleted", isDeleted);
 
         using var connection = _context.CreateConnection();
 
@@ -190,6 +191,20 @@ public class UserRepository : IUserRepository
         await connection.ExecuteAsync(deleteChildrenQuery, new { UserId = userId });
 
         await AddUserChildren(children, userId);
+    }
+
+    public async Task Undelete(int id)
+    {
+        const string query = UserQuery.DeleteByIdQuery;
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, new { Id = id });
+    }
+
+    public async Task Delete(int id)
+    {
+        const string query = UserQuery.UndeleteByIdQuery;
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(query, new { Id = id });
     }
 
     public async Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId)

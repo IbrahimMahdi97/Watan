@@ -11,10 +11,12 @@ public interface IUserService
     Task<int> CreateUser(UserForCreationDto userForCreationDto, int userId);
     Task<TokenDto> RefreshToken(TokenDto tokenDto);
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
-    Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
+    Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters, bool isDeleted);
     Task<UserHierarchyDto> GetHierarchy();
     Task Update(UserForCreationDto userForCreationDto, int userId);
     Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId);
     Task<UsersCountDto> GetCountFromDateToDate(DateTime fromDate, DateTime toDate);
     Task AddChildren(int id, IEnumerable<UserChildForManipulation> children);
+    Task Undelete(int id);
+    Task Delete(int id);
 }

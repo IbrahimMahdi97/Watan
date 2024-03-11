@@ -39,7 +39,7 @@ public static class EventQuery
                                             FROM EventDetails 
                                             INNER JOIN Posts ON EventDetails.PostId = Posts.Id 
                                             INNER JOIN Provinces P on EventDetails.ProvinceId = P.Id 
-                                            INNER JOIN Towns T on EventDetails.TownId = T.Id WHERE PostId = @Id";
+                                            INNER JOIN Towns T on EventDetails.TownId = T.Id WHERE PostId = @Id AND Posts.IsDeleted = 0";
 
     public const string InsertEvent =
         @"INSERT INTO EventDetails (PostId, Type, ProvinceId, TownId, Date, StartTime, EndTime, LocationUrl)
@@ -68,6 +68,7 @@ public static class EventQuery
                                                                          WHERE
                                                                              (U.provinceId = @ProvinceId AND U.townId = @TownId)
                                                                              OR (U.provinceId != @ProvinceId OR U.townId != @TownId)
+                                                                             AND P.IsDeleted = 0
                                                                          GROUP BY
                                                                              DATEADD(WEEK, DATEDIFF(WEEK, 0,P.RecordDate), 0)
                                                                          ORDER BY
@@ -82,5 +83,6 @@ public static class EventQuery
                                                         JOIN EventDetails ED ON P.Id = ED.PostId
                                                         JOIN Provinces Pr on ED.ProvinceId = Pr.Id
                                                         WHERE P.RecordDate BETWEEN @FromDate AND @ToDate
+                                                        AND P.IsDeleted = 0
                                                     """;
 }

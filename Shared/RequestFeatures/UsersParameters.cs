@@ -51,4 +51,10 @@ public class UsersParameters : RequestParameters
     public DateTime? ToRecruitmentYear { get; set; }
 
     public string? SearchText { get; set; }
+    
+    public string? InvitedByUsername { get; set; }
+    public string? VotingCenterName { get; set; }
+    public string? VotingCenterNumber { get; set; }
+    public string? PartnerName { get; set; }
+    public bool IsReceivingSocialSecurity { get; set; }
 }

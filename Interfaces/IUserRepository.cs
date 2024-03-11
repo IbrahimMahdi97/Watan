@@ -18,11 +18,13 @@ public interface IUserRepository
     Task UpdateDeviceId(int userId, string deviceId);
     Task<string?> GetUserDeviceId(int userId);
     Task UpdateRating(UserRatingForUpdateDto userRatingForUpdateDto);
-    Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters);
+    Task<PagedList<UserForListingDto>> GetByParameters(UsersParameters parameters, bool isDeleted);
     Task Update(UserForCreationDto userForCreationDto, int userId);
     Task<int> GetCountByProvinceIdAndTownId(int provinceId, int townId);
     Task<UsersCountDto> GetCountFromDateToDate(DateTime fromDate, DateTime toDate);
     Task<IEnumerable<UserChildForManipulation>?> GetUserChildren(int userId);
     Task UpdateChildren(IEnumerable<UserChildForManipulation> children, int userId);
 
+    Task Undelete(int id);
+    Task Delete(int id);
 }

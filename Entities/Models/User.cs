@@ -37,6 +37,11 @@ public class User
     public string? GraduatedFromCollege { get; set; }
     public string? GraduatedFromUniversity { get; set; }
     public string? AcademicAchievement { get; set; }
+    public string? InvitedByUsername { get; set; }
+    public string? VotingCenterName { get; set; }
+    public string? VotingCenterNumber { get; set; }
+    public string? PartnerName { get; set; }
+    public bool IsReceivingSocialSecurity { get; set; }
     public int StudyingYearsCount { get; set; }
     public int JobDegree { get; set; }
     public int FamilyMembersCount { get; set; }
