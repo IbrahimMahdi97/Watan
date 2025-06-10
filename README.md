@@ -1,7 +1,7 @@
 # Overview
 This repository contains a .NET 7 based REST API.
 The solution (Watan.sln) groups several projects:
-
+```
 Watan/                 – API host (Program.cs, middleware, migrations)
 Watan.Presentation/    – API controllers
 Service/               – Business logic implementations
@@ -11,7 +11,7 @@ Interfaces/            – Repository and logger interfaces
 Entities/              – Domain models, enums, custom exceptions
 Shared/                – DTOs, helper extensions, request parameter classes
 LoggerService/         – NLog logger implementation
-
+```
 ## API Host
 Watan/Program.cs wires everything together. It sets up logging, DI, migrations, JWT auth, and registers controllers. The application uses a custom middleware to handle missing/expired tokens and an exception handler. Swagger is configured for API documentation.
 ```
