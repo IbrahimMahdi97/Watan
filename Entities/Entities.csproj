@@ -5,16 +5,15 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
+    
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <Folder Include="ErrorModel\" />
+      <Folder Include="Exceptions\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Enums\" />
-      <Folder Include="ErrorModel\" />
-      <Folder Include="Exceptions\" />
-      <Folder Include="Models\" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     </ItemGroup>
 
 </Project>
