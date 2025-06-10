@@ -1,6 +1,6 @@
 # Overview
 This repository contains a .NET 7 based REST API.
-The solution (Watan.sln) groups several projects:
+The solution (`Watan.sln`) groups several projects:
 ```
 Watan/                 – API host (Program.cs, middleware, migrations)
 Watan.Presentation/    – API controllers
@@ -13,7 +13,7 @@ Shared/                – DTOs, helper extensions, request parameter classes
 LoggerService/         – NLog logger implementation
 ```
 ## API Host
-Watan/Program.cs wires everything together. It sets up logging, DI, migrations, JWT auth, and registers controllers. The application uses a custom middleware to handle missing/expired tokens and an exception handler. Swagger is configured for API documentation.
+`Watan/Program.cs` wires everything together. It sets up logging, DI, migrations, JWT auth, and registers controllers. The application uses a custom middleware to handle missing/expired tokens and an exception handler. Swagger is configured for API documentation.
 ```
 builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
@@ -42,7 +42,7 @@ app.MigrateDatabase(logger);
 
 ## Layers
 1. Entities
-Holds POCO classes for database entities (e.g., User, Post, Complaint) and enumerations. It also defines custom exception types for error handling.
+Holds POCO classes for database entities (e.g., `User`, `Post`) and enumerations. It also defines custom exception types for error handling.
 
 2. Shared
 Contains Data Transfer Objects (DTOs), parameter objects for paging/filtering, and helper extensions (e.g., SHA-512 hashing and retrieving user ID from JWT claims).
@@ -58,13 +58,13 @@ public static class ClaimsPrincipleExtensions
 }
 ```
 3. Interfaces
-Defines repository interfaces (IUserRepository, IPostRepository, etc.) and other abstractions such as ILoggerManager or IFileStorageService.
+Defines repository interfaces (`IUserRepository`, `IPostRepository`, etc.) and other abstractions such as `ILoggerManager` or `IFileStorageService`.
 
 4. Repository
-Implements repositories using Dapper. SQL queries live in Repository/Query/*Query.cs. Example: PostRepository retrieves posts, creates them inside transactions, and maps results to DTOs.
+Implements repositories using Dapper. SQL queries live in `Repository/Query/*Query.cs`. Example: `PostRepository` retrieves posts, creates them inside transactions, and maps results to DTOs.
 
 5. Service.Interface / Service
-The service layer implements business logic. Each service depends on IRepositoryManager and optional helpers like FileStorageService. Example: PostService retrieves posts and attaches image URLs by reading from local storage.
+The service layer implements business logic. Each service depends on `IRepositoryManager` and optional helpers like `FileStorageService`. Example: `PostService` retrieves posts and attaches image URLs by reading from local storage.
 ```
 public async Task<IEnumerable<PostDto>> GetAllPosts(int userId)
 {
@@ -81,30 +81,30 @@ public async Task<IEnumerable<PostDto>> GetAllPosts(int userId)
 }
 ```
 
-ServiceManager and RepositoryManager lazily instantiate services and repositories to centralize dependency management.
+`ServiceManager` and `RepositoryManager` lazily instantiate services and repositories to centralize dependency management.
 
 6. Watan.Presentation
-Houses ASP.NET controllers which are thin wrappers around the service layer. An example is PostsController, providing CRUD operations with JWT authorization.
+Houses ASP.NET controllers which are thin wrappers around the service layer. An example is `PostsController`, providing CRUD operations with JWT authorization.
 
 7. LoggerService
-Implements ILoggerManager using NLog.
+Implements `ILoggerManager` using NLog.
 
 8. Migrations
-Database schema is managed with FluentMigrator. MigrationManager runs migrations on startup. Database.cs creates the database if needed.
+Database schema is managed with FluentMigrator. `MigrationManager` runs migrations on startup. `Database.cs` creates the database if needed.
 
 ## Configuration and Helpers
-- nlog.config configures file-based logging.
-- serviceAccountKey.json stores Firebase credentials for sending push notifications via NotificationService.
-- global.json pins the .NET SDK version (7.0).
-- launchSettings.json contains local development profiles.
+- `nlog.config` configures file-based logging.
+- `serviceAccountKey.json` stores Firebase credentials for sending push notifications via NotificationService.
+- `global.json` pins the .NET SDK version (7.0).
+- `launchSettings.json` contains local development profiles.
 
 ## What to Learn Next
 1. Dapper basics – Understand how repositories build SQL queries and map them to DTOs.
-2. FluentMigrator – Review migration classes in Watan/Migrations to learn the database schema and seeding process.
-3. JWT authentication – Examine UserService for token creation/refresh logic and the custom middleware handling expired/missing tokens.
-4. Dependency injection – Study ServiceExtensions.cs for how services, repositories, and logging are registered.
+2. FluentMigrator – Review migration classes in `Watan/Migrations` to learn the database schema and seeding process.
+3. JWT authentication – Examine `UserService` for token creation/refresh logic and the custom middleware handling expired/missing tokens.
+4. Dependency injection – Study `ServiceExtensions.cs` for how services, repositories, and logging are registered.
 5. Controller to service flow – Observe how controllers call service methods and how responses are shaped using DTOs.
-6. File storage utilities – See FileStorageService for saving/retrieving images.
-7. Firebase push notifications – Explore NotificationService for sending notifications and retrieving unread counts.
+6. File storage utilities – See `FileStorageService` for saving/retrieving images.
+7. Firebase push notifications – Explore `NotificationService` for sending notifications and retrieving unread counts.
 
 Understanding these pieces will make it easier to contribute new endpoints, modify database queries, or adjust business rules within this codebase.
